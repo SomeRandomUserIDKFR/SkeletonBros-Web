@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="BAR_ATTACK.png">
+	<!-- Created with Adobe Animate version 21.0.0.35450 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="BAR ATTACK 20000" x="10" y="10" width="140" height="351" frameX="-525" frameY="0" frameWidth="684" frameHeight="351"/>
+	<SubTexture name="BAR ATTACK 20001" x="10" y="10" width="140" height="351" frameX="-525" frameY="0" frameWidth="684" frameHeight="351"/>
+	<SubTexture name="BAR ATTACK 20002" x="160" y="10" width="178" height="308" frameX="-506" frameY="-21" frameWidth="684" frameHeight="351"/>
+	<SubTexture name="BAR ATTACK 20003" x="348" y="10" width="251" height="165" frameX="-359" frameY="-101" frameWidth="684" frameHeight="351"/>
+	<SubTexture name="BAR ATTACK 20004" x="609" y="10" width="329" height="29" frameX="-182" frameY="-173" frameWidth="684" frameHeight="351"/>
+	<SubTexture name="BAR ATTACK 20005" x="609" y="10" width="329" height="29" frameX="-182" frameY="-173" frameWidth="684" frameHeight="351"/>
+	<SubTexture name="BAR ATTACK 20006" x="948" y="10" width="212" height="12" frameX="-150" frameY="-183" frameWidth="684" frameHeight="351"/>
+	<SubTexture name="BAR ATTACK 20007" x="1170" y="10" width="69" height="7" frameX="-59" frameY="-185" frameWidth="684" frameHeight="351"/>
+	<SubTexture name="BAR ATTACK 20008" x="1249" y="10" width="12" height="7" frameX="0" frameY="-185" frameWidth="684" frameHeight="351"/>
+	<SubTexture name="BAR ATTACK 20009" x="1271" y="10" width="0" height="0" frameX="-49" frameY="100" frameWidth="684" frameHeight="351"/>
+	<SubTexture name="BAR ATTACK MISS0000" x="10" y="371" width="153" height="308" frameX="-124" frameY="-85" frameWidth="392" frameHeight="493"/>
+	<SubTexture name="BAR ATTACK MISS0001" x="10" y="371" width="153" height="308" frameX="-124" frameY="-85" frameWidth="392" frameHeight="493"/>
+	<SubTexture name="BAR ATTACK MISS0002" x="173" y="371" width="91" height="382" frameX="-161" frameY="-49" frameWidth="392" frameHeight="493"/>
+	<SubTexture name="BAR ATTACK MISS0003" x="274" y="371" width="34" height="438" frameX="-190" frameY="-21" frameWidth="392" frameHeight="493"/>
+	<SubTexture name="BAR ATTACK MISS0004" x="318" y="371" width="19" height="464" frameX="-197" frameY="-8" frameWidth="392" frameHeight="493"/>
+	<SubTexture name="BAR ATTACK MISS0005" x="347" y="371" width="16" height="470" frameX="-199" frameY="-5" frameWidth="392" frameHeight="493"/>
+	<SubTexture name="BAR ATTACK MISS0006" x="373" y="371" width="298" height="469" frameX="-38" frameY="-12" frameWidth="392" frameHeight="493"/>
+	<SubTexture name="BAR ATTACK MISS0007" x="681" y="371" width="308" height="493" frameX="-84" frameY="0" frameWidth="392" frameHeight="493"/>
+	<SubTexture name="BAR ATTACK MISS0008" x="999" y="371" width="308" height="127" frameX="-84" frameY="-161" frameWidth="392" frameHeight="493"/>
+	<SubTexture name="BAR ATTACK MISS0009" x="10" y="874" width="296" height="125" frameX="-82" frameY="-162" frameWidth="392" frameHeight="493"/>
+	<SubTexture name="BAR ATTACK MISS0010" x="10" y="874" width="296" height="125" frameX="-82" frameY="-162" frameWidth="392" frameHeight="493"/>
+	<SubTexture name="BAR ATTACK MISS0011" x="316" y="874" width="297" height="125" frameX="-82" frameY="-162" frameWidth="392" frameHeight="493"/>
+	<SubTexture name="BAR ATTACK MISS0012" x="316" y="874" width="297" height="125" frameX="-82" frameY="-162" frameWidth="392" frameHeight="493"/>
+	<SubTexture name="BAR ATTACK MISS0013" x="316" y="874" width="297" height="125" frameX="-82" frameY="-162" frameWidth="392" frameHeight="493"/>
+	<SubTexture name="BAR ATTACK MISS0014" x="316" y="874" width="297" height="125" frameX="-82" frameY="-162" frameWidth="392" frameHeight="493"/>
+	<SubTexture name="BAR ATTACK MISS0015" x="316" y="874" width="297" height="125" frameX="-82" frameY="-162" frameWidth="392" frameHeight="493"/>
+	<SubTexture name="BAR ATTACK MISS0016" x="316" y="874" width="297" height="125" frameX="-82" frameY="-162" frameWidth="392" frameHeight="493"/>
+	<SubTexture name="BAR ATTACK MISS0017" x="316" y="874" width="297" height="125" frameX="-82" frameY="-162" frameWidth="392" frameHeight="493"/>
+	<SubTexture name="BAR ATTACK MISS0018" x="316" y="874" width="297" height="125" frameX="-82" frameY="-162" frameWidth="392" frameHeight="493"/>
+	<SubTexture name="BAR ATTACK MISS0019" x="316" y="874" width="297" height="125" frameX="-82" frameY="-162" frameWidth="392" frameHeight="493"/>
+	<SubTexture name="BAR ATTACK MISS0020" x="316" y="874" width="297" height="125" frameX="-82" frameY="-162" frameWidth="392" frameHeight="493"/>
+	<SubTexture name="BAR ATTACK MISS0021" x="316" y="874" width="297" height="125" frameX="-82" frameY="-162" frameWidth="392" frameHeight="493"/>
+	<SubTexture name="BAR ATTACK MISS0022" x="316" y="874" width="297" height="125" frameX="-82" frameY="-162" frameWidth="392" frameHeight="493"/>
+	<SubTexture name="BAR ATTACK MISS0023" x="623" y="874" width="298" height="105" frameX="-38" frameY="-184" frameWidth="392" frameHeight="493"/>
+	<SubTexture name="BAR ATTACK MISS0024" x="931" y="874" width="282" height="37" frameX="-1" frameY="-235" frameWidth="392" frameHeight="493"/>
+	<SubTexture name="BAR ATTACK MISS0025" x="1223" y="874" width="98" height="22" frameX="0" frameY="-252" frameWidth="392" frameHeight="493"/>
+	<SubTexture name="BAR ATTACK MISS0026" x="1331" y="874" width="0" height="0" frameX="-140" frameY="-67" frameWidth="392" frameHeight="493"/>
+	<SubTexture name="BAR ATTAK0000" x="10" y="1009" width="153" height="357"/>
+	<SubTexture name="BAR ATTAK0001" x="10" y="1009" width="153" height="357"/>
+	<SubTexture name="BAR ATTAK0002" x="173" y="1009" width="140" height="353" frameX="-6" frameY="-2" frameWidth="153" frameHeight="357"/>
+	<SubTexture name="BAR ATTAK0003" x="173" y="1009" width="140" height="353" frameX="-6" frameY="-2" frameWidth="153" frameHeight="357"/>
+	<SubTexture name="BAR ATTAK0004" x="10" y="10" width="140" height="351" frameX="-6" frameY="-3" frameWidth="684" frameHeight="351"/>
+	<SubTexture name="BAR ATTAK0005" x="10" y="10" width="140" height="351" frameX="-6" frameY="-3" frameWidth="684" frameHeight="351"/>
+	<SubTexture name="BAR ATTAK0006" x="10" y="10" width="140" height="351" frameX="-6" frameY="-3" frameWidth="684" frameHeight="351"/>
+	<SubTexture name="BAR ATTAK0007" x="10" y="10" width="140" height="351" frameX="-6" frameY="-3" frameWidth="684" frameHeight="351"/>
+	<SubTexture name="BAR ATTAK0008" x="10" y="10" width="140" height="351" frameX="-6" frameY="-3" frameWidth="684" frameHeight="351"/>
+	<SubTexture name="BAR ATTAK0009" x="10" y="10" width="140" height="351" frameX="-6" frameY="-3" frameWidth="684" frameHeight="351"/>
+	<SubTexture name="BAR ATTAK0010" x="10" y="10" width="140" height="351" frameX="-6" frameY="-3" frameWidth="684" frameHeight="351"/>
+	<SubTexture name="BAR ATTAK0011" x="10" y="10" width="140" height="351" frameX="-6" frameY="-3" frameWidth="684" frameHeight="351"/>
+	<SubTexture name="BAR ATTAK0012" x="10" y="10" width="140" height="351" frameX="-6" frameY="-3" frameWidth="684" frameHeight="351"/>
+	<SubTexture name="BAR ATTAK0013" x="10" y="10" width="140" height="351" frameX="-6" frameY="-3" frameWidth="684" frameHeight="351"/>
+	<SubTexture name="BAR ATTAK0014" x="10" y="10" width="140" height="351" frameX="-6" frameY="-3" frameWidth="684" frameHeight="351"/>
+	<SubTexture name="BAR ATTAK0015" x="10" y="10" width="140" height="351" frameX="-6" frameY="-3" frameWidth="684" frameHeight="351"/>
+	<SubTexture name="BAR ATTAK0016" x="10" y="10" width="140" height="351" frameX="-6" frameY="-3" frameWidth="684" frameHeight="351"/>
+	<SubTexture name="BAR ATTAK0017" x="10" y="10" width="140" height="351" frameX="-6" frameY="-3" frameWidth="684" frameHeight="351"/>
+	<SubTexture name="BAR ATTAK0018" x="10" y="10" width="140" height="351" frameX="-6" frameY="-3" frameWidth="684" frameHeight="351"/>
+	<SubTexture name="BAR ATTAK0019" x="10" y="10" width="140" height="351" frameX="-6" frameY="-3" frameWidth="684" frameHeight="351"/>
+</TextureAtlas>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="SB LOGO.png">
+	<!-- Created with Adobe Animate version 21.0.7.42652 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="LOGO SKELETON GODS0000" x="5" y="5" width="674" height="166" frameX="0" frameY="-3" frameWidth="674" frameHeight="197"/>
+	<SubTexture name="LOGO SKELETON GODS0001" x="5" y="5" width="674" height="166" frameX="0" frameY="-3" frameWidth="674" frameHeight="197"/>
+	<SubTexture name="LOGO SKELETON GODS0002" x="5" y="5" width="674" height="166" frameX="0" frameY="-12" frameWidth="674" frameHeight="197"/>
+	<SubTexture name="LOGO SKELETON GODS0003" x="5" y="5" width="674" height="166" frameX="0" frameY="-12" frameWidth="674" frameHeight="197"/>
+	<SubTexture name="LOGO SKELETON GODS0004" x="5" y="5" width="674" height="166" frameX="0" frameY="-24" frameWidth="674" frameHeight="197"/>
+	<SubTexture name="LOGO SKELETON GODS0005" x="5" y="5" width="674" height="166" frameX="0" frameY="-24" frameWidth="674" frameHeight="197"/>
+	<SubTexture name="LOGO SKELETON GODS0006" x="5" y="5" width="674" height="166" frameX="0" frameY="-27" frameWidth="674" frameHeight="197"/>
+	<SubTexture name="LOGO SKELETON GODS0007" x="5" y="5" width="674" height="166" frameX="0" frameY="-27" frameWidth="674" frameHeight="197"/>
+	<SubTexture name="LOGO SKELETON GODS0008" x="5" y="5" width="674" height="166" frameX="0" frameY="-29" frameWidth="674" frameHeight="197"/>
+	<SubTexture name="LOGO SKELETON GODS0009" x="5" y="5" width="674" height="166" frameX="0" frameY="-29" frameWidth="674" frameHeight="197"/>
+	<SubTexture name="LOGO SKELETON GODS0010" x="5" y="176" width="674" height="166" frameX="0" frameY="-31" frameWidth="674" frameHeight="197"/>
+	<SubTexture name="LOGO SKELETON GODS0011" x="5" y="176" width="674" height="166" frameX="0" frameY="-31" frameWidth="674" frameHeight="197"/>
+	<SubTexture name="LOGO SKELETON GODS0012" x="5" y="176" width="674" height="166" frameX="0" frameY="-31" frameWidth="674" frameHeight="197"/>
+	<SubTexture name="LOGO SKELETON GODS0013" x="5" y="176" width="674" height="166" frameX="0" frameY="-31" frameWidth="674" frameHeight="197"/>
+	<SubTexture name="LOGO SKELETON GODS0014" x="5" y="176" width="674" height="166" frameX="0" frameY="-31" frameWidth="674" frameHeight="197"/>
+	<SubTexture name="LOGO SKELETON GODS0015" x="5" y="176" width="674" height="166" frameX="0" frameY="-31" frameWidth="674" frameHeight="197"/>
+	<SubTexture name="LOGO SKELETON GODS0016" x="5" y="176" width="674" height="166" frameX="0" frameY="-31" frameWidth="674" frameHeight="197"/>
+	<SubTexture name="LOGO SKELETON GODS0017" x="5" y="5" width="674" height="166" frameX="0" frameY="-29" frameWidth="674" frameHeight="197"/>
+	<SubTexture name="LOGO SKELETON GODS0018" x="5" y="5" width="674" height="166" frameX="0" frameY="-29" frameWidth="674" frameHeight="197"/>
+	<SubTexture name="LOGO SKELETON GODS0019" x="5" y="5" width="674" height="166" frameX="0" frameY="-26" frameWidth="674" frameHeight="197"/>
+	<SubTexture name="LOGO SKELETON GODS0020" x="5" y="5" width="674" height="166" frameX="0" frameY="-26" frameWidth="674" frameHeight="197"/>
+	<SubTexture name="LOGO SKELETON GODS0021" x="5" y="5" width="674" height="166" frameX="0" frameY="-17" frameWidth="674" frameHeight="197"/>
+	<SubTexture name="LOGO SKELETON GODS0022" x="5" y="5" width="674" height="166" frameX="0" frameY="-17" frameWidth="674" frameHeight="197"/>
+	<SubTexture name="LOGO SKELETON GODS0023" x="5" y="176" width="674" height="166" frameX="0" frameY="-7" frameWidth="674" frameHeight="197"/>
+	<SubTexture name="LOGO SKELETON GODS0024" x="5" y="176" width="674" height="166" frameX="0" frameY="-7" frameWidth="674" frameHeight="197"/>
+	<SubTexture name="LOGO SKELETON GODS0025" x="5" y="5" width="674" height="166" frameX="0" frameY="-3" frameWidth="674" frameHeight="197"/>
+	<SubTexture name="LOGO SKELETON GODS0026" x="5" y="5" width="674" height="166" frameX="0" frameY="-3" frameWidth="674" frameHeight="197"/>
+	<SubTexture name="LOGO SKELETON GODS0027" x="5" y="176" width="674" height="166" frameX="0" frameY="-1" frameWidth="674" frameHeight="197"/>
+	<SubTexture name="LOGO SKELETON GODS0028" x="5" y="176" width="674" height="166" frameX="0" frameY="-1" frameWidth="674" frameHeight="197"/>
+	<SubTexture name="LOGO SKELETON GODS0029" x="5" y="347" width="674" height="165" frameX="0" frameY="0" frameWidth="674" frameHeight="197"/>
+	<SubTexture name="LOGO SKELETON GODS0030" x="5" y="347" width="674" height="165" frameX="0" frameY="0" frameWidth="674" frameHeight="197"/>
+	<SubTexture name="LOGO SKELETON GODS0031" x="5" y="347" width="674" height="165" frameX="0" frameY="0" frameWidth="674" frameHeight="197"/>
+	<SubTexture name="LOGO SKELETON GODS0032" x="5" y="347" width="674" height="165" frameX="0" frameY="0" frameWidth="674" frameHeight="197"/>
+	<SubTexture name="LOGO SKELETON GODS0033" x="5" y="347" width="674" height="165" frameX="0" frameY="0" frameWidth="674" frameHeight="197"/>
+	<SubTexture name="LOGO SKELETON GODS0034" x="5" y="347" width="674" height="165" frameX="0" frameY="0" frameWidth="674" frameHeight="197"/>
+	<SubTexture name="LOGO SKELETON GODS0035" x="5" y="347" width="674" height="165" frameX="0" frameY="0" frameWidth="674" frameHeight="197"/>
+	<SubTexture name="LOGO SKELETON GODS0036" x="5" y="347" width="674" height="165" frameX="0" frameY="0" frameWidth="674" frameHeight="197"/>
+	<SubTexture name="LOGO SKELETON GODS0037" x="5" y="347" width="674" height="165" frameX="0" frameY="0" frameWidth="674" frameHeight="197"/>
+</TextureAtlas>

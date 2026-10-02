@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!--
+        Keep this wrapper in the same folder as PsychEngine.js, assets/,
+        flixel/, and manifest/. When that folder is published through
+        jsDelivr, all relative files resolve from the CDN automatically.
+    -->
+    <base href="./">
+
+    <meta charset="utf-8">
+    <meta id="viewport" name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Skeleton Bros</title>
+
+    <link rel="shortcut icon" type="image/png" href="./favicon.png">
+    <script src="./PsychEngine.js"></script>
+
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #000;
+        }
+
+        #openfl-content {
+            width: 100%;
+            height: 100%;
+            background: #000;
+        }
+    </style>
+</head>
+<body>
+    <noscript>
+        JavaScript is required to play Skeleton Bros.
+    </noscript>
+
+    <div id="openfl-content"></div>
+
+    <script>
+        window.addEventListener("touchmove", function (event) {
+            event.preventDefault();
+        }, { capture: false, passive: false });
+
+        window.addEventListener("keydown", function (event) {
+            var gameKeys = ["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
+            if (gameKeys.indexOf(event.code) !== -1) {
+                event.preventDefault();
+            }
+        }, false);
+
+        lime.embed("PsychEngine", "openfl-content", 1280, 720, {
+            parameters: {}
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+{
+    "songs":  [
+                  {
+                      "value":  [
+                                    "Tears In The Rain",
+                                    "sans-dusttale",
+                                    [
+                                        76,
+                                        74,
+                                        113
+                                    ]
+                                ],
+                      "Count":  3
+                  }
+              ],
+    "hideFreeplay":  false,
+    "weekBackground":  "",
+    "difficulties":  "Bf",
+    "weekCharacters":  [
+                           "",
+                           "",
+                           ""
+                       ],
+    "storyName":  "",
+    "weekName":  "Extra Songs",
+    "freeplayColor":  [
+                          146,
+                          113,
+                          253
+                      ],
+    "hideStoryMode":  true,
+    "weekBefore":  "tutorial",
+    "startUnlocked":  true
+}

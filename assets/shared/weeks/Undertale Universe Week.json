@@ -1,0 +1,45 @@
+{
+    "songs":  [
+                  {
+                      "value":  [
+                                    "Bonely One",
+                                    "Sans",
+                                    [
+                                        115,
+                                        132,
+                                        255
+                                    ]
+                                ],
+                      "Count":  3
+                  },
+                  {
+                      "value":  [
+                                    "Final Judgment",
+                                    "Sans",
+                                    [
+                                        115,
+                                        132,
+                                        255
+                                    ]
+                                ],
+                      "Count":  3
+                  }
+              ],
+    "hideFreeplay":  false,
+    "weekBackground":  "stage",
+    "weekCharacters":  [
+                           "sans",
+                           "bf",
+                           "gf"
+                       ],
+    "storyName":  "Undertale Universe",
+    "weekName":  "Undertale Universe Week",
+    "freeplayColor":  [
+                          146,
+                          113,
+                          253
+                      ],
+    "hideStoryMode":  false,
+    "weekBefore":  "tutorial",
+    "startUnlocked":  true
+}

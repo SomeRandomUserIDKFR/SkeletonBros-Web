@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="spacebar.png">
+	<!-- Created with Adobe Animate version 21.0.7.42652 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="ALERT0000" x="0" y="0" width="605" height="630" frameX="-28" frameY="-29" frameWidth="660" frameHeight="688"/>
+	<SubTexture name="ALERT0001" x="0" y="0" width="605" height="630" frameX="-28" frameY="-29" frameWidth="660" frameHeight="688"/>
+	<SubTexture name="ALERT0002" x="605" y="0" width="660" height="688"/>
+	<SubTexture name="ALERT0003" x="605" y="0" width="660" height="688"/>
+	<SubTexture name="ALERT0004" x="1265" y="0" width="538" height="560" frameX="-61" frameY="-64" frameWidth="660" frameHeight="688"/>
+	<SubTexture name="ALERT0005" x="1265" y="0" width="538" height="560" frameX="-61" frameY="-64" frameWidth="660" frameHeight="688"/>
+	<SubTexture name="ALERT0006" x="1803" y="0" width="552" height="575" frameX="-54" frameY="-57" frameWidth="660" frameHeight="688"/>
+	<SubTexture name="ALERT0007" x="1803" y="0" width="552" height="575" frameX="-54" frameY="-57" frameWidth="660" frameHeight="688"/>
+	<SubTexture name="ALERT0008" x="1803" y="0" width="552" height="575" frameX="-54" frameY="-57" frameWidth="660" frameHeight="688"/>
+	<SubTexture name="ALERT0009" x="2355" y="0" width="480" height="500" frameX="-90" frameY="-94" frameWidth="660" frameHeight="688"/>
+	<SubTexture name="ALERT0010" x="2355" y="0" width="480" height="500" frameX="-90" frameY="-94" frameWidth="660" frameHeight="688"/>
+	<SubTexture name="ALERT0011" x="2835" y="0" width="504" height="525" frameX="-78" frameY="-82" frameWidth="660" frameHeight="688"/>
+	<SubTexture name="ALERT0012" x="2835" y="0" width="504" height="525" frameX="-78" frameY="-82" frameWidth="660" frameHeight="688"/>
+	<SubTexture name="ALERT0013" x="2835" y="0" width="504" height="525" frameX="-78" frameY="-82" frameWidth="660" frameHeight="688"/>
+	<SubTexture name="ALERT0014" x="3339" y="0" width="440" height="458" frameX="-110" frameY="-115" frameWidth="660" frameHeight="688"/>
+	<SubTexture name="ALERT0015" x="3339" y="0" width="440" height="458" frameX="-110" frameY="-115" frameWidth="660" frameHeight="688"/>
+	<SubTexture name="ALERT0016" x="0" y="688" width="469" height="488" frameX="-96" frameY="-100" frameWidth="660" frameHeight="688"/>
+	<SubTexture name="ALERT0017" x="0" y="688" width="469" height="488" frameX="-96" frameY="-100" frameWidth="660" frameHeight="688"/>
+	<SubTexture name="ALERT0018" x="0" y="688" width="469" height="488" frameX="-96" frameY="-100" frameWidth="660" frameHeight="688"/>
+	<SubTexture name="ALERT0019" x="469" y="688" width="409" height="426" frameX="-126" frameY="-131" frameWidth="660" frameHeight="688"/>
+	<SubTexture name="ALERT0020" x="469" y="688" width="409" height="426" frameX="-126" frameY="-131" frameWidth="660" frameHeight="688"/>
+	<SubTexture name="ALERT0021" x="878" y="688" width="444" height="461" frameX="-108" frameY="-114" frameWidth="660" frameHeight="688"/>
+	<SubTexture name="ALERT0022" x="878" y="688" width="444" height="461" frameX="-108" frameY="-114" frameWidth="660" frameHeight="688"/>
+	<SubTexture name="ALERT0023" x="878" y="688" width="444" height="461" frameX="-108" frameY="-114" frameWidth="660" frameHeight="688"/>
+	<SubTexture name="ALERT0024" x="878" y="688" width="444" height="461" frameX="-108" frameY="-114" frameWidth="660" frameHeight="688"/>
+	<SubTexture name="ALERT0025" x="878" y="688" width="444" height="461" frameX="-108" frameY="-114" frameWidth="660" frameHeight="688"/>
+	<SubTexture name="ALERT0026" x="878" y="688" width="444" height="461" frameX="-108" frameY="-114" frameWidth="660" frameHeight="688"/>
+	<SubTexture name="ALERT0027" x="878" y="688" width="444" height="461" frameX="-108" frameY="-114" frameWidth="660" frameHeight="688"/>
+	<SubTexture name="space bar gaster blaster0000" x="1322" y="688" width="719" height="848"/>
+	<SubTexture name="space bar gaster blaster0001" x="2041" y="688" width="535" height="609" frameX="-92" frameY="-119" frameWidth="719" frameHeight="848"/>
+	<SubTexture name="space bar gaster blaster0002" x="2576" y="688" width="535" height="609" frameX="-92" frameY="-119" frameWidth="719" frameHeight="848"/>
+	<SubTexture name="space bar gaster blaster0003" x="3111" y="688" width="579" height="659" frameX="-70" frameY="-94" frameWidth="719" frameHeight="848"/>
+	<SubTexture name="space bar gaster blaster0004" x="0" y="1536" width="579" height="659" frameX="-70" frameY="-94" frameWidth="719" frameHeight="848"/>
+	<SubTexture name="space bar gaster blaster0005" x="579" y="1536" width="583" height="664" frameX="-68" frameY="-92" frameWidth="719" frameHeight="848"/>
+	<SubTexture name="space bar gaster blaster0006" x="1162" y="1536" width="583" height="664" frameX="-68" frameY="-92" frameWidth="719" frameHeight="848"/>
+	<SubTexture name="space bar gaster blaster0007" x="1162" y="1536" width="583" height="664" frameX="-68" frameY="-92" frameWidth="719" frameHeight="848"/>
+	<SubTexture name="space bar gaster blaster0008" x="1162" y="1536" width="583" height="664" frameX="-68" frameY="-92" frameWidth="719" frameHeight="848"/>
+	<SubTexture name="space bar gaster blaster0009" x="1162" y="1536" width="583" height="664" frameX="-68" frameY="-92" frameWidth="719" frameHeight="848"/>
+	<SubTexture name="space bar gaster blaster0010" x="1162" y="1536" width="583" height="664" frameX="-68" frameY="-92" frameWidth="719" frameHeight="848"/>
+	<SubTexture name="space bar gaster blaster0011" x="1162" y="1536" width="583" height="664" frameX="-68" frameY="-92" frameWidth="719" frameHeight="848"/>
+	<SubTexture name="space bar gaster blaster0012" x="1162" y="1536" width="583" height="664" frameX="-68" frameY="-92" frameWidth="719" frameHeight="848"/>
+	<SubTexture name="space bar gaster blaster0013" x="1162" y="1536" width="583" height="664" frameX="-68" frameY="-92" frameWidth="719" frameHeight="848"/>
+	<SubTexture name="space bar gaster blaster0014" x="1162" y="1536" width="583" height="664" frameX="-68" frameY="-92" frameWidth="719" frameHeight="848"/>
+	<SubTexture name="space bar gaster blaster0015" x="1162" y="1536" width="583" height="664" frameX="-68" frameY="-92" frameWidth="719" frameHeight="848"/>
+	<SubTexture name="space bar gaster blaster0016" x="1162" y="1536" width="583" height="664" frameX="-68" frameY="-92" frameWidth="719" frameHeight="848"/>
+	<SubTexture name="space bar gaster blaster0017" x="1162" y="1536" width="583" height="664" frameX="-68" frameY="-92" frameWidth="719" frameHeight="848"/>
+	<SubTexture name="space bar gaster blaster0018" x="1162" y="1536" width="583" height="664" frameX="-68" frameY="-92" frameWidth="719" frameHeight="848"/>
+	<SubTexture name="space bar gaster blaster0019" x="1162" y="1536" width="583" height="664" frameX="-68" frameY="-92" frameWidth="719" frameHeight="848"/>
+	<SubTexture name="space bar gaster blaster0020" x="1162" y="1536" width="583" height="664" frameX="-68" frameY="-92" frameWidth="719" frameHeight="848"/>
+	<SubTexture name="space bar gaster blaster0021" x="1162" y="1536" width="583" height="664" frameX="-68" frameY="-92" frameWidth="719" frameHeight="848"/>
+	<SubTexture name="space bar gaster blaster0022" x="1162" y="1536" width="583" height="664" frameX="-68" frameY="-92" frameWidth="719" frameHeight="848"/>
+	<SubTexture name="space bar gaster blaster0023" x="1162" y="1536" width="583" height="664" frameX="-68" frameY="-92" frameWidth="719" frameHeight="848"/>
+	<SubTexture name="space bar gaster blaster0024" x="1162" y="1536" width="583" height="664" frameX="-68" frameY="-92" frameWidth="719" frameHeight="848"/>
+	<SubTexture name="space bar gaster blaster0025" x="1162" y="1536" width="583" height="664" frameX="-68" frameY="-92" frameWidth="719" frameHeight="848"/>
+	<SubTexture name="space bar gaster blaster0026" x="1162" y="1536" width="583" height="664" frameX="-68" frameY="-92" frameWidth="719" frameHeight="848"/>
+	<SubTexture name="space bar gaster blaster0027" x="1162" y="1536" width="583" height="664" frameX="-68" frameY="-92" frameWidth="719" frameHeight="848"/>
+	<SubTexture name="space bar gaster blaster0028" x="1162" y="1536" width="583" height="664" frameX="-68" frameY="-92" frameWidth="719" frameHeight="848"/>
+	<SubTexture name="space bar gaster blaster0029" x="1745" y="1536" width="557" height="649" frameX="-96" frameY="-106" frameWidth="719" frameHeight="848"/>
+	<SubTexture name="space bar gaster blaster0030" x="2302" y="1536" width="557" height="649" frameX="-96" frameY="-106" frameWidth="719" frameHeight="848"/>
+	<SubTexture name="space bar gaster blaster0031" x="2859" y="1536" width="423" height="518" frameX="-187" frameY="-183" frameWidth="719" frameHeight="848"/>
+	<SubTexture name="space bar gaster blaster0032" x="3282" y="1536" width="382" height="293" frameX="-197" frameY="-330" frameWidth="719" frameHeight="848"/>
+	<SubTexture name="space bar gaster blaster0033" x="3664" y="1536" width="128" height="105" frameX="-300" frameY="-361" frameWidth="719" frameHeight="848"/>
+	<SubTexture name="space bar gaster blaster0034" x="3792" y="1536" width="45" height="55" frameX="-333" frameY="-394" frameWidth="719" frameHeight="848"/>
+	<SubTexture name="space bar gaster blaster0035" x="3837" y="1536" width="9" height="8" frameX="-355" frameY="-420" frameWidth="719" frameHeight="848"/>
+	<SubTexture name="space bar gaster blaster0036" x="3846" y="1536" width="0" height="0" frameX="-68" frameY="-92" frameWidth="719" frameHeight="848"/>
+	<SubTexture name="spacebar0000" x="0" y="2200" width="765" height="286"/>
+	<SubTexture name="spacebar0001" x="765" y="2200" width="765" height="282" frameX="0" frameY="-3" frameWidth="765" frameHeight="286"/>
+	<SubTexture name="spacebar0002" x="1530" y="2200" width="765" height="284" frameX="0" frameY="0" frameWidth="765" frameHeight="286"/>
+	<SubTexture name="spacebar0003" x="2295" y="2200" width="765" height="281" frameX="0" frameY="-3" frameWidth="765" frameHeight="286"/>
+	<SubTexture name="spacebar0004" x="3060" y="2200" width="765" height="284" frameX="0" frameY="0" frameWidth="765" frameHeight="286"/>
+</TextureAtlas>

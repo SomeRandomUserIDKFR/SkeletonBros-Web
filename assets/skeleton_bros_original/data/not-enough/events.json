@@ -1,0 +1,89 @@
+{
+	"song": {
+		"speed": 3,
+		"stage": "stagesans",
+		"player1": "bf-sans",
+		"player2": "sans",
+		"player3": null,
+		"events": [
+			[
+				79928.125,
+				[
+					[
+						"Change Character",
+						"0",
+						"bf-black"
+					]
+				]
+			],
+			[
+				79934.375,
+				[
+					[
+						"Change Character",
+						"1",
+						"sans-black"
+					]
+				]
+			],
+			[
+				86000,
+				[
+					[
+						"Play Animation",
+						"badtime",
+						"sans-black"
+					]
+				]
+			],
+			[
+				86125,
+				[
+					[
+						"Camera Follow Pos",
+						"540",
+						"1120"
+					]
+				]
+			],
+			[
+				88000,
+				[
+					[
+						"Camera Follow Pos",
+						"",
+						""
+					]
+				]
+			],
+			[
+				145168.75,
+				[
+					[
+						"Change Character",
+						"0",
+						"bf-sans"
+					]
+				]
+			],
+			[
+				145190.625,
+				[
+					[
+						"Change Character",
+						"1",
+						"sans"
+					]
+				]
+			]
+		],
+		"notes": [],
+		"splashSkin": null,
+		"validScore": false,
+		"gfVersion": "gf",
+		"bpm": 120,
+		"arrowSkin": null,
+		"needsVoices": true,
+		"song": "Not Enough"
+	}
+}

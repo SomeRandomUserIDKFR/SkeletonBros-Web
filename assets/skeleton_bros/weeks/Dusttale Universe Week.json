@@ -1,0 +1,57 @@
+{
+    "songs":  [
+                  {
+                      "value":  [
+                                    "The Murder",
+                                    "sans-dusttale",
+                                    [
+                                        76,
+                                        74,
+                                        113
+                                    ]
+                                ],
+                      "Count":  3
+                  },
+                  {
+                      "value":  [
+                                    "Psycomania",
+                                    "sans-dusttale",
+                                    [
+                                        76,
+                                        74,
+                                        113
+                                    ]
+                                ],
+                      "Count":  3
+                  },
+                  {
+                      "value":  [
+                                    "Red Megalovania",
+                                    "sans-dusttale",
+                                    [
+                                        76,
+                                        74,
+                                        113
+                                    ]
+                                ],
+                      "Count":  3
+                  }
+              ],
+    "hideFreeplay":  false,
+    "weekBackground":  "stage",
+    "weekCharacters":  [
+                           "sans",
+                           "bf",
+                           "gf"
+                       ],
+    "storyName":  "Dusttale Universe",
+    "weekName":  "Dusttale Universe Week",
+    "freeplayColor":  [
+                          146,
+                          113,
+                          253
+                      ],
+    "hideStoryMode":  false,
+    "weekBefore":  "Undertale Universe Week",
+    "startUnlocked":  true
+}

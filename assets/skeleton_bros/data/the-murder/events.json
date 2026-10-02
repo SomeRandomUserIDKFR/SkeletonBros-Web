@@ -1,0 +1,99 @@
+{
+	"song": {
+		"speed": 2.8,
+		"stage": "SnowForest",
+		"player1": "bf-dust",
+		"player2": "sans-dusttale",
+		"player3": null,
+		"events": [
+			[
+				58961.5384615384,
+				[
+					[
+						"Unfocus Camera",
+						"",
+						""
+					]
+				]
+			],
+			[
+				59076.9230769231,
+				[
+					[
+						"Camera Follow Pos",
+						"650",
+						"400"
+					]
+				]
+			],
+			[
+				88500,
+				[
+					[
+						"Unfocus Camera",
+						"",
+						""
+					]
+				]
+			],
+			[
+				88615.3846153846,
+				[
+					[
+						"Camera Follow Pos",
+						"",
+						""
+					]
+				]
+			],
+			[
+				147689.423076923,
+				[
+					[
+						"Change Character",
+						"0",
+						"bf-light"
+					]
+				]
+			],
+			[
+				147692.307692308,
+				[
+					[
+						"Change Character",
+						"1",
+						"sans-dusttale-almas"
+					]
+				]
+			],
+			[
+				177230.769230769,
+				[
+					[
+						"Change Character",
+						"1",
+						"sans-dusttale"
+					]
+				]
+			],
+			[
+				177230.769230769,
+				[
+					[
+						"Change Character",
+						"0",
+						"bf-dust"
+					]
+				]
+			]
+		],
+		"notes": [],
+		"splashSkin": null,
+		"validScore": false,
+		"gfVersion": "gf",
+		"bpm": 130,
+		"arrowSkin": null,
+		"needsVoices": true,
+		"song": "The Murder"
+	}
+}

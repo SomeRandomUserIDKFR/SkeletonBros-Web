@@ -1,0 +1,8 @@
+{
+	"name": "VS Skeleton Bros",
+	"description": "Migrated Skeleton Bros content",
+	"restart": false,
+	"runsGlobally": false,
+	"color": [32, 48, 128],
+	"iconFramerate": 10
+}

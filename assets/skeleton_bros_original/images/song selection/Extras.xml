@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="Extras.png">
+	<!-- Created with Adobe Animate version 21.0.7.42652 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="CHALLENGES SELECT0000" x="0" y="0" width="369" height="642" frameX="-32" frameY="0" frameWidth="401" frameHeight="642"/>
+	<SubTexture name="CHALLENGES SELECT0001" x="0" y="0" width="369" height="642" frameX="-32" frameY="0" frameWidth="401" frameHeight="642"/>
+	<SubTexture name="CHALLENGES SELECT0002" x="369" y="0" width="371" height="642" frameX="-30" frameY="0" frameWidth="401" frameHeight="642"/>
+	<SubTexture name="CHALLENGES SELECT0003" x="369" y="0" width="371" height="642" frameX="-30" frameY="0" frameWidth="401" frameHeight="642"/>
+	<SubTexture name="CHALLENGES SELECT0004" x="740" y="0" width="372" height="642" frameX="-29" frameY="0" frameWidth="401" frameHeight="642"/>
+	<SubTexture name="CHALLENGES SELECT0005" x="740" y="0" width="372" height="642" frameX="-29" frameY="0" frameWidth="401" frameHeight="642"/>
+	<SubTexture name="CHALLENGES SELECT0006" x="1112" y="0" width="377" height="642" frameX="-24" frameY="0" frameWidth="401" frameHeight="642"/>
+	<SubTexture name="CHALLENGES SELECT0007" x="1112" y="0" width="377" height="642" frameX="-24" frameY="0" frameWidth="401" frameHeight="642"/>
+	<SubTexture name="CHALLENGES SELECT0008" x="1489" y="0" width="390" height="642" frameX="-11" frameY="0" frameWidth="401" frameHeight="642"/>
+	<SubTexture name="CHALLENGES SELECT0009" x="1489" y="0" width="390" height="642" frameX="-11" frameY="0" frameWidth="401" frameHeight="642"/>
+	<SubTexture name="CHALLENGES SELECT0010" x="1879" y="0" width="398" height="642" frameX="-3" frameY="0" frameWidth="401" frameHeight="642"/>
+	<SubTexture name="CHALLENGES SELECT0011" x="1879" y="0" width="398" height="642" frameX="-3" frameY="0" frameWidth="401" frameHeight="642"/>
+	<SubTexture name="CHALLENGES SELECT0012" x="2277" y="0" width="400" height="642" frameX="-1" frameY="0" frameWidth="401" frameHeight="642"/>
+	<SubTexture name="CHALLENGES SELECT0013" x="2277" y="0" width="400" height="642" frameX="-1" frameY="0" frameWidth="401" frameHeight="642"/>
+	<SubTexture name="CHALLENGES SELECT0014" x="2677" y="0" width="400" height="642" frameX="-1" frameY="0" frameWidth="401" frameHeight="642"/>
+	<SubTexture name="CHALLENGES SELECT0015" x="2677" y="0" width="400" height="642" frameX="-1" frameY="0" frameWidth="401" frameHeight="642"/>
+	<SubTexture name="CHALLENGES SELECT0016" x="3077" y="0" width="401" height="642"/>
+	<SubTexture name="CHALLENGES SELECT0017" x="3077" y="0" width="401" height="642"/>
+	<SubTexture name="CHALLENGES SELECT0018" x="3478" y="0" width="398" height="642" frameX="-3" frameY="0" frameWidth="401" frameHeight="642"/>
+	<SubTexture name="CHALLENGES SELECT0019" x="3478" y="0" width="398" height="642" frameX="-3" frameY="0" frameWidth="401" frameHeight="642"/>
+	<SubTexture name="CHALLENGES SELECT0020" x="0" y="642" width="393" height="642" frameX="-8" frameY="0" frameWidth="401" frameHeight="642"/>
+	<SubTexture name="CHALLENGES SELECT0021" x="0" y="642" width="393" height="642" frameX="-8" frameY="0" frameWidth="401" frameHeight="642"/>
+	<SubTexture name="CHALLENGES SELECT0022" x="393" y="642" width="385" height="642" frameX="-16" frameY="0" frameWidth="401" frameHeight="642"/>
+	<SubTexture name="CHALLENGES SELECT0023" x="393" y="642" width="385" height="642" frameX="-16" frameY="0" frameWidth="401" frameHeight="642"/>
+	<SubTexture name="CHALLENGES SELECT0024" x="778" y="642" width="375" height="642" frameX="-26" frameY="0" frameWidth="401" frameHeight="642"/>
+	<SubTexture name="CHALLENGES SELECT0025" x="778" y="642" width="375" height="642" frameX="-26" frameY="0" frameWidth="401" frameHeight="642"/>
+	<SubTexture name="CHALLENGES SELECT0026" x="1153" y="642" width="370" height="642" frameX="-31" frameY="0" frameWidth="401" frameHeight="642"/>
+	<SubTexture name="CHALLENGES SELECT0027" x="1153" y="642" width="370" height="642" frameX="-31" frameY="0" frameWidth="401" frameHeight="642"/>
+	<SubTexture name="CHALLENGES SELECT0028" x="1523" y="642" width="369" height="642" frameX="-32" frameY="0" frameWidth="401" frameHeight="642"/>
+	<SubTexture name="CHALLENGES SELECT0029" x="1523" y="642" width="369" height="642" frameX="-32" frameY="0" frameWidth="401" frameHeight="642"/>
+	<SubTexture name="CHALLENGES SELECT0030" x="1892" y="642" width="368" height="642" frameX="-33" frameY="0" frameWidth="401" frameHeight="642"/>
+	<SubTexture name="CHALLENGES SELECT0031" x="1892" y="642" width="368" height="642" frameX="-33" frameY="0" frameWidth="401" frameHeight="642"/>
+	<SubTexture name="CHALLENGES SELECT0032" x="2260" y="642" width="368" height="642" frameX="-33" frameY="0" frameWidth="401" frameHeight="642"/>
+	<SubTexture name="CHALLENGES SELECT0033" x="2260" y="642" width="368" height="642" frameX="-33" frameY="0" frameWidth="401" frameHeight="642"/>
+	<SubTexture name="CHALLENGES NO SELECT0000" x="2628" y="642" width="374" height="551"/>
+</TextureAtlas>

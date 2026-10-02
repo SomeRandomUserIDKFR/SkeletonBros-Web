@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="WEEK 1.png">
+	<!-- Created with Adobe Animate version 21.0.7.42652 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="WEEK 10000" x="0" y="0" width="364" height="562"/>
+	<SubTexture name="WEEK 10001" x="0" y="0" width="364" height="562"/>
+	<SubTexture name="WEEK 10002" x="364" y="0" width="363" height="562" frameX="0" frameY="0" frameWidth="364" frameHeight="562"/>
+	<SubTexture name="WEEK 10003" x="364" y="0" width="363" height="562" frameX="0" frameY="0" frameWidth="364" frameHeight="562"/>
+	<SubTexture name="WEEK 10004" x="727" y="0" width="363" height="562" frameX="0" frameY="0" frameWidth="364" frameHeight="562"/>
+	<SubTexture name="WEEK 10005" x="727" y="0" width="363" height="562" frameX="0" frameY="0" frameWidth="364" frameHeight="562"/>
+</TextureAtlas>
