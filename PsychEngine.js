@@ -597,6 +597,7 @@ var lime_app_Application = function() {
 };
 $hxClasses["lime.app.Application"] = lime_app_Application;
 lime_app_Application.__name__ = "lime.app.Application";
+lime_app_Application.current = null;
 lime_app_Application.__super__ = lime_app_Module;
 lime_app_Application.prototype = $extend(lime_app_Module.prototype,{
 	meta: null
@@ -1826,6 +1827,8 @@ var openfl_display_DisplayObject = function() {
 $hxClasses["openfl.display.DisplayObject"] = openfl_display_DisplayObject;
 openfl_display_DisplayObject.__name__ = "openfl.display.DisplayObject";
 openfl_display_DisplayObject.__interfaces__ = [openfl_display_IBitmapDrawable];
+openfl_display_DisplayObject.__initStage = null;
+openfl_display_DisplayObject.__supportDOM = null;
 openfl_display_DisplayObject.__calculateAbsoluteTransform = function(local,parentTransform,target) {
 	target.a = local.a * parentTransform.a + local.b * parentTransform.c;
 	target.b = local.a * parentTransform.b + local.b * parentTransform.d;
@@ -3378,6 +3381,7 @@ var openfl_display_Sprite = function() {
 };
 $hxClasses["openfl.display.Sprite"] = openfl_display_Sprite;
 openfl_display_Sprite.__name__ = "openfl.display.Sprite";
+openfl_display_Sprite.__constructor = null;
 openfl_display_Sprite.fromTimeline = function(timeline) {
 	var sprite = new openfl_display_Sprite();
 	timeline.initializeSprite(sprite);
@@ -5444,6 +5448,7 @@ var Main = function() {
 };
 $hxClasses["Main"] = Main;
 Main.__name__ = "Main";
+Main.fpsVar = null;
 Main.main = function() {
 	openfl_Lib.get_current().addChild(new Main());
 };
@@ -5714,6 +5719,23 @@ HxOverrides.keyValueIter = function(a) {
 HxOverrides.now = function() {
 	return Date.now();
 };
+var IntIterator = function(min,max) {
+	this.min = min;
+	this.max = max;
+};
+$hxClasses["IntIterator"] = IntIterator;
+IntIterator.__name__ = "IntIterator";
+IntIterator.prototype = {
+	min: null
+	,max: null
+	,hasNext: function() {
+		return this.min < this.max;
+	}
+	,next: function() {
+		return this.min++;
+	}
+	,__class__: IntIterator
+};
 var Lambda = function() { };
 $hxClasses["Lambda"] = Lambda;
 Lambda.__name__ = "Lambda";
@@ -5739,6 +5761,9 @@ Lambda.exists = function(it,f) {
 var ManifestResources = function() { };
 $hxClasses["ManifestResources"] = ManifestResources;
 ManifestResources.__name__ = "ManifestResources";
+ManifestResources.preloadLibraries = null;
+ManifestResources.preloadLibraryNames = null;
+ManifestResources.rootPath = null;
 ManifestResources.init = function(config) {
 	ManifestResources.preloadLibraries = [];
 	ManifestResources.preloadLibraryNames = [];
@@ -6481,6 +6506,16 @@ Type.getInstanceFields = function(c) {
 	HxOverrides.remove(a,"__properties__");
 	return a;
 };
+Type.getClassFields = function(c) {
+	var a = Reflect.fields(c);
+	HxOverrides.remove(a,"__name__");
+	HxOverrides.remove(a,"__interfaces__");
+	HxOverrides.remove(a,"__properties__");
+	HxOverrides.remove(a,"__super__");
+	HxOverrides.remove(a,"__meta__");
+	HxOverrides.remove(a,"prototype");
+	return a;
+};
 Type.typeof = function(v) {
 	switch(typeof(v)) {
 	case "boolean":
@@ -6515,6 +6550,34 @@ Type.typeof = function(v) {
 	default:
 		return ValueType.TUnknown;
 	}
+};
+Type.enumEq = function(a,b) {
+	if(a == b) {
+		return true;
+	}
+	try {
+		var e = a.__enum__;
+		if(e == null || e != b.__enum__) {
+			return false;
+		}
+		if(a._hx_index != b._hx_index) {
+			return false;
+		}
+		var enm = $hxEnums[e];
+		var params = enm.__constructs__[a._hx_index].__params__;
+		var _g = 0;
+		while(_g < params.length) {
+			var f = params[_g];
+			++_g;
+			if(!Type.enumEq(a[f],b[f])) {
+				return false;
+			}
+		}
+	} catch( _g ) {
+		haxe_NativeStackTrace.lastError = _g;
+		return false;
+	}
+	return true;
 };
 Type.enumParameters = function(e) {
 	var enm = $hxEnums[e.__enum__];
@@ -7942,6 +8005,7 @@ var backend_Controls = function() {
 };
 $hxClasses["backend.Controls"] = backend_Controls;
 backend_Controls.__name__ = "backend.Controls";
+backend_Controls.instance = null;
 backend_Controls.prototype = {
 	get_UI_UP_P: function() {
 		return this.justPressed("ui_up");
@@ -8482,6 +8546,7 @@ var backend_CustomFadeTransition = function(duration,isTransIn) {
 };
 $hxClasses["backend.CustomFadeTransition"] = backend_CustomFadeTransition;
 backend_CustomFadeTransition.__name__ = "backend.CustomFadeTransition";
+backend_CustomFadeTransition.finishCallback = null;
 backend_CustomFadeTransition.__super__ = backend_MusicBeatSubstate;
 backend_CustomFadeTransition.prototype = $extend(backend_MusicBeatSubstate.prototype,{
 	isTransIn: null
@@ -10015,6 +10080,7 @@ backend_Paths.destroyGraphic = function(graphic) {
 	}
 	flixel_FlxG.bitmap.remove(graphic);
 };
+backend_Paths.currentLevel = null;
 backend_Paths.setCurrentLevel = function(name) {
 	backend_Paths.currentLevel = name.toLowerCase();
 };
@@ -12048,6 +12114,7 @@ var openfl_geom_ColorTransform = function(redMultiplier,greenMultiplier,blueMult
 };
 $hxClasses["openfl.geom.ColorTransform"] = openfl_geom_ColorTransform;
 openfl_geom_ColorTransform.__name__ = "openfl.geom.ColorTransform";
+openfl_geom_ColorTransform.__limeColorMatrix = null;
 openfl_geom_ColorTransform.prototype = {
 	alphaMultiplier: null
 	,alphaOffset: null
@@ -12353,6 +12420,9 @@ var flixel_FlxCamera = function(X,Y,Width,Height,Zoom) {
 $hxClasses["flixel.FlxCamera"] = flixel_FlxCamera;
 flixel_FlxCamera.__name__ = "flixel.FlxCamera";
 flixel_FlxCamera.__properties__ = {set_defaultCameras:"set_defaultCameras",get_defaultCameras:"get_defaultCameras"};
+flixel_FlxCamera._defaultCameras = null;
+flixel_FlxCamera._storageTilesHead = null;
+flixel_FlxCamera._storageTrianglesHead = null;
 flixel_FlxCamera.get_defaultCameras = function() {
 	return flixel_FlxCamera._defaultCameras;
 };
@@ -14205,6 +14275,8 @@ backend_Song.convert = function(songJson) {
 		}
 	}
 };
+backend_Song.chartPath = null;
+backend_Song.loadedSongName = null;
 backend_Song.loadFromJson = function(jsonInput,folder) {
 	if(folder == null) {
 		folder = jsonInput;
@@ -14215,6 +14287,7 @@ backend_Song.loadFromJson = function(jsonInput,folder) {
 	backend_StageData.loadDirectory(states_PlayState.SONG);
 	return states_PlayState.SONG;
 };
+backend_Song._lastPath = null;
 backend_Song.getChart = function(jsonInput,folder) {
 	if(folder == null) {
 		folder = jsonInput;
@@ -14542,13 +14615,14 @@ backend_WeekData.reloadWeekFiles = function(isStoryMode) {
 	while(_g < singleFileWeeks.length) {
 		var weekName = singleFileWeeks[_g];
 		++_g;
-		var rawWeek = openfl_utils_Assets.getText("assets/shared/weeks/" + weekName + ".json");
+		var rawWeek = openfl_utils_Assets.getText("assets/skeleton_bros_original/weeks/" + weekName + ".json");
 		if(rawWeek == null) {
 			continue;
 		}
 		var weekFile = JSON.parse(rawWeek);
 		if((isStoryMode == null || !weekFile.hideStoryMode) && (!isStoryMode || !weekFile.hideFreeplay)) {
 			var loadedWeek = new backend_WeekData(weekFile,weekName);
+			loadedWeek.folder = "skeleton_bros_original";
 			backend_WeekData.weeksLoaded.h[weekName] = loadedWeek;
 			backend_WeekData.weeksList.push(weekName);
 		}
@@ -22697,6 +22771,7 @@ var openfl_text_TextField = function() {
 };
 $hxClasses["openfl.text.TextField"] = openfl_text_TextField;
 openfl_text_TextField.__name__ = "openfl.text.TextField";
+openfl_text_TextField.__defaultTextFormat = null;
 openfl_text_TextField.__super__ = openfl_display_InteractiveObject;
 openfl_text_TextField.prototype = $extend(openfl_display_InteractiveObject.prototype,{
 	condenseWhite: null
@@ -25737,6 +25812,7 @@ js_Boot.__cast = function(o,t) {
 		throw haxe_Exception.thrown("Cannot cast " + Std.string(o) + " to " + Std.string(t));
 	}
 };
+js_Boot.__toStr = null;
 js_Boot.__nativeClassName = function(o) {
 	var name = js_Boot.__toStr.call(o).slice(8,-1);
 	if(name == "Object" || name == "Function" || name == "Math" || name == "JSON") {
@@ -26565,6 +26641,23 @@ var flixel_FlxG = function() { };
 $hxClasses["flixel.FlxG"] = flixel_FlxG;
 flixel_FlxG.__name__ = "flixel.FlxG";
 flixel_FlxG.__properties__ = {set_mouse:"set_mouse",set_fullscreen:"set_fullscreen",get_fullscreen:"get_fullscreen",set_scaleMode:"set_scaleMode",get_onMobile:"get_onMobile",set_drawFramerate:"set_drawFramerate",set_updateFramerate:"set_updateFramerate",get_state:"get_state",get_stage:"get_stage"};
+flixel_FlxG.camera = null;
+flixel_FlxG.game = null;
+flixel_FlxG.updateFramerate = null;
+flixel_FlxG.drawFramerate = null;
+flixel_FlxG.renderMethod = null;
+flixel_FlxG.renderBlit = null;
+flixel_FlxG.renderTile = null;
+flixel_FlxG.width = null;
+flixel_FlxG.height = null;
+flixel_FlxG.mouse = null;
+flixel_FlxG.touches = null;
+flixel_FlxG.keys = null;
+flixel_FlxG.gamepads = null;
+flixel_FlxG.accelerometer = null;
+flixel_FlxG.vcr = null;
+flixel_FlxG.plugins = null;
+flixel_FlxG.sound = null;
 flixel_FlxG.resizeGame = function(width,height) {
 	flixel_FlxG.scaleMode.onMeasure(width,height);
 };
@@ -32326,6 +32419,8 @@ var openfl_display_BitmapData = function(width,height,transparent,fillColor) {
 $hxClasses["openfl.display.BitmapData"] = openfl_display_BitmapData;
 openfl_display_BitmapData.__name__ = "openfl.display.BitmapData";
 openfl_display_BitmapData.__interfaces__ = [openfl_display_IBitmapDrawable];
+openfl_display_BitmapData.__textureFormat = null;
+openfl_display_BitmapData.__textureInternalFormat = null;
 openfl_display_BitmapData.fromBase64 = function(base64,type) {
 	return null;
 };
@@ -33750,6 +33845,7 @@ var flixel_addons_transition__$FlxTransitionSprite_RawGraphicTransTileCircle = f
 };
 $hxClasses["flixel.addons.transition._FlxTransitionSprite.RawGraphicTransTileCircle"] = flixel_addons_transition__$FlxTransitionSprite_RawGraphicTransTileCircle;
 flixel_addons_transition__$FlxTransitionSprite_RawGraphicTransTileCircle.__name__ = "flixel.addons.transition._FlxTransitionSprite.RawGraphicTransTileCircle";
+flixel_addons_transition__$FlxTransitionSprite_RawGraphicTransTileCircle.preload = null;
 flixel_addons_transition__$FlxTransitionSprite_RawGraphicTransTileCircle.__super__ = openfl_display_BitmapData;
 flixel_addons_transition__$FlxTransitionSprite_RawGraphicTransTileCircle.prototype = $extend(openfl_display_BitmapData.prototype,{
 	__class__: flixel_addons_transition__$FlxTransitionSprite_RawGraphicTransTileCircle
@@ -33792,6 +33888,7 @@ var flixel_addons_transition__$FlxTransitionSprite_RawGraphicTransTileDiamond = 
 };
 $hxClasses["flixel.addons.transition._FlxTransitionSprite.RawGraphicTransTileDiamond"] = flixel_addons_transition__$FlxTransitionSprite_RawGraphicTransTileDiamond;
 flixel_addons_transition__$FlxTransitionSprite_RawGraphicTransTileDiamond.__name__ = "flixel.addons.transition._FlxTransitionSprite.RawGraphicTransTileDiamond";
+flixel_addons_transition__$FlxTransitionSprite_RawGraphicTransTileDiamond.preload = null;
 flixel_addons_transition__$FlxTransitionSprite_RawGraphicTransTileDiamond.__super__ = openfl_display_BitmapData;
 flixel_addons_transition__$FlxTransitionSprite_RawGraphicTransTileDiamond.prototype = $extend(openfl_display_BitmapData.prototype,{
 	__class__: flixel_addons_transition__$FlxTransitionSprite_RawGraphicTransTileDiamond
@@ -33834,6 +33931,7 @@ var flixel_addons_transition_RawGraphicTransTileSquare = function(width,height,t
 };
 $hxClasses["flixel.addons.transition.RawGraphicTransTileSquare"] = flixel_addons_transition_RawGraphicTransTileSquare;
 flixel_addons_transition_RawGraphicTransTileSquare.__name__ = "flixel.addons.transition.RawGraphicTransTileSquare";
+flixel_addons_transition_RawGraphicTransTileSquare.preload = null;
 flixel_addons_transition_RawGraphicTransTileSquare.__super__ = openfl_display_BitmapData;
 flixel_addons_transition_RawGraphicTransTileSquare.prototype = $extend(openfl_display_BitmapData.prototype,{
 	__class__: flixel_addons_transition_RawGraphicTransTileSquare
@@ -34301,6 +34399,7 @@ var flixel_addons_transition__$TransitionFade_RawGraphicDiagonalGradient = funct
 };
 $hxClasses["flixel.addons.transition._TransitionFade.RawGraphicDiagonalGradient"] = flixel_addons_transition__$TransitionFade_RawGraphicDiagonalGradient;
 flixel_addons_transition__$TransitionFade_RawGraphicDiagonalGradient.__name__ = "flixel.addons.transition._TransitionFade.RawGraphicDiagonalGradient";
+flixel_addons_transition__$TransitionFade_RawGraphicDiagonalGradient.preload = null;
 flixel_addons_transition__$TransitionFade_RawGraphicDiagonalGradient.__super__ = openfl_display_BitmapData;
 flixel_addons_transition__$TransitionFade_RawGraphicDiagonalGradient.prototype = $extend(openfl_display_BitmapData.prototype,{
 	__class__: flixel_addons_transition__$TransitionFade_RawGraphicDiagonalGradient
@@ -35506,6 +35605,7 @@ var openfl_geom_Point = function(x,y) {
 };
 $hxClasses["openfl.geom.Point"] = openfl_geom_Point;
 openfl_geom_Point.__name__ = "openfl.geom.Point";
+openfl_geom_Point.__limeVector2 = null;
 openfl_geom_Point.distance = function(pt1,pt2) {
 	var dx = pt1.x - pt2.x;
 	var dy = pt1.y - pt2.y;
@@ -38231,6 +38331,7 @@ var openfl_geom_Rectangle = function(x,y,width,height) {
 };
 $hxClasses["openfl.geom.Rectangle"] = openfl_geom_Rectangle;
 openfl_geom_Rectangle.__name__ = "openfl.geom.Rectangle";
+openfl_geom_Rectangle.__limeRectangle = null;
 openfl_geom_Rectangle.prototype = {
 	height: null
 	,width: null
@@ -49323,6 +49424,7 @@ var flixel_input_mouse__$FlxMouse_GraphicCursor = function(width,height,transpar
 };
 $hxClasses["flixel.input.mouse._FlxMouse.GraphicCursor"] = flixel_input_mouse__$FlxMouse_GraphicCursor;
 flixel_input_mouse__$FlxMouse_GraphicCursor.__name__ = "flixel.input.mouse._FlxMouse.GraphicCursor";
+flixel_input_mouse__$FlxMouse_GraphicCursor.preload = null;
 flixel_input_mouse__$FlxMouse_GraphicCursor.__super__ = openfl_display_BitmapData;
 flixel_input_mouse__$FlxMouse_GraphicCursor.prototype = $extend(openfl_display_BitmapData.prototype,{
 	__class__: flixel_input_mouse__$FlxMouse_GraphicCursor
@@ -49752,6 +49854,7 @@ var flixel_input_mouse_FlxMouseEvent = function(object,onMouseDown,onMouseUp,onM
 $hxClasses["flixel.input.mouse.FlxMouseEvent"] = flixel_input_mouse_FlxMouseEvent;
 flixel_input_mouse_FlxMouseEvent.__name__ = "flixel.input.mouse.FlxMouseEvent";
 flixel_input_mouse_FlxMouseEvent.__interfaces__ = [flixel_util_IFlxDestroyable];
+flixel_input_mouse_FlxMouseEvent.globalManager = null;
 flixel_input_mouse_FlxMouseEvent.add = function(object,onMouseDown,onMouseUp,onMouseOver,onMouseOut,mouseChildren,mouseEnabled,pixelPerfect,mouseButtons) {
 	if(pixelPerfect == null) {
 		pixelPerfect = true;
@@ -54800,6 +54903,7 @@ var flixel_system_GraphicLogo = function(width,height,transparent,fillRGBA,onloa
 };
 $hxClasses["flixel.system.GraphicLogo"] = flixel_system_GraphicLogo;
 flixel_system_GraphicLogo.__name__ = "flixel.system.GraphicLogo";
+flixel_system_GraphicLogo.preload = null;
 flixel_system_GraphicLogo.__super__ = openfl_display_BitmapData;
 flixel_system_GraphicLogo.prototype = $extend(openfl_display_BitmapData.prototype,{
 	__class__: flixel_system_GraphicLogo
@@ -54831,6 +54935,7 @@ var flixel_system_GraphicVirtualInput = function(width,height,transparent,fillRG
 };
 $hxClasses["flixel.system.GraphicVirtualInput"] = flixel_system_GraphicVirtualInput;
 flixel_system_GraphicVirtualInput.__name__ = "flixel.system.GraphicVirtualInput";
+flixel_system_GraphicVirtualInput.preload = null;
 flixel_system_GraphicVirtualInput.__super__ = openfl_display_BitmapData;
 flixel_system_GraphicVirtualInput.prototype = $extend(openfl_display_BitmapData.prototype,{
 	__class__: flixel_system_GraphicVirtualInput
@@ -55971,6 +56076,7 @@ var flixel_system_FlxLinkedList = function() {
 $hxClasses["flixel.system.FlxLinkedList"] = flixel_system_FlxLinkedList;
 flixel_system_FlxLinkedList.__name__ = "flixel.system.FlxLinkedList";
 flixel_system_FlxLinkedList.__interfaces__ = [flixel_util_IFlxDestroyable];
+flixel_system_FlxLinkedList._cachedListsHead = null;
 flixel_system_FlxLinkedList.recycle = function() {
 	if(flixel_system_FlxLinkedList._cachedListsHead != null) {
 		var cachedList = flixel_system_FlxLinkedList._cachedListsHead;
@@ -56038,6 +56144,7 @@ var flixel_system__$FlxPreloader_GraphicLogoLight = function(width,height,transp
 };
 $hxClasses["flixel.system._FlxPreloader.GraphicLogoLight"] = flixel_system__$FlxPreloader_GraphicLogoLight;
 flixel_system__$FlxPreloader_GraphicLogoLight.__name__ = "flixel.system._FlxPreloader.GraphicLogoLight";
+flixel_system__$FlxPreloader_GraphicLogoLight.preload = null;
 flixel_system__$FlxPreloader_GraphicLogoLight.__super__ = openfl_display_BitmapData;
 flixel_system__$FlxPreloader_GraphicLogoLight.prototype = $extend(openfl_display_BitmapData.prototype,{
 	__class__: flixel_system__$FlxPreloader_GraphicLogoLight
@@ -56069,6 +56176,7 @@ var flixel_system__$FlxPreloader_GraphicLogoCorners = function(width,height,tran
 };
 $hxClasses["flixel.system._FlxPreloader.GraphicLogoCorners"] = flixel_system__$FlxPreloader_GraphicLogoCorners;
 flixel_system__$FlxPreloader_GraphicLogoCorners.__name__ = "flixel.system._FlxPreloader.GraphicLogoCorners";
+flixel_system__$FlxPreloader_GraphicLogoCorners.preload = null;
 flixel_system__$FlxPreloader_GraphicLogoCorners.__super__ = openfl_display_BitmapData;
 flixel_system__$FlxPreloader_GraphicLogoCorners.prototype = $extend(openfl_display_BitmapData.prototype,{
 	__class__: flixel_system__$FlxPreloader_GraphicLogoCorners
@@ -56211,6 +56319,27 @@ var flixel_system_FlxQuadTree = function(X,Y,Width,Height,Parent) {
 };
 $hxClasses["flixel.system.FlxQuadTree"] = flixel_system_FlxQuadTree;
 flixel_system_FlxQuadTree.__name__ = "flixel.system.FlxQuadTree";
+flixel_system_FlxQuadTree.divisions = null;
+flixel_system_FlxQuadTree._min = null;
+flixel_system_FlxQuadTree._object = null;
+flixel_system_FlxQuadTree._objectLeftEdge = null;
+flixel_system_FlxQuadTree._objectTopEdge = null;
+flixel_system_FlxQuadTree._objectRightEdge = null;
+flixel_system_FlxQuadTree._objectBottomEdge = null;
+flixel_system_FlxQuadTree._list = null;
+flixel_system_FlxQuadTree._useBothLists = null;
+flixel_system_FlxQuadTree._processingCallback = null;
+flixel_system_FlxQuadTree._notifyCallback = null;
+flixel_system_FlxQuadTree._iterator = null;
+flixel_system_FlxQuadTree._objectHullX = null;
+flixel_system_FlxQuadTree._objectHullY = null;
+flixel_system_FlxQuadTree._objectHullWidth = null;
+flixel_system_FlxQuadTree._objectHullHeight = null;
+flixel_system_FlxQuadTree._checkObjectHullX = null;
+flixel_system_FlxQuadTree._checkObjectHullY = null;
+flixel_system_FlxQuadTree._checkObjectHullWidth = null;
+flixel_system_FlxQuadTree._checkObjectHullHeight = null;
+flixel_system_FlxQuadTree._cachedTreesHead = null;
 flixel_system_FlxQuadTree.recycle = function(X,Y,Width,Height,Parent) {
 	if(flixel_system_FlxQuadTree._cachedTreesHead != null) {
 		var cachedTree = flixel_system_FlxQuadTree._cachedTreesHead;
@@ -56622,6 +56751,7 @@ var flixel_system_debug__$FlxDebugger_GraphicFlixel = function(width,height,tran
 };
 $hxClasses["flixel.system.debug._FlxDebugger.GraphicFlixel"] = flixel_system_debug__$FlxDebugger_GraphicFlixel;
 flixel_system_debug__$FlxDebugger_GraphicFlixel.__name__ = "flixel.system.debug._FlxDebugger.GraphicFlixel";
+flixel_system_debug__$FlxDebugger_GraphicFlixel.preload = null;
 flixel_system_debug__$FlxDebugger_GraphicFlixel.__super__ = openfl_display_BitmapData;
 flixel_system_debug__$FlxDebugger_GraphicFlixel.prototype = $extend(openfl_display_BitmapData.prototype,{
 	__class__: flixel_system_debug__$FlxDebugger_GraphicFlixel
@@ -56653,6 +56783,7 @@ var flixel_system_debug__$FlxDebugger_GraphicDrawDebug = function(width,height,t
 };
 $hxClasses["flixel.system.debug._FlxDebugger.GraphicDrawDebug"] = flixel_system_debug__$FlxDebugger_GraphicDrawDebug;
 flixel_system_debug__$FlxDebugger_GraphicDrawDebug.__name__ = "flixel.system.debug._FlxDebugger.GraphicDrawDebug";
+flixel_system_debug__$FlxDebugger_GraphicDrawDebug.preload = null;
 flixel_system_debug__$FlxDebugger_GraphicDrawDebug.__super__ = openfl_display_BitmapData;
 flixel_system_debug__$FlxDebugger_GraphicDrawDebug.prototype = $extend(openfl_display_BitmapData.prototype,{
 	__class__: flixel_system_debug__$FlxDebugger_GraphicDrawDebug
@@ -56684,6 +56815,7 @@ var flixel_system_debug_GraphicLog = function(width,height,transparent,fillRGBA,
 };
 $hxClasses["flixel.system.debug.GraphicLog"] = flixel_system_debug_GraphicLog;
 flixel_system_debug_GraphicLog.__name__ = "flixel.system.debug.GraphicLog";
+flixel_system_debug_GraphicLog.preload = null;
 flixel_system_debug_GraphicLog.__super__ = openfl_display_BitmapData;
 flixel_system_debug_GraphicLog.prototype = $extend(openfl_display_BitmapData.prototype,{
 	__class__: flixel_system_debug_GraphicLog
@@ -56715,6 +56847,7 @@ var flixel_system_debug_GraphicStats = function(width,height,transparent,fillRGB
 };
 $hxClasses["flixel.system.debug.GraphicStats"] = flixel_system_debug_GraphicStats;
 flixel_system_debug_GraphicStats.__name__ = "flixel.system.debug.GraphicStats";
+flixel_system_debug_GraphicStats.preload = null;
 flixel_system_debug_GraphicStats.__super__ = openfl_display_BitmapData;
 flixel_system_debug_GraphicStats.prototype = $extend(openfl_display_BitmapData.prototype,{
 	__class__: flixel_system_debug_GraphicStats
@@ -56746,6 +56879,7 @@ var flixel_system_debug_GraphicWatch = function(width,height,transparent,fillRGB
 };
 $hxClasses["flixel.system.debug.GraphicWatch"] = flixel_system_debug_GraphicWatch;
 flixel_system_debug_GraphicWatch.__name__ = "flixel.system.debug.GraphicWatch";
+flixel_system_debug_GraphicWatch.preload = null;
 flixel_system_debug_GraphicWatch.__super__ = openfl_display_BitmapData;
 flixel_system_debug_GraphicWatch.prototype = $extend(openfl_display_BitmapData.prototype,{
 	__class__: flixel_system_debug_GraphicWatch
@@ -56777,6 +56911,7 @@ var flixel_system_debug_GraphicBitmapLog = function(width,height,transparent,fil
 };
 $hxClasses["flixel.system.debug.GraphicBitmapLog"] = flixel_system_debug_GraphicBitmapLog;
 flixel_system_debug_GraphicBitmapLog.__name__ = "flixel.system.debug.GraphicBitmapLog";
+flixel_system_debug_GraphicBitmapLog.preload = null;
 flixel_system_debug_GraphicBitmapLog.__super__ = openfl_display_BitmapData;
 flixel_system_debug_GraphicBitmapLog.prototype = $extend(openfl_display_BitmapData.prototype,{
 	__class__: flixel_system_debug_GraphicBitmapLog
@@ -56808,6 +56943,7 @@ var flixel_system_debug_GraphicConsole = function(width,height,transparent,fillR
 };
 $hxClasses["flixel.system.debug.GraphicConsole"] = flixel_system_debug_GraphicConsole;
 flixel_system_debug_GraphicConsole.__name__ = "flixel.system.debug.GraphicConsole";
+flixel_system_debug_GraphicConsole.preload = null;
 flixel_system_debug_GraphicConsole.__super__ = openfl_display_BitmapData;
 flixel_system_debug_GraphicConsole.prototype = $extend(openfl_display_BitmapData.prototype,{
 	__class__: flixel_system_debug_GraphicConsole
@@ -56839,6 +56975,7 @@ var flixel_system_debug_GraphicArrowLeft = function(width,height,transparent,fil
 };
 $hxClasses["flixel.system.debug.GraphicArrowLeft"] = flixel_system_debug_GraphicArrowLeft;
 flixel_system_debug_GraphicArrowLeft.__name__ = "flixel.system.debug.GraphicArrowLeft";
+flixel_system_debug_GraphicArrowLeft.preload = null;
 flixel_system_debug_GraphicArrowLeft.__super__ = openfl_display_BitmapData;
 flixel_system_debug_GraphicArrowLeft.prototype = $extend(openfl_display_BitmapData.prototype,{
 	__class__: flixel_system_debug_GraphicArrowLeft
@@ -56870,6 +57007,7 @@ var flixel_system_debug_GraphicArrowRight = function(width,height,transparent,fi
 };
 $hxClasses["flixel.system.debug.GraphicArrowRight"] = flixel_system_debug_GraphicArrowRight;
 flixel_system_debug_GraphicArrowRight.__name__ = "flixel.system.debug.GraphicArrowRight";
+flixel_system_debug_GraphicArrowRight.preload = null;
 flixel_system_debug_GraphicArrowRight.__super__ = openfl_display_BitmapData;
 flixel_system_debug_GraphicArrowRight.prototype = $extend(openfl_display_BitmapData.prototype,{
 	__class__: flixel_system_debug_GraphicArrowRight
@@ -56901,6 +57039,7 @@ var flixel_system_debug_GraphicCloseButton = function(width,height,transparent,f
 };
 $hxClasses["flixel.system.debug.GraphicCloseButton"] = flixel_system_debug_GraphicCloseButton;
 flixel_system_debug_GraphicCloseButton.__name__ = "flixel.system.debug.GraphicCloseButton";
+flixel_system_debug_GraphicCloseButton.preload = null;
 flixel_system_debug_GraphicCloseButton.__super__ = openfl_display_BitmapData;
 flixel_system_debug_GraphicCloseButton.prototype = $extend(openfl_display_BitmapData.prototype,{
 	__class__: flixel_system_debug_GraphicCloseButton
@@ -56932,6 +57071,7 @@ var flixel_system_debug_GraphicInteractive = function(width,height,transparent,f
 };
 $hxClasses["flixel.system.debug.GraphicInteractive"] = flixel_system_debug_GraphicInteractive;
 flixel_system_debug_GraphicInteractive.__name__ = "flixel.system.debug.GraphicInteractive";
+flixel_system_debug_GraphicInteractive.preload = null;
 flixel_system_debug_GraphicInteractive.__super__ = openfl_display_BitmapData;
 flixel_system_debug_GraphicInteractive.prototype = $extend(openfl_display_BitmapData.prototype,{
 	__class__: flixel_system_debug_GraphicInteractive
@@ -56957,6 +57097,7 @@ flixel_system_debug_FlxDebuggerLayout.__constructs__ = [flixel_system_debug_FlxD
 var flixel_system_debug_Tooltip = function() { };
 $hxClasses["flixel.system.debug.Tooltip"] = flixel_system_debug_Tooltip;
 flixel_system_debug_Tooltip.__name__ = "flixel.system.debug.Tooltip";
+flixel_system_debug_Tooltip._container = null;
 flixel_system_debug_Tooltip.init = function(container) {
 	flixel_system_debug_Tooltip._container = container;
 };
@@ -57114,6 +57255,7 @@ var flixel_system_debug__$Window_GraphicWindowHandle = function(width,height,tra
 };
 $hxClasses["flixel.system.debug._Window.GraphicWindowHandle"] = flixel_system_debug__$Window_GraphicWindowHandle;
 flixel_system_debug__$Window_GraphicWindowHandle.__name__ = "flixel.system.debug._Window.GraphicWindowHandle";
+flixel_system_debug__$Window_GraphicWindowHandle.preload = null;
 flixel_system_debug__$Window_GraphicWindowHandle.__super__ = openfl_display_BitmapData;
 flixel_system_debug__$Window_GraphicWindowHandle.prototype = $extend(openfl_display_BitmapData.prototype,{
 	__class__: flixel_system_debug__$Window_GraphicWindowHandle
@@ -57656,6 +57798,8 @@ var flixel_system_debug_completion_CompletionListEntry = function() {
 };
 $hxClasses["flixel.system.debug.completion.CompletionListEntry"] = flixel_system_debug_completion_CompletionListEntry;
 flixel_system_debug_completion_CompletionListEntry.__name__ = "flixel.system.debug.completion.CompletionListEntry";
+flixel_system_debug_completion_CompletionListEntry.normalBitmapData = null;
+flixel_system_debug_completion_CompletionListEntry.highlightBitmapData = null;
 flixel_system_debug_completion_CompletionListEntry.__super__ = openfl_display_Sprite;
 flixel_system_debug_completion_CompletionListEntry.prototype = $extend(openfl_display_Sprite.prototype,{
 	selected: null
@@ -57709,6 +57853,1231 @@ flixel_system_debug_completion_CompletionListScrollBar.prototype = $extend(openf
 		tmp.set_y(Max != null && lowerBound > Max ? Max : lowerBound);
 	}
 	,__class__: flixel_system_debug_completion_CompletionListScrollBar
+});
+var flixel_system_debug_console_ConsoleUtil = function() { };
+$hxClasses["flixel.system.debug.console.ConsoleUtil"] = flixel_system_debug_console_ConsoleUtil;
+flixel_system_debug_console_ConsoleUtil.__name__ = "flixel.system.debug.console.ConsoleUtil";
+flixel_system_debug_console_ConsoleUtil.parser = null;
+flixel_system_debug_console_ConsoleUtil.interp = null;
+flixel_system_debug_console_ConsoleUtil.init = function() {
+	flixel_system_debug_console_ConsoleUtil.parser = new hscript_Parser();
+	flixel_system_debug_console_ConsoleUtil.parser.allowJSON = true;
+	flixel_system_debug_console_ConsoleUtil.parser.allowTypes = true;
+	flixel_system_debug_console_ConsoleUtil.interp = new flixel_system_debug_console__$ConsoleUtil_Interp();
+};
+flixel_system_debug_console_ConsoleUtil.parseCommand = function(input) {
+	if(StringTools.endsWith(input,";")) {
+		input = HxOverrides.substr(input,0,-1);
+	}
+	return flixel_system_debug_console_ConsoleUtil.parser.parseString(input);
+};
+flixel_system_debug_console_ConsoleUtil.runCommand = function(input) {
+	return flixel_system_debug_console_ConsoleUtil.interp.expr(flixel_system_debug_console_ConsoleUtil.parseCommand(input));
+};
+flixel_system_debug_console_ConsoleUtil.runExpr = function(expr) {
+	return flixel_system_debug_console_ConsoleUtil.interp.expr(expr);
+};
+flixel_system_debug_console_ConsoleUtil.registerObject = function(alias,object) {
+	if(object == null || Reflect.isObject(object)) {
+		flixel_system_debug_console_ConsoleUtil.interp.variables.h[alias] = object;
+	}
+};
+flixel_system_debug_console_ConsoleUtil.registerFunction = function(alias,func) {
+	if(Reflect.isFunction(func)) {
+		flixel_system_debug_console_ConsoleUtil.interp.variables.h[alias] = func;
+	}
+};
+flixel_system_debug_console_ConsoleUtil.removeByAlias = function(alias) {
+	var _this = flixel_system_debug_console_ConsoleUtil.interp.variables;
+	if(Object.prototype.hasOwnProperty.call(_this.h,alias)) {
+		delete(_this.h[alias]);
+	}
+};
+flixel_system_debug_console_ConsoleUtil.getFields = function(Object1) {
+	var fields = [];
+	if(js_Boot.__instanceof(Object1,Class)) {
+		fields = Type.getClassFields(Object1);
+	} else if(js_Boot.__instanceof(Object1,Enum)) {
+		var _this = Object1.__constructs__;
+		var result = new Array(_this.length);
+		var _g = 0;
+		var _g1 = _this.length;
+		while(_g < _g1) {
+			var i = _g++;
+			result[i] = _this[i]._hx_name;
+		}
+		fields = result;
+	} else if(Reflect.isObject(Object1)) {
+		fields = Type.getInstanceFields(js_Boot.getClass(Object1));
+	}
+	HxOverrides.remove(fields,"__constructs__");
+	var filteredFields = [];
+	var _g = 0;
+	while(_g < fields.length) {
+		var field = fields[_g];
+		++_g;
+		if(StringTools.startsWith(field,"get_") || StringTools.startsWith(field,"set_")) {
+			var name = HxOverrides.substr(field,4,null);
+			if(fields.indexOf(name) == -1 && filteredFields.indexOf(name) == -1) {
+				filteredFields.push(name);
+			}
+		} else {
+			filteredFields.push(field);
+		}
+	}
+	return flixel_system_debug_console_ConsoleUtil.sortFields(filteredFields);
+};
+flixel_system_debug_console_ConsoleUtil.sortFields = function(fields) {
+	var underscoreList = [];
+	var _g = [];
+	var _g1 = 0;
+	var _g2 = fields;
+	while(_g1 < _g2.length) {
+		var v = _g2[_g1];
+		++_g1;
+		var fields1;
+		if(StringTools.startsWith(v,"_")) {
+			underscoreList.push(v);
+			fields1 = false;
+		} else {
+			fields1 = true;
+		}
+		if(fields1) {
+			_g.push(v);
+		}
+	}
+	fields = _g;
+	flixel_util_FlxStringUtil.sortAlphabetically(fields);
+	flixel_util_FlxStringUtil.sortAlphabetically(underscoreList);
+	return fields.concat(underscoreList);
+};
+flixel_system_debug_console_ConsoleUtil.log = function(text) {
+	flixel_FlxG.log.advanced([text],flixel_system_debug_log_LogStyle.CONSOLE);
+};
+var hscript_Interp = function() {
+	this.locals = new haxe_ds_StringMap();
+	this.declared = [];
+	this.resetVariables();
+	this.initOps();
+};
+$hxClasses["hscript.Interp"] = hscript_Interp;
+hscript_Interp.__name__ = "hscript.Interp";
+hscript_Interp.prototype = {
+	variables: null
+	,locals: null
+	,binops: null
+	,depth: null
+	,inTry: null
+	,declared: null
+	,returnValue: null
+	,resetVariables: function() {
+		var _gthis = this;
+		this.variables = new haxe_ds_StringMap();
+		this.variables.h["null"] = null;
+		this.variables.h["true"] = true;
+		this.variables.h["false"] = false;
+		var this1 = this.variables;
+		var value = Reflect.makeVarArgs(function(el) {
+			var inf = _gthis.posInfos();
+			var v = el.shift();
+			if(el.length > 0) {
+				inf.customParams = el;
+			}
+			haxe_Log.trace(Std.string(v),inf);
+		});
+		this1.h["trace"] = value;
+	}
+	,posInfos: function() {
+		return { fileName : "hscript", lineNumber : 0};
+	}
+	,initOps: function() {
+		var me = this;
+		this.binops = new haxe_ds_StringMap();
+		this.binops.h["+"] = function(e1,e2) {
+			return me.expr(e1) + me.expr(e2);
+		};
+		this.binops.h["-"] = function(e1,e2) {
+			return me.expr(e1) - me.expr(e2);
+		};
+		this.binops.h["*"] = function(e1,e2) {
+			return me.expr(e1) * me.expr(e2);
+		};
+		this.binops.h["/"] = function(e1,e2) {
+			return me.expr(e1) / me.expr(e2);
+		};
+		this.binops.h["%"] = function(e1,e2) {
+			return me.expr(e1) % me.expr(e2);
+		};
+		this.binops.h["&"] = function(e1,e2) {
+			return me.expr(e1) & me.expr(e2);
+		};
+		this.binops.h["|"] = function(e1,e2) {
+			return me.expr(e1) | me.expr(e2);
+		};
+		this.binops.h["^"] = function(e1,e2) {
+			return me.expr(e1) ^ me.expr(e2);
+		};
+		this.binops.h["<<"] = function(e1,e2) {
+			return me.expr(e1) << me.expr(e2);
+		};
+		this.binops.h[">>"] = function(e1,e2) {
+			return me.expr(e1) >> me.expr(e2);
+		};
+		this.binops.h[">>>"] = function(e1,e2) {
+			return me.expr(e1) >>> me.expr(e2);
+		};
+		this.binops.h["=="] = function(e1,e2) {
+			return me.expr(e1) == me.expr(e2);
+		};
+		this.binops.h["!="] = function(e1,e2) {
+			return me.expr(e1) != me.expr(e2);
+		};
+		this.binops.h[">="] = function(e1,e2) {
+			return me.expr(e1) >= me.expr(e2);
+		};
+		this.binops.h["<="] = function(e1,e2) {
+			return me.expr(e1) <= me.expr(e2);
+		};
+		this.binops.h[">"] = function(e1,e2) {
+			return me.expr(e1) > me.expr(e2);
+		};
+		this.binops.h["<"] = function(e1,e2) {
+			return me.expr(e1) < me.expr(e2);
+		};
+		this.binops.h["||"] = function(e1,e2) {
+			if(me.expr(e1) != true) {
+				return me.expr(e2) == true;
+			} else {
+				return true;
+			}
+		};
+		this.binops.h["&&"] = function(e1,e2) {
+			if(me.expr(e1) == true) {
+				return me.expr(e2) == true;
+			} else {
+				return false;
+			}
+		};
+		this.binops.h["="] = $bind(this,this.assign);
+		this.binops.h["..."] = function(e1,e2) {
+			return new IntIterator(me.expr(e1),me.expr(e2));
+		};
+		this.binops.h["is"] = function(e1,e2) {
+			return js_Boot.__instanceof(me.expr(e1),me.expr(e2));
+		};
+		this.assignOp("+=",function(v1,v2) {
+			return v1 + v2;
+		});
+		this.assignOp("-=",function(v1,v2) {
+			return v1 - v2;
+		});
+		this.assignOp("*=",function(v1,v2) {
+			return v1 * v2;
+		});
+		this.assignOp("/=",function(v1,v2) {
+			return v1 / v2;
+		});
+		this.assignOp("%=",function(v1,v2) {
+			return v1 % v2;
+		});
+		this.assignOp("&=",function(v1,v2) {
+			return v1 & v2;
+		});
+		this.assignOp("|=",function(v1,v2) {
+			return v1 | v2;
+		});
+		this.assignOp("^=",function(v1,v2) {
+			return v1 ^ v2;
+		});
+		this.assignOp("<<=",function(v1,v2) {
+			return v1 << v2;
+		});
+		this.assignOp(">>=",function(v1,v2) {
+			return v1 >> v2;
+		});
+		this.assignOp(">>>=",function(v1,v2) {
+			return v1 >>> v2;
+		});
+	}
+	,setVar: function(name,v) {
+		this.variables.h[name] = v;
+		return v;
+	}
+	,assign: function(e1,e2) {
+		var v = this.expr(e2);
+		switch(e1._hx_index) {
+		case 1:
+			var id = e1.v;
+			var l = this.locals.h[id];
+			if(l == null) {
+				this.setVar(id,v);
+			} else {
+				l.r = v;
+			}
+			break;
+		case 5:
+			var e = e1.e;
+			var f = e1.f;
+			v = this.set(this.expr(e),f,v);
+			break;
+		case 16:
+			var e = e1.e;
+			var index = e1.index;
+			var arr = this.expr(e);
+			var index1 = this.expr(index);
+			if(js_Boot.__implements(arr,haxe_IMap)) {
+				(js_Boot.__cast(arr , haxe_IMap)).set(index1,v);
+			} else {
+				arr[index1] = v;
+			}
+			break;
+		default:
+			var e = hscript_Error.EInvalidOp("=");
+			throw haxe_Exception.thrown(e);
+		}
+		return v;
+	}
+	,assignOp: function(op,fop) {
+		var me = this;
+		this.binops.h[op] = function(e1,e2) {
+			return me.evalAssignOp(op,fop,e1,e2);
+		};
+	}
+	,evalAssignOp: function(op,fop,e1,e2) {
+		var v;
+		switch(e1._hx_index) {
+		case 1:
+			var id = e1.v;
+			var l = this.locals.h[id];
+			v = fop(this.expr(e1),this.expr(e2));
+			if(l == null) {
+				this.setVar(id,v);
+			} else {
+				l.r = v;
+			}
+			break;
+		case 5:
+			var e = e1.e;
+			var f = e1.f;
+			var obj = this.expr(e);
+			v = fop(this.get(obj,f),this.expr(e2));
+			v = this.set(obj,f,v);
+			break;
+		case 16:
+			var e = e1.e;
+			var index = e1.index;
+			var arr = this.expr(e);
+			var index1 = this.expr(index);
+			if(js_Boot.__implements(arr,haxe_IMap)) {
+				v = fop((js_Boot.__cast(arr , haxe_IMap)).get(index1),this.expr(e2));
+				(js_Boot.__cast(arr , haxe_IMap)).set(index1,v);
+			} else {
+				v = fop(arr[index1],this.expr(e2));
+				arr[index1] = v;
+			}
+			break;
+		default:
+			var e = hscript_Error.EInvalidOp(op);
+			throw haxe_Exception.thrown(e);
+		}
+		return v;
+	}
+	,increment: function(e,prefix,delta) {
+		switch(e._hx_index) {
+		case 1:
+			var id = e.v;
+			var l = this.locals.h[id];
+			var v = l == null ? this.resolve(id) : l.r;
+			if(prefix) {
+				v += delta;
+				if(l == null) {
+					this.setVar(id,v);
+				} else {
+					l.r = v;
+				}
+			} else if(l == null) {
+				this.setVar(id,v + delta);
+			} else {
+				l.r = v + delta;
+			}
+			return v;
+		case 5:
+			var e1 = e.e;
+			var f = e.f;
+			var obj = this.expr(e1);
+			var v = this.get(obj,f);
+			if(prefix) {
+				v += delta;
+				this.set(obj,f,v);
+			} else {
+				this.set(obj,f,v + delta);
+			}
+			return v;
+		case 16:
+			var e1 = e.e;
+			var index = e.index;
+			var arr = this.expr(e1);
+			var index1 = this.expr(index);
+			if(js_Boot.__implements(arr,haxe_IMap)) {
+				var v = (js_Boot.__cast(arr , haxe_IMap)).get(index1);
+				if(prefix) {
+					v += delta;
+					(js_Boot.__cast(arr , haxe_IMap)).set(index1,v);
+				} else {
+					(js_Boot.__cast(arr , haxe_IMap)).set(index1,v + delta);
+				}
+				return v;
+			} else {
+				var v = arr[index1];
+				if(prefix) {
+					v += delta;
+					arr[index1] = v;
+				} else {
+					arr[index1] = v + delta;
+				}
+				return v;
+			}
+			break;
+		default:
+			var e = hscript_Error.EInvalidOp(delta > 0 ? "++" : "--");
+			throw haxe_Exception.thrown(e);
+		}
+	}
+	,execute: function(expr) {
+		this.depth = 0;
+		this.locals = new haxe_ds_StringMap();
+		this.declared = [];
+		return this.exprReturn(expr);
+	}
+	,exprReturn: function(e) {
+		try {
+			return this.expr(e);
+		} catch( _g ) {
+			haxe_NativeStackTrace.lastError = _g;
+			var _g1 = haxe_Exception.caught(_g).unwrap();
+			if(js_Boot.__instanceof(_g1,hscript__$Interp_Stop)) {
+				var e = _g1;
+				switch(e._hx_index) {
+				case 0:
+					throw haxe_Exception.thrown("Invalid break");
+				case 1:
+					throw haxe_Exception.thrown("Invalid continue");
+				case 2:
+					var v = this.returnValue;
+					this.returnValue = null;
+					return v;
+				}
+			} else {
+				throw _g;
+			}
+		}
+	}
+	,duplicate: function(h) {
+		var h2 = new haxe_ds_StringMap();
+		var h1 = h.h;
+		var k_h = h1;
+		var k_keys = Object.keys(h1);
+		var k_length = k_keys.length;
+		var k_current = 0;
+		while(k_current < k_length) {
+			var k = k_keys[k_current++];
+			h2.h[k] = h.h[k];
+		}
+		return h2;
+	}
+	,restore: function(old) {
+		while(this.declared.length > old) {
+			var d = this.declared.pop();
+			this.locals.h[d.n] = d.old;
+		}
+	}
+	,error: function(e,rethrow) {
+		if(rethrow == null) {
+			rethrow = false;
+		}
+		if(rethrow) {
+			throw haxe_Exception.thrown(e);
+		} else {
+			throw haxe_Exception.thrown(e);
+		}
+	}
+	,rethrow: function(e) {
+		throw haxe_Exception.thrown(e);
+	}
+	,resolve: function(id) {
+		var v = this.variables.h[id];
+		if(v == null && !Object.prototype.hasOwnProperty.call(this.variables.h,id)) {
+			var e = hscript_Error.EUnknownVariable(id);
+			throw haxe_Exception.thrown(e);
+		}
+		return v;
+	}
+	,expr: function(e) {
+		var _gthis = this;
+		switch(e._hx_index) {
+		case 0:
+			var c = e.c;
+			switch(c._hx_index) {
+			case 0:
+				var v = c.v;
+				return v;
+			case 1:
+				var f = c.f;
+				return f;
+			case 2:
+				var s = c.s;
+				return s;
+			}
+			break;
+		case 1:
+			var id = e.v;
+			var l = this.locals.h[id];
+			if(l != null) {
+				return l.r;
+			}
+			return this.resolve(id);
+		case 2:
+			var _g = e.t;
+			var n = e.n;
+			var e1 = e.e;
+			this.declared.push({ n : n, old : this.locals.h[n]});
+			var this1 = this.locals;
+			var value = e1 == null ? null : this.expr(e1);
+			this1.h[n] = { r : value};
+			return null;
+		case 3:
+			var e1 = e.e;
+			return this.expr(e1);
+		case 4:
+			var exprs = e.e;
+			var old = this.declared.length;
+			var v = null;
+			var _g = 0;
+			while(_g < exprs.length) {
+				var e1 = exprs[_g];
+				++_g;
+				v = this.expr(e1);
+			}
+			this.restore(old);
+			return v;
+		case 5:
+			var e1 = e.e;
+			var f = e.f;
+			return this.get(this.expr(e1),f);
+		case 6:
+			var op = e.op;
+			var e1 = e.e1;
+			var e2 = e.e2;
+			var fop = this.binops.h[op];
+			if(fop == null) {
+				var e3 = hscript_Error.EInvalidOp(op);
+				throw haxe_Exception.thrown(e3);
+			}
+			return fop(e1,e2);
+		case 7:
+			var op = e.op;
+			var prefix = e.prefix;
+			var e1 = e.e;
+			switch(op) {
+			case "!":
+				return this.expr(e1) != true;
+			case "++":
+				return this.increment(e1,prefix,1);
+			case "-":
+				return -this.expr(e1);
+			case "--":
+				return this.increment(e1,prefix,-1);
+			case "~":
+				return ~this.expr(e1);
+			default:
+				var e1 = hscript_Error.EInvalidOp(op);
+				throw haxe_Exception.thrown(e1);
+			}
+			break;
+		case 8:
+			var e1 = e.e;
+			var params = e.params;
+			var args = [];
+			var _g = 0;
+			while(_g < params.length) {
+				var p = params[_g];
+				++_g;
+				args.push(this.expr(p));
+			}
+			if(e1._hx_index == 5) {
+				var e2 = e1.e;
+				var f = e1.f;
+				var obj = this.expr(e2);
+				if(obj == null) {
+					var e2 = hscript_Error.EInvalidAccess(f);
+					throw haxe_Exception.thrown(e2);
+				}
+				return this.fcall(obj,f,args);
+			} else {
+				return this.call(null,this.expr(e1),args);
+			}
+			break;
+		case 9:
+			var econd = e.cond;
+			var e1 = e.e1;
+			var e2 = e.e2;
+			if(this.expr(econd) == true) {
+				return this.expr(e1);
+			} else if(e2 == null) {
+				return null;
+			} else {
+				return this.expr(e2);
+			}
+			break;
+		case 10:
+			var econd = e.cond;
+			var e1 = e.e;
+			this.whileLoop(econd,e1);
+			return null;
+		case 11:
+			var v = e.v;
+			var it = e.it;
+			var e1 = e.e;
+			this.forLoop(v,it,e1);
+			return null;
+		case 12:
+			throw haxe_Exception.thrown(hscript__$Interp_Stop.SBreak);
+		case 13:
+			throw haxe_Exception.thrown(hscript__$Interp_Stop.SContinue);
+		case 14:
+			var _g = e.ret;
+			var params = e.args;
+			var fexpr = e.e;
+			var name = e.name;
+			var capturedLocals = this.duplicate(this.locals);
+			var me = this;
+			var hasOpt = false;
+			var minParams = 0;
+			var _g = 0;
+			while(_g < params.length) {
+				var p = params[_g];
+				++_g;
+				if(p.opt) {
+					hasOpt = true;
+				} else {
+					minParams += 1;
+				}
+			}
+			var f = function(args) {
+				if((args == null ? 0 : args.length) != params.length) {
+					if(args.length < minParams) {
+						var str = "Invalid number of parameters. Got " + args.length + ", required " + minParams;
+						if(name != null) {
+							str += " for function '" + name + "'";
+						}
+						var e = hscript_Error.ECustom(str);
+						throw haxe_Exception.thrown(e);
+					}
+					var args2 = [];
+					var extraParams = args.length - minParams;
+					var pos = 0;
+					var _g = 0;
+					while(_g < params.length) {
+						var p = params[_g];
+						++_g;
+						if(p.opt) {
+							if(extraParams > 0) {
+								args2.push(args[pos++]);
+								--extraParams;
+							} else {
+								args2.push(null);
+							}
+						} else {
+							args2.push(args[pos++]);
+						}
+					}
+					args = args2;
+				}
+				var old = me.locals;
+				var depth = me.depth;
+				me.depth++;
+				me.locals = me.duplicate(capturedLocals);
+				var _g = 0;
+				var _g1 = params.length;
+				while(_g < _g1) {
+					var i = _g++;
+					me.locals.h[params[i].name] = { r : args[i]};
+				}
+				var r = null;
+				var oldDecl = _gthis.declared.length;
+				if(_gthis.inTry) {
+					try {
+						r = me.exprReturn(fexpr);
+					} catch( _g ) {
+						haxe_NativeStackTrace.lastError = _g;
+						var e = haxe_Exception.caught(_g).unwrap();
+						_gthis.restore(oldDecl);
+						me.locals = old;
+						me.depth = depth;
+						throw haxe_Exception.thrown(e);
+					}
+				} else {
+					r = me.exprReturn(fexpr);
+				}
+				_gthis.restore(oldDecl);
+				me.locals = old;
+				me.depth = depth;
+				return r;
+			};
+			var f1 = Reflect.makeVarArgs(f);
+			if(name != null) {
+				if(this.depth == 0) {
+					this.variables.h[name] = f1;
+				} else {
+					this.declared.push({ n : name, old : this.locals.h[name]});
+					var ref = { r : f1};
+					this.locals.h[name] = ref;
+					capturedLocals.h[name] = ref;
+				}
+			}
+			return f1;
+		case 15:
+			var e1 = e.e;
+			this.returnValue = e1 == null ? null : this.expr(e1);
+			throw haxe_Exception.thrown(hscript__$Interp_Stop.SReturn);
+		case 16:
+			var e1 = e.e;
+			var index = e.index;
+			var arr = this.expr(e1);
+			var index1 = this.expr(index);
+			if(js_Boot.__implements(arr,haxe_IMap)) {
+				return (js_Boot.__cast(arr , haxe_IMap)).get(index1);
+			}
+			return arr[index1];
+		case 17:
+			var arr = e.e;
+			var tmp;
+			if(arr.length > 0) {
+				var _g = arr[0];
+				if(_g._hx_index == 6) {
+					var _g1 = _g.e1;
+					var _g1 = _g.e2;
+					tmp = _g.op == "=>";
+				} else {
+					tmp = false;
+				}
+			} else {
+				tmp = false;
+			}
+			if(tmp) {
+				var keys = [];
+				var values = [];
+				var _g = 0;
+				while(_g < arr.length) {
+					var e1 = arr[_g];
+					++_g;
+					if(e1._hx_index == 6) {
+						if(e1.op == "=>") {
+							var eKey = e1.e1;
+							var eValue = e1.e2;
+							keys.push(this.expr(eKey));
+							values.push(this.expr(eValue));
+						} else {
+							var e2 = hscript_Error.ECustom("Invalid map key=>value expression");
+							throw haxe_Exception.thrown(e2);
+						}
+					} else {
+						var e3 = hscript_Error.ECustom("Invalid map key=>value expression");
+						throw haxe_Exception.thrown(e3);
+					}
+				}
+				return this.makeMap(keys,values);
+			} else {
+				var a = [];
+				var _g = 0;
+				while(_g < arr.length) {
+					var e1 = arr[_g];
+					++_g;
+					a.push(this.expr(e1));
+				}
+				return a;
+			}
+			break;
+		case 18:
+			var cl = e.cl;
+			var params1 = e.params;
+			var a = [];
+			var _g = 0;
+			while(_g < params1.length) {
+				var e1 = params1[_g];
+				++_g;
+				a.push(this.expr(e1));
+			}
+			return this.cnew(cl,a);
+		case 19:
+			var e1 = e.e;
+			throw haxe_Exception.thrown(this.expr(e1));
+		case 20:
+			var _g = e.t;
+			var e1 = e.e;
+			var n = e.v;
+			var ecatch = e.ecatch;
+			var old = this.declared.length;
+			var oldTry = this.inTry;
+			try {
+				this.inTry = true;
+				var v = this.expr(e1);
+				this.restore(old);
+				this.inTry = oldTry;
+				return v;
+			} catch( _g ) {
+				haxe_NativeStackTrace.lastError = _g;
+				var _g1 = haxe_Exception.caught(_g).unwrap();
+				if(js_Boot.__instanceof(_g1,hscript__$Interp_Stop)) {
+					var err = _g1;
+					this.inTry = oldTry;
+					throw haxe_Exception.thrown(err);
+				} else {
+					var err = _g1;
+					this.restore(old);
+					this.inTry = oldTry;
+					this.declared.push({ n : n, old : this.locals.h[n]});
+					this.locals.h[n] = { r : err};
+					var v = this.expr(ecatch);
+					this.restore(old);
+					return v;
+				}
+			}
+			break;
+		case 21:
+			var fl = e.fl;
+			var o = { };
+			var _g = 0;
+			while(_g < fl.length) {
+				var f = fl[_g];
+				++_g;
+				this.set(o,f.name,this.expr(f.e));
+			}
+			return o;
+		case 22:
+			var econd = e.cond;
+			var e1 = e.e1;
+			var e2 = e.e2;
+			if(this.expr(econd) == true) {
+				return this.expr(e1);
+			} else {
+				return this.expr(e2);
+			}
+			break;
+		case 23:
+			var e1 = e.e;
+			var cases = e.cases;
+			var def = e.defaultExpr;
+			var val = this.expr(e1);
+			var match = false;
+			var _g = 0;
+			while(_g < cases.length) {
+				var c = cases[_g];
+				++_g;
+				var _g1 = 0;
+				var _g2 = c.values;
+				while(_g1 < _g2.length) {
+					var v = _g2[_g1];
+					++_g1;
+					if(this.expr(v) == val) {
+						match = true;
+						break;
+					}
+				}
+				if(match) {
+					val = this.expr(c.expr);
+					break;
+				}
+			}
+			if(!match) {
+				val = def == null ? null : this.expr(def);
+			}
+			return val;
+		case 24:
+			var econd = e.cond;
+			var e1 = e.e;
+			this.doWhileLoop(econd,e1);
+			return null;
+		case 25:
+			var meta = e.name;
+			var args = e.args;
+			var e1 = e.e;
+			return this.exprMeta(meta,args,e1);
+		case 26:
+			var _g = e.t;
+			var e1 = e.e;
+			return this.expr(e1);
+		case 27:
+			var it = e.it;
+			var e1 = e.e;
+			var key = null;
+			var value = null;
+			var it1 = it;
+			if(it1._hx_index == 6) {
+				if(it1.op == "in") {
+					var ekv = it1.e1;
+					var eiter = it1.e2;
+					if(ekv._hx_index == 6) {
+						if(ekv.op == "=>") {
+							var v1 = ekv.e1;
+							var v2 = ekv.e2;
+							if(v1._hx_index == 1) {
+								if(v2._hx_index == 1) {
+									var v21 = v2.v;
+									var v11 = v1.v;
+									key = v11;
+									value = v21;
+									it1 = eiter;
+								}
+							}
+						}
+					}
+				}
+			}
+			if(key == null) {
+				var e2 = hscript_Error.ECustom("Invalid for expression");
+				throw haxe_Exception.thrown(e2);
+			} else {
+				_gthis.forKeyValueLoop(key,value,it1,e1);
+			}
+			return null;
+		case 28:
+			var _g = e.t;
+			var e1 = e.e;
+			return this.expr(e1);
+		}
+	}
+	,exprMeta: function(meta,args,e) {
+		return this.expr(e);
+	}
+	,doWhileLoop: function(econd,e) {
+		var _gthis = this;
+		var old = this.declared.length;
+		do {
+			var cont = true;
+			try {
+				_gthis.expr(e);
+			} catch( _g ) {
+				haxe_NativeStackTrace.lastError = _g;
+				var _g1 = haxe_Exception.caught(_g).unwrap();
+				if(js_Boot.__instanceof(_g1,hscript__$Interp_Stop)) {
+					var err = _g1;
+					switch(err._hx_index) {
+					case 0:
+						cont = false;
+						break;
+					case 1:
+						break;
+					case 2:
+						throw haxe_Exception.thrown(err);
+					}
+				} else {
+					throw _g;
+				}
+			}
+			if(!cont) {
+				break;
+			}
+		} while(this.expr(econd) == true);
+		this.restore(old);
+	}
+	,whileLoop: function(econd,e) {
+		var _gthis = this;
+		var old = this.declared.length;
+		while(this.expr(econd) == true) {
+			var cont = true;
+			try {
+				_gthis.expr(e);
+			} catch( _g ) {
+				haxe_NativeStackTrace.lastError = _g;
+				var _g1 = haxe_Exception.caught(_g).unwrap();
+				if(js_Boot.__instanceof(_g1,hscript__$Interp_Stop)) {
+					var err = _g1;
+					switch(err._hx_index) {
+					case 0:
+						cont = false;
+						break;
+					case 1:
+						break;
+					case 2:
+						throw haxe_Exception.thrown(err);
+					}
+				} else {
+					throw _g;
+				}
+			}
+			if(!cont) {
+				break;
+			}
+		}
+		this.restore(old);
+	}
+	,makeIterator: function(v) {
+		if(((v) instanceof Array)) {
+			return new haxe_iterators_ArrayIterator(v);
+		}
+		if(v.iterator != null) {
+			v = $getIterator(v);
+		}
+		if(v.hasNext == null || v.next == null) {
+			var e = hscript_Error.EInvalidIterator(v);
+			throw haxe_Exception.thrown(e);
+		}
+		return v;
+	}
+	,makeKeyValueIterator: function(v) {
+		if(((v) instanceof Array)) {
+			return new haxe_iterators_ArrayKeyValueIterator(v);
+		}
+		if(v.keyValueIterator != null) {
+			v = $getKeyValueIterator(v);
+		}
+		if(v.hasNext == null || v.next == null) {
+			var e = hscript_Error.EInvalidIterator(v);
+			throw haxe_Exception.thrown(e);
+		}
+		return v;
+	}
+	,forLoop: function(n,it,e) {
+		var _gthis = this;
+		var old = this.declared.length;
+		this.declared.push({ n : n, old : this.locals.h[n]});
+		var it1 = this.makeIterator(this.expr(it));
+		while(it1.hasNext()) {
+			var this1 = this.locals;
+			var value = { r : it1.next()};
+			this1.h[n] = value;
+			var cont = true;
+			try {
+				_gthis.expr(e);
+			} catch( _g ) {
+				haxe_NativeStackTrace.lastError = _g;
+				var _g1 = haxe_Exception.caught(_g).unwrap();
+				if(js_Boot.__instanceof(_g1,hscript__$Interp_Stop)) {
+					var err = _g1;
+					switch(err._hx_index) {
+					case 0:
+						cont = false;
+						break;
+					case 1:
+						break;
+					case 2:
+						throw haxe_Exception.thrown(err);
+					}
+				} else {
+					throw _g;
+				}
+			}
+			if(!cont) {
+				break;
+			}
+		}
+		this.restore(old);
+	}
+	,forKeyValueLoop: function(vk,vv,it,e) {
+		var _gthis = this;
+		var old = this.declared.length;
+		this.declared.push({ n : vk, old : this.locals.h[vk]});
+		this.declared.push({ n : vv, old : this.locals.h[vv]});
+		var it1 = this.makeKeyValueIterator(this.expr(it));
+		while(it1.hasNext()) {
+			var v = it1.next();
+			this.locals.h[vk] = { r : v.key};
+			this.locals.h[vv] = { r : v.value};
+			var cont = true;
+			try {
+				_gthis.expr(e);
+			} catch( _g ) {
+				haxe_NativeStackTrace.lastError = _g;
+				var _g1 = haxe_Exception.caught(_g).unwrap();
+				if(js_Boot.__instanceof(_g1,hscript__$Interp_Stop)) {
+					var err = _g1;
+					switch(err._hx_index) {
+					case 0:
+						cont = false;
+						break;
+					case 1:
+						break;
+					case 2:
+						throw haxe_Exception.thrown(err);
+					}
+				} else {
+					throw _g;
+				}
+			}
+			if(!cont) {
+				break;
+			}
+		}
+		this.restore(old);
+	}
+	,loopRun: function(f) {
+		var cont = true;
+		try {
+			f();
+		} catch( _g ) {
+			haxe_NativeStackTrace.lastError = _g;
+			var _g1 = haxe_Exception.caught(_g).unwrap();
+			if(js_Boot.__instanceof(_g1,hscript__$Interp_Stop)) {
+				var err = _g1;
+				switch(err._hx_index) {
+				case 0:
+					cont = false;
+					break;
+				case 1:
+					break;
+				case 2:
+					throw haxe_Exception.thrown(err);
+				}
+			} else {
+				throw _g;
+			}
+		}
+		return cont;
+	}
+	,isMap: function(o) {
+		return js_Boot.__implements(o,haxe_IMap);
+	}
+	,getMapValue: function(map,key) {
+		return (js_Boot.__cast(map , haxe_IMap)).get(key);
+	}
+	,setMapValue: function(map,key,value) {
+		(js_Boot.__cast(map , haxe_IMap)).set(key,value);
+	}
+	,makeMap: function(keys,values) {
+		var isAllString = true;
+		var isAllInt = true;
+		var isAllObject = true;
+		var isAllEnum = true;
+		var _g = 0;
+		while(_g < keys.length) {
+			var key = keys[_g];
+			++_g;
+			isAllString = isAllString && typeof(key) == "string";
+			isAllInt = isAllInt && (typeof(key) == "number" && ((key | 0) === key));
+			isAllObject = isAllObject && Reflect.isObject(key);
+			isAllEnum = isAllEnum && Reflect.isEnumValue(key);
+		}
+		if(isAllInt) {
+			var m = new haxe_ds_IntMap();
+			var _g_current = 0;
+			var _g_array = keys;
+			while(_g_current < _g_array.length) {
+				var _g_value = _g_array[_g_current];
+				var _g_key = _g_current++;
+				var i = _g_key;
+				var key = _g_value;
+				m.h[key] = values[i];
+			}
+			return m;
+		}
+		if(isAllString) {
+			var m = new haxe_ds_StringMap();
+			var _g_current = 0;
+			var _g_array = keys;
+			while(_g_current < _g_array.length) {
+				var _g_value = _g_array[_g_current];
+				var _g_key = _g_current++;
+				var i = _g_key;
+				var key = _g_value;
+				m.h[key] = values[i];
+			}
+			return m;
+		}
+		if(isAllEnum) {
+			var m = new haxe_ds_EnumValueMap();
+			var _g_current = 0;
+			var _g_array = keys;
+			while(_g_current < _g_array.length) {
+				var _g_value = _g_array[_g_current];
+				var _g_key = _g_current++;
+				var i = _g_key;
+				var key = _g_value;
+				m.set(key,values[i]);
+			}
+			return m;
+		}
+		if(isAllObject) {
+			var m = new haxe_ds_ObjectMap();
+			var _g_current = 0;
+			var _g_array = keys;
+			while(_g_current < _g_array.length) {
+				var _g_value = _g_array[_g_current];
+				var _g_key = _g_current++;
+				var i = _g_key;
+				var key = _g_value;
+				m.set(key,values[i]);
+			}
+			return m;
+		}
+		var e = hscript_Error.ECustom("Invalid map keys " + Std.string(keys));
+		throw haxe_Exception.thrown(e);
+	}
+	,get: function(o,f) {
+		if(o == null) {
+			var e = hscript_Error.EInvalidAccess(f);
+			throw haxe_Exception.thrown(e);
+		}
+		return Reflect.getProperty(o,f);
+	}
+	,set: function(o,f,v) {
+		if(o == null) {
+			var e = hscript_Error.EInvalidAccess(f);
+			throw haxe_Exception.thrown(e);
+		}
+		Reflect.setProperty(o,f,v);
+		return v;
+	}
+	,fcall: function(o,f,args) {
+		return this.call(o,this.get(o,f),args);
+	}
+	,call: function(o,f,args) {
+		return f.apply(o,args);
+	}
+	,cnew: function(cl,args) {
+		var c = $hxClasses[cl];
+		if(c == null) {
+			c = this.resolve(cl);
+		}
+		return Type.createInstance(c,args);
+	}
+	,__class__: hscript_Interp
+};
+var flixel_system_debug_console__$ConsoleUtil_Interp = function() {
+	hscript_Interp.call(this);
+};
+$hxClasses["flixel.system.debug.console._ConsoleUtil.Interp"] = flixel_system_debug_console__$ConsoleUtil_Interp;
+flixel_system_debug_console__$ConsoleUtil_Interp.__name__ = "flixel.system.debug.console._ConsoleUtil.Interp";
+flixel_system_debug_console__$ConsoleUtil_Interp.__super__ = hscript_Interp;
+flixel_system_debug_console__$ConsoleUtil_Interp.prototype = $extend(hscript_Interp.prototype,{
+	getGlobals: function() {
+		return this.toArray(new haxe_ds__$StringMap_StringMapKeyIterator(this.locals.h)).concat(this.toArray(new haxe_ds__$StringMap_StringMapKeyIterator(this.variables.h)));
+	}
+	,toArray: function(iterator) {
+		var array = [];
+		var element = iterator;
+		while(element.hasNext()) {
+			var element1 = element.next();
+			array.push(element1);
+		}
+		return array;
+	}
+	,get: function(o,f) {
+		if(o == null) {
+			var e = hscript_Error.EInvalidAccess(f);
+			throw haxe_Exception.thrown(e);
+		}
+		return Reflect.getProperty(o,f);
+	}
+	,set: function(o,f,v) {
+		if(o == null) {
+			var e = hscript_Error.EInvalidAccess(f);
+			throw haxe_Exception.thrown(e);
+		}
+		Reflect.setProperty(o,f,v);
+		return v;
+	}
+	,__class__: flixel_system_debug_console__$ConsoleUtil_Interp
 });
 var flixel_system_debug_interaction_Interaction = function(container) {
 	this._flixelPointer = new flixel_input_FlxPointer();
@@ -58220,6 +59589,7 @@ var flixel_system_debug_interaction_tools__$Eraser_GraphicEraserTool = function(
 };
 $hxClasses["flixel.system.debug.interaction.tools._Eraser.GraphicEraserTool"] = flixel_system_debug_interaction_tools__$Eraser_GraphicEraserTool;
 flixel_system_debug_interaction_tools__$Eraser_GraphicEraserTool.__name__ = "flixel.system.debug.interaction.tools._Eraser.GraphicEraserTool";
+flixel_system_debug_interaction_tools__$Eraser_GraphicEraserTool.preload = null;
 flixel_system_debug_interaction_tools__$Eraser_GraphicEraserTool.__super__ = openfl_display_BitmapData;
 flixel_system_debug_interaction_tools__$Eraser_GraphicEraserTool.prototype = $extend(openfl_display_BitmapData.prototype,{
 	__class__: flixel_system_debug_interaction_tools__$Eraser_GraphicEraserTool
@@ -58381,6 +59751,7 @@ var flixel_system_debug_interaction_tools__$Mover_GraphicMoverTool = function(wi
 };
 $hxClasses["flixel.system.debug.interaction.tools._Mover.GraphicMoverTool"] = flixel_system_debug_interaction_tools__$Mover_GraphicMoverTool;
 flixel_system_debug_interaction_tools__$Mover_GraphicMoverTool.__name__ = "flixel.system.debug.interaction.tools._Mover.GraphicMoverTool";
+flixel_system_debug_interaction_tools__$Mover_GraphicMoverTool.preload = null;
 flixel_system_debug_interaction_tools__$Mover_GraphicMoverTool.__super__ = openfl_display_BitmapData;
 flixel_system_debug_interaction_tools__$Mover_GraphicMoverTool.prototype = $extend(openfl_display_BitmapData.prototype,{
 	__class__: flixel_system_debug_interaction_tools__$Mover_GraphicMoverTool
@@ -58486,6 +59857,7 @@ var flixel_system_debug_interaction_tools_GraphicCursorCross = function(width,he
 };
 $hxClasses["flixel.system.debug.interaction.tools.GraphicCursorCross"] = flixel_system_debug_interaction_tools_GraphicCursorCross;
 flixel_system_debug_interaction_tools_GraphicCursorCross.__name__ = "flixel.system.debug.interaction.tools.GraphicCursorCross";
+flixel_system_debug_interaction_tools_GraphicCursorCross.preload = null;
 flixel_system_debug_interaction_tools_GraphicCursorCross.__super__ = openfl_display_BitmapData;
 flixel_system_debug_interaction_tools_GraphicCursorCross.prototype = $extend(openfl_display_BitmapData.prototype,{
 	__class__: flixel_system_debug_interaction_tools_GraphicCursorCross
@@ -58705,6 +60077,7 @@ var flixel_system_debug_interaction_tools__$Transform_GraphicTransformTool = fun
 };
 $hxClasses["flixel.system.debug.interaction.tools._Transform.GraphicTransformTool"] = flixel_system_debug_interaction_tools__$Transform_GraphicTransformTool;
 flixel_system_debug_interaction_tools__$Transform_GraphicTransformTool.__name__ = "flixel.system.debug.interaction.tools._Transform.GraphicTransformTool";
+flixel_system_debug_interaction_tools__$Transform_GraphicTransformTool.preload = null;
 flixel_system_debug_interaction_tools__$Transform_GraphicTransformTool.__super__ = openfl_display_BitmapData;
 flixel_system_debug_interaction_tools__$Transform_GraphicTransformTool.prototype = $extend(openfl_display_BitmapData.prototype,{
 	__class__: flixel_system_debug_interaction_tools__$Transform_GraphicTransformTool
@@ -58736,6 +60109,7 @@ var flixel_system_debug_interaction_tools__$Transform_GraphicTransformCursorDefa
 };
 $hxClasses["flixel.system.debug.interaction.tools._Transform.GraphicTransformCursorDefault"] = flixel_system_debug_interaction_tools__$Transform_GraphicTransformCursorDefault;
 flixel_system_debug_interaction_tools__$Transform_GraphicTransformCursorDefault.__name__ = "flixel.system.debug.interaction.tools._Transform.GraphicTransformCursorDefault";
+flixel_system_debug_interaction_tools__$Transform_GraphicTransformCursorDefault.preload = null;
 flixel_system_debug_interaction_tools__$Transform_GraphicTransformCursorDefault.__super__ = openfl_display_BitmapData;
 flixel_system_debug_interaction_tools__$Transform_GraphicTransformCursorDefault.prototype = $extend(openfl_display_BitmapData.prototype,{
 	__class__: flixel_system_debug_interaction_tools__$Transform_GraphicTransformCursorDefault
@@ -58767,6 +60141,7 @@ var flixel_system_debug_interaction_tools__$Transform_GraphicTransformCursorScal
 };
 $hxClasses["flixel.system.debug.interaction.tools._Transform.GraphicTransformCursorScaleY"] = flixel_system_debug_interaction_tools__$Transform_GraphicTransformCursorScaleY;
 flixel_system_debug_interaction_tools__$Transform_GraphicTransformCursorScaleY.__name__ = "flixel.system.debug.interaction.tools._Transform.GraphicTransformCursorScaleY";
+flixel_system_debug_interaction_tools__$Transform_GraphicTransformCursorScaleY.preload = null;
 flixel_system_debug_interaction_tools__$Transform_GraphicTransformCursorScaleY.__super__ = openfl_display_BitmapData;
 flixel_system_debug_interaction_tools__$Transform_GraphicTransformCursorScaleY.prototype = $extend(openfl_display_BitmapData.prototype,{
 	__class__: flixel_system_debug_interaction_tools__$Transform_GraphicTransformCursorScaleY
@@ -58798,6 +60173,7 @@ var flixel_system_debug_interaction_tools__$Transform_GraphicTransformCursorScal
 };
 $hxClasses["flixel.system.debug.interaction.tools._Transform.GraphicTransformCursorScaleX"] = flixel_system_debug_interaction_tools__$Transform_GraphicTransformCursorScaleX;
 flixel_system_debug_interaction_tools__$Transform_GraphicTransformCursorScaleX.__name__ = "flixel.system.debug.interaction.tools._Transform.GraphicTransformCursorScaleX";
+flixel_system_debug_interaction_tools__$Transform_GraphicTransformCursorScaleX.preload = null;
 flixel_system_debug_interaction_tools__$Transform_GraphicTransformCursorScaleX.__super__ = openfl_display_BitmapData;
 flixel_system_debug_interaction_tools__$Transform_GraphicTransformCursorScaleX.prototype = $extend(openfl_display_BitmapData.prototype,{
 	__class__: flixel_system_debug_interaction_tools__$Transform_GraphicTransformCursorScaleX
@@ -58829,6 +60205,7 @@ var flixel_system_debug_interaction_tools__$Transform_GraphicTransformCursorScal
 };
 $hxClasses["flixel.system.debug.interaction.tools._Transform.GraphicTransformCursorScaleXY"] = flixel_system_debug_interaction_tools__$Transform_GraphicTransformCursorScaleXY;
 flixel_system_debug_interaction_tools__$Transform_GraphicTransformCursorScaleXY.__name__ = "flixel.system.debug.interaction.tools._Transform.GraphicTransformCursorScaleXY";
+flixel_system_debug_interaction_tools__$Transform_GraphicTransformCursorScaleXY.preload = null;
 flixel_system_debug_interaction_tools__$Transform_GraphicTransformCursorScaleXY.__super__ = openfl_display_BitmapData;
 flixel_system_debug_interaction_tools__$Transform_GraphicTransformCursorScaleXY.prototype = $extend(openfl_display_BitmapData.prototype,{
 	__class__: flixel_system_debug_interaction_tools__$Transform_GraphicTransformCursorScaleXY
@@ -58860,6 +60237,7 @@ var flixel_system_debug_interaction_tools__$Transform_GraphicTransformCursorRota
 };
 $hxClasses["flixel.system.debug.interaction.tools._Transform.GraphicTransformCursorRotate"] = flixel_system_debug_interaction_tools__$Transform_GraphicTransformCursorRotate;
 flixel_system_debug_interaction_tools__$Transform_GraphicTransformCursorRotate.__name__ = "flixel.system.debug.interaction.tools._Transform.GraphicTransformCursorRotate";
+flixel_system_debug_interaction_tools__$Transform_GraphicTransformCursorRotate.preload = null;
 flixel_system_debug_interaction_tools__$Transform_GraphicTransformCursorRotate.__super__ = openfl_display_BitmapData;
 flixel_system_debug_interaction_tools__$Transform_GraphicTransformCursorRotate.prototype = $extend(openfl_display_BitmapData.prototype,{
 	__class__: flixel_system_debug_interaction_tools__$Transform_GraphicTransformCursorRotate
@@ -59320,6 +60698,7 @@ var flixel_system_debug_stats__$Stats_GraphicMinimizeButton = function(width,hei
 };
 $hxClasses["flixel.system.debug.stats._Stats.GraphicMinimizeButton"] = flixel_system_debug_stats__$Stats_GraphicMinimizeButton;
 flixel_system_debug_stats__$Stats_GraphicMinimizeButton.__name__ = "flixel.system.debug.stats._Stats.GraphicMinimizeButton";
+flixel_system_debug_stats__$Stats_GraphicMinimizeButton.preload = null;
 flixel_system_debug_stats__$Stats_GraphicMinimizeButton.__super__ = openfl_display_BitmapData;
 flixel_system_debug_stats__$Stats_GraphicMinimizeButton.prototype = $extend(openfl_display_BitmapData.prototype,{
 	__class__: flixel_system_debug_stats__$Stats_GraphicMinimizeButton
@@ -59351,6 +60730,7 @@ var flixel_system_debug_stats__$Stats_GraphicMaximizeButton = function(width,hei
 };
 $hxClasses["flixel.system.debug.stats._Stats.GraphicMaximizeButton"] = flixel_system_debug_stats__$Stats_GraphicMaximizeButton;
 flixel_system_debug_stats__$Stats_GraphicMaximizeButton.__name__ = "flixel.system.debug.stats._Stats.GraphicMaximizeButton";
+flixel_system_debug_stats__$Stats_GraphicMaximizeButton.preload = null;
 flixel_system_debug_stats__$Stats_GraphicMaximizeButton.__super__ = openfl_display_BitmapData;
 flixel_system_debug_stats__$Stats_GraphicMaximizeButton.prototype = $extend(openfl_display_BitmapData.prototype,{
 	__class__: flixel_system_debug_stats__$Stats_GraphicMaximizeButton
@@ -61207,6 +62587,7 @@ var flixel_tweens_FlxTween = function(Options,manager) {
 $hxClasses["flixel.tweens.FlxTween"] = flixel_tweens_FlxTween;
 flixel_tweens_FlxTween.__name__ = "flixel.tweens.FlxTween";
 flixel_tweens_FlxTween.__interfaces__ = [flixel_util_IFlxDestroyable];
+flixel_tweens_FlxTween.globalManager = null;
 flixel_tweens_FlxTween.tween = function(Object1,Values,Duration,Options) {
 	if(Duration == null) {
 		Duration = 1;
@@ -67237,6 +68618,7 @@ var openfl_net_SharedObject = function() {
 };
 $hxClasses["openfl.net.SharedObject"] = openfl_net_SharedObject;
 openfl_net_SharedObject.__name__ = "openfl.net.SharedObject";
+openfl_net_SharedObject.__sharedObjects = null;
 openfl_net_SharedObject.getLocal = function(name,localPath,secure) {
 	if(secure == null) {
 		secure = false;
@@ -67438,6 +68820,7 @@ var flixel_util__$FlxSave_FlxSharedObject = function() {
 };
 $hxClasses["flixel.util._FlxSave.FlxSharedObject"] = flixel_util__$FlxSave_FlxSharedObject;
 flixel_util__$FlxSave_FlxSharedObject.__name__ = "flixel.util._FlxSave.FlxSharedObject";
+flixel_util__$FlxSave_FlxSharedObject.all = null;
 flixel_util__$FlxSave_FlxSharedObject.init = function() {
 	if(flixel_util__$FlxSave_FlxSharedObject.all == null) {
 		flixel_util__$FlxSave_FlxSharedObject.all = new haxe_ds_StringMap();
@@ -69125,6 +70508,7 @@ var flixel_util_FlxTimer = function(manager) {
 $hxClasses["flixel.util.FlxTimer"] = flixel_util_FlxTimer;
 flixel_util_FlxTimer.__name__ = "flixel.util.FlxTimer";
 flixel_util_FlxTimer.__interfaces__ = [flixel_util_IFlxDestroyable];
+flixel_util_FlxTimer.globalManager = null;
 flixel_util_FlxTimer.prototype = {
 	manager: null
 	,time: null
@@ -76987,6 +78371,7 @@ var flxanimate_frames_FlxAnimateFrames = function() {
 };
 $hxClasses["flxanimate.frames.FlxAnimateFrames"] = flxanimate_frames_FlxAnimateFrames;
 flxanimate_frames_FlxAnimateFrames.__name__ = "flxanimate.frames.FlxAnimateFrames";
+flxanimate_frames_FlxAnimateFrames.zip = null;
 flxanimate_frames_FlxAnimateFrames.fromTextureAtlas = function(Path) {
 	var frames = new flxanimate_frames_FlxAnimateFrames();
 	var _g = [];
@@ -79196,6 +80581,8 @@ haxe__$Int64__$_$_$Int64.prototype = {
 var haxe_NativeStackTrace = function() { };
 $hxClasses["haxe.NativeStackTrace"] = haxe_NativeStackTrace;
 haxe_NativeStackTrace.__name__ = "haxe.NativeStackTrace";
+haxe_NativeStackTrace.lastError = null;
+haxe_NativeStackTrace.wrapCallSite = null;
 haxe_NativeStackTrace.saveStack = function(e) {
 	haxe_NativeStackTrace.lastError = e;
 };
@@ -79332,6 +80719,7 @@ haxe_NativeStackTrace.skipLines = function(stack,skip,pos) {
 var haxe_Resource = function() { };
 $hxClasses["haxe.Resource"] = haxe_Resource;
 haxe_Resource.__name__ = "haxe.Resource";
+haxe_Resource.content = null;
 haxe_Resource.getString = function(name) {
 	var _g = 0;
 	var _g1 = haxe_Resource.content;
@@ -80081,6 +81469,7 @@ var haxe__$Unserializer_NullResolver = function() {
 };
 $hxClasses["haxe._Unserializer.NullResolver"] = haxe__$Unserializer_NullResolver;
 haxe__$Unserializer_NullResolver.__name__ = "haxe._Unserializer.NullResolver";
+haxe__$Unserializer_NullResolver.instance = null;
 haxe__$Unserializer_NullResolver.prototype = {
 	resolveClass: function(name) {
 		return null;
@@ -80600,6 +81989,25 @@ haxe_ds_EnumValueMap.prototype = $extend(haxe_ds_BalancedTree.prototype,{
 	}
 	,__class__: haxe_ds_EnumValueMap
 });
+var haxe_ds_GenericCell = function(elt,next) {
+	this.elt = elt;
+	this.next = next;
+};
+$hxClasses["haxe.ds.GenericCell"] = haxe_ds_GenericCell;
+haxe_ds_GenericCell.__name__ = "haxe.ds.GenericCell";
+haxe_ds_GenericCell.prototype = {
+	elt: null
+	,next: null
+	,__class__: haxe_ds_GenericCell
+};
+var haxe_ds_GenericStack = function() {
+};
+$hxClasses["haxe.ds.GenericStack"] = haxe_ds_GenericStack;
+haxe_ds_GenericStack.__name__ = "haxe.ds.GenericStack";
+haxe_ds_GenericStack.prototype = {
+	head: null
+	,__class__: haxe_ds_GenericStack
+};
 var haxe_ds_IntMap = function() {
 	this.h = { };
 };
@@ -83103,6 +84511,3162 @@ haxe_zip_Reader.prototype = {
 	}
 	,__class__: haxe_zip_Reader
 };
+var hscript_Const = $hxEnums["hscript.Const"] = { __ename__:"hscript.Const",__constructs__:null
+	,CInt: ($_=function(v) { return {_hx_index:0,v:v,__enum__:"hscript.Const",toString:$estr}; },$_._hx_name="CInt",$_.__params__ = ["v"],$_)
+	,CFloat: ($_=function(f) { return {_hx_index:1,f:f,__enum__:"hscript.Const",toString:$estr}; },$_._hx_name="CFloat",$_.__params__ = ["f"],$_)
+	,CString: ($_=function(s) { return {_hx_index:2,s:s,__enum__:"hscript.Const",toString:$estr}; },$_._hx_name="CString",$_.__params__ = ["s"],$_)
+};
+hscript_Const.__constructs__ = [hscript_Const.CInt,hscript_Const.CFloat,hscript_Const.CString];
+var hscript_Expr = $hxEnums["hscript.Expr"] = { __ename__:"hscript.Expr",__constructs__:null
+	,EConst: ($_=function(c) { return {_hx_index:0,c:c,__enum__:"hscript.Expr",toString:$estr}; },$_._hx_name="EConst",$_.__params__ = ["c"],$_)
+	,EIdent: ($_=function(v) { return {_hx_index:1,v:v,__enum__:"hscript.Expr",toString:$estr}; },$_._hx_name="EIdent",$_.__params__ = ["v"],$_)
+	,EVar: ($_=function(n,t,e) { return {_hx_index:2,n:n,t:t,e:e,__enum__:"hscript.Expr",toString:$estr}; },$_._hx_name="EVar",$_.__params__ = ["n","t","e"],$_)
+	,EParent: ($_=function(e) { return {_hx_index:3,e:e,__enum__:"hscript.Expr",toString:$estr}; },$_._hx_name="EParent",$_.__params__ = ["e"],$_)
+	,EBlock: ($_=function(e) { return {_hx_index:4,e:e,__enum__:"hscript.Expr",toString:$estr}; },$_._hx_name="EBlock",$_.__params__ = ["e"],$_)
+	,EField: ($_=function(e,f) { return {_hx_index:5,e:e,f:f,__enum__:"hscript.Expr",toString:$estr}; },$_._hx_name="EField",$_.__params__ = ["e","f"],$_)
+	,EBinop: ($_=function(op,e1,e2) { return {_hx_index:6,op:op,e1:e1,e2:e2,__enum__:"hscript.Expr",toString:$estr}; },$_._hx_name="EBinop",$_.__params__ = ["op","e1","e2"],$_)
+	,EUnop: ($_=function(op,prefix,e) { return {_hx_index:7,op:op,prefix:prefix,e:e,__enum__:"hscript.Expr",toString:$estr}; },$_._hx_name="EUnop",$_.__params__ = ["op","prefix","e"],$_)
+	,ECall: ($_=function(e,params) { return {_hx_index:8,e:e,params:params,__enum__:"hscript.Expr",toString:$estr}; },$_._hx_name="ECall",$_.__params__ = ["e","params"],$_)
+	,EIf: ($_=function(cond,e1,e2) { return {_hx_index:9,cond:cond,e1:e1,e2:e2,__enum__:"hscript.Expr",toString:$estr}; },$_._hx_name="EIf",$_.__params__ = ["cond","e1","e2"],$_)
+	,EWhile: ($_=function(cond,e) { return {_hx_index:10,cond:cond,e:e,__enum__:"hscript.Expr",toString:$estr}; },$_._hx_name="EWhile",$_.__params__ = ["cond","e"],$_)
+	,EFor: ($_=function(v,it,e) { return {_hx_index:11,v:v,it:it,e:e,__enum__:"hscript.Expr",toString:$estr}; },$_._hx_name="EFor",$_.__params__ = ["v","it","e"],$_)
+	,EBreak: {_hx_name:"EBreak",_hx_index:12,__enum__:"hscript.Expr",toString:$estr}
+	,EContinue: {_hx_name:"EContinue",_hx_index:13,__enum__:"hscript.Expr",toString:$estr}
+	,EFunction: ($_=function(args,e,name,ret) { return {_hx_index:14,args:args,e:e,name:name,ret:ret,__enum__:"hscript.Expr",toString:$estr}; },$_._hx_name="EFunction",$_.__params__ = ["args","e","name","ret"],$_)
+	,EReturn: ($_=function(e) { return {_hx_index:15,e:e,__enum__:"hscript.Expr",toString:$estr}; },$_._hx_name="EReturn",$_.__params__ = ["e"],$_)
+	,EArray: ($_=function(e,index) { return {_hx_index:16,e:e,index:index,__enum__:"hscript.Expr",toString:$estr}; },$_._hx_name="EArray",$_.__params__ = ["e","index"],$_)
+	,EArrayDecl: ($_=function(e) { return {_hx_index:17,e:e,__enum__:"hscript.Expr",toString:$estr}; },$_._hx_name="EArrayDecl",$_.__params__ = ["e"],$_)
+	,ENew: ($_=function(cl,params) { return {_hx_index:18,cl:cl,params:params,__enum__:"hscript.Expr",toString:$estr}; },$_._hx_name="ENew",$_.__params__ = ["cl","params"],$_)
+	,EThrow: ($_=function(e) { return {_hx_index:19,e:e,__enum__:"hscript.Expr",toString:$estr}; },$_._hx_name="EThrow",$_.__params__ = ["e"],$_)
+	,ETry: ($_=function(e,v,t,ecatch) { return {_hx_index:20,e:e,v:v,t:t,ecatch:ecatch,__enum__:"hscript.Expr",toString:$estr}; },$_._hx_name="ETry",$_.__params__ = ["e","v","t","ecatch"],$_)
+	,EObject: ($_=function(fl) { return {_hx_index:21,fl:fl,__enum__:"hscript.Expr",toString:$estr}; },$_._hx_name="EObject",$_.__params__ = ["fl"],$_)
+	,ETernary: ($_=function(cond,e1,e2) { return {_hx_index:22,cond:cond,e1:e1,e2:e2,__enum__:"hscript.Expr",toString:$estr}; },$_._hx_name="ETernary",$_.__params__ = ["cond","e1","e2"],$_)
+	,ESwitch: ($_=function(e,cases,defaultExpr) { return {_hx_index:23,e:e,cases:cases,defaultExpr:defaultExpr,__enum__:"hscript.Expr",toString:$estr}; },$_._hx_name="ESwitch",$_.__params__ = ["e","cases","defaultExpr"],$_)
+	,EDoWhile: ($_=function(cond,e) { return {_hx_index:24,cond:cond,e:e,__enum__:"hscript.Expr",toString:$estr}; },$_._hx_name="EDoWhile",$_.__params__ = ["cond","e"],$_)
+	,EMeta: ($_=function(name,args,e) { return {_hx_index:25,name:name,args:args,e:e,__enum__:"hscript.Expr",toString:$estr}; },$_._hx_name="EMeta",$_.__params__ = ["name","args","e"],$_)
+	,ECheckType: ($_=function(e,t) { return {_hx_index:26,e:e,t:t,__enum__:"hscript.Expr",toString:$estr}; },$_._hx_name="ECheckType",$_.__params__ = ["e","t"],$_)
+	,EForGen: ($_=function(it,e) { return {_hx_index:27,it:it,e:e,__enum__:"hscript.Expr",toString:$estr}; },$_._hx_name="EForGen",$_.__params__ = ["it","e"],$_)
+	,ECast: ($_=function(e,t) { return {_hx_index:28,e:e,t:t,__enum__:"hscript.Expr",toString:$estr}; },$_._hx_name="ECast",$_.__params__ = ["e","t"],$_)
+};
+hscript_Expr.__constructs__ = [hscript_Expr.EConst,hscript_Expr.EIdent,hscript_Expr.EVar,hscript_Expr.EParent,hscript_Expr.EBlock,hscript_Expr.EField,hscript_Expr.EBinop,hscript_Expr.EUnop,hscript_Expr.ECall,hscript_Expr.EIf,hscript_Expr.EWhile,hscript_Expr.EFor,hscript_Expr.EBreak,hscript_Expr.EContinue,hscript_Expr.EFunction,hscript_Expr.EReturn,hscript_Expr.EArray,hscript_Expr.EArrayDecl,hscript_Expr.ENew,hscript_Expr.EThrow,hscript_Expr.ETry,hscript_Expr.EObject,hscript_Expr.ETernary,hscript_Expr.ESwitch,hscript_Expr.EDoWhile,hscript_Expr.EMeta,hscript_Expr.ECheckType,hscript_Expr.EForGen,hscript_Expr.ECast];
+var hscript_CType = $hxEnums["hscript.CType"] = { __ename__:"hscript.CType",__constructs__:null
+	,CTPath: ($_=function(path,params) { return {_hx_index:0,path:path,params:params,__enum__:"hscript.CType",toString:$estr}; },$_._hx_name="CTPath",$_.__params__ = ["path","params"],$_)
+	,CTFun: ($_=function(args,ret) { return {_hx_index:1,args:args,ret:ret,__enum__:"hscript.CType",toString:$estr}; },$_._hx_name="CTFun",$_.__params__ = ["args","ret"],$_)
+	,CTAnon: ($_=function(fields) { return {_hx_index:2,fields:fields,__enum__:"hscript.CType",toString:$estr}; },$_._hx_name="CTAnon",$_.__params__ = ["fields"],$_)
+	,CTParent: ($_=function(t) { return {_hx_index:3,t:t,__enum__:"hscript.CType",toString:$estr}; },$_._hx_name="CTParent",$_.__params__ = ["t"],$_)
+	,CTOpt: ($_=function(t) { return {_hx_index:4,t:t,__enum__:"hscript.CType",toString:$estr}; },$_._hx_name="CTOpt",$_.__params__ = ["t"],$_)
+	,CTNamed: ($_=function(n,t) { return {_hx_index:5,n:n,t:t,__enum__:"hscript.CType",toString:$estr}; },$_._hx_name="CTNamed",$_.__params__ = ["n","t"],$_)
+	,CTExpr: ($_=function(e) { return {_hx_index:6,e:e,__enum__:"hscript.CType",toString:$estr}; },$_._hx_name="CTExpr",$_.__params__ = ["e"],$_)
+};
+hscript_CType.__constructs__ = [hscript_CType.CTPath,hscript_CType.CTFun,hscript_CType.CTAnon,hscript_CType.CTParent,hscript_CType.CTOpt,hscript_CType.CTNamed,hscript_CType.CTExpr];
+var hscript_Error = $hxEnums["hscript.Error"] = { __ename__:"hscript.Error",__constructs__:null
+	,EInvalidChar: ($_=function(c) { return {_hx_index:0,c:c,__enum__:"hscript.Error",toString:$estr}; },$_._hx_name="EInvalidChar",$_.__params__ = ["c"],$_)
+	,EUnexpected: ($_=function(s) { return {_hx_index:1,s:s,__enum__:"hscript.Error",toString:$estr}; },$_._hx_name="EUnexpected",$_.__params__ = ["s"],$_)
+	,EUnterminatedString: {_hx_name:"EUnterminatedString",_hx_index:2,__enum__:"hscript.Error",toString:$estr}
+	,EUnterminatedComment: {_hx_name:"EUnterminatedComment",_hx_index:3,__enum__:"hscript.Error",toString:$estr}
+	,EInvalidPreprocessor: ($_=function(msg) { return {_hx_index:4,msg:msg,__enum__:"hscript.Error",toString:$estr}; },$_._hx_name="EInvalidPreprocessor",$_.__params__ = ["msg"],$_)
+	,EUnknownVariable: ($_=function(v) { return {_hx_index:5,v:v,__enum__:"hscript.Error",toString:$estr}; },$_._hx_name="EUnknownVariable",$_.__params__ = ["v"],$_)
+	,EInvalidIterator: ($_=function(v) { return {_hx_index:6,v:v,__enum__:"hscript.Error",toString:$estr}; },$_._hx_name="EInvalidIterator",$_.__params__ = ["v"],$_)
+	,EInvalidOp: ($_=function(op) { return {_hx_index:7,op:op,__enum__:"hscript.Error",toString:$estr}; },$_._hx_name="EInvalidOp",$_.__params__ = ["op"],$_)
+	,EInvalidAccess: ($_=function(f) { return {_hx_index:8,f:f,__enum__:"hscript.Error",toString:$estr}; },$_._hx_name="EInvalidAccess",$_.__params__ = ["f"],$_)
+	,ECustom: ($_=function(msg) { return {_hx_index:9,msg:msg,__enum__:"hscript.Error",toString:$estr}; },$_._hx_name="ECustom",$_.__params__ = ["msg"],$_)
+};
+hscript_Error.__constructs__ = [hscript_Error.EInvalidChar,hscript_Error.EUnexpected,hscript_Error.EUnterminatedString,hscript_Error.EUnterminatedComment,hscript_Error.EInvalidPreprocessor,hscript_Error.EUnknownVariable,hscript_Error.EInvalidIterator,hscript_Error.EInvalidOp,hscript_Error.EInvalidAccess,hscript_Error.ECustom];
+var hscript_ModuleDecl = $hxEnums["hscript.ModuleDecl"] = { __ename__:"hscript.ModuleDecl",__constructs__:null
+	,DPackage: ($_=function(path) { return {_hx_index:0,path:path,__enum__:"hscript.ModuleDecl",toString:$estr}; },$_._hx_name="DPackage",$_.__params__ = ["path"],$_)
+	,DImport: ($_=function(path,everything,name) { return {_hx_index:1,path:path,everything:everything,name:name,__enum__:"hscript.ModuleDecl",toString:$estr}; },$_._hx_name="DImport",$_.__params__ = ["path","everything","name"],$_)
+	,DClass: ($_=function(c) { return {_hx_index:2,c:c,__enum__:"hscript.ModuleDecl",toString:$estr}; },$_._hx_name="DClass",$_.__params__ = ["c"],$_)
+	,DTypedef: ($_=function(c) { return {_hx_index:3,c:c,__enum__:"hscript.ModuleDecl",toString:$estr}; },$_._hx_name="DTypedef",$_.__params__ = ["c"],$_)
+};
+hscript_ModuleDecl.__constructs__ = [hscript_ModuleDecl.DPackage,hscript_ModuleDecl.DImport,hscript_ModuleDecl.DClass,hscript_ModuleDecl.DTypedef];
+var hscript_FieldAccess = $hxEnums["hscript.FieldAccess"] = { __ename__:"hscript.FieldAccess",__constructs__:null
+	,APublic: {_hx_name:"APublic",_hx_index:0,__enum__:"hscript.FieldAccess",toString:$estr}
+	,APrivate: {_hx_name:"APrivate",_hx_index:1,__enum__:"hscript.FieldAccess",toString:$estr}
+	,AInline: {_hx_name:"AInline",_hx_index:2,__enum__:"hscript.FieldAccess",toString:$estr}
+	,AOverride: {_hx_name:"AOverride",_hx_index:3,__enum__:"hscript.FieldAccess",toString:$estr}
+	,AStatic: {_hx_name:"AStatic",_hx_index:4,__enum__:"hscript.FieldAccess",toString:$estr}
+	,AMacro: {_hx_name:"AMacro",_hx_index:5,__enum__:"hscript.FieldAccess",toString:$estr}
+};
+hscript_FieldAccess.__constructs__ = [hscript_FieldAccess.APublic,hscript_FieldAccess.APrivate,hscript_FieldAccess.AInline,hscript_FieldAccess.AOverride,hscript_FieldAccess.AStatic,hscript_FieldAccess.AMacro];
+var hscript_FieldKind = $hxEnums["hscript.FieldKind"] = { __ename__:"hscript.FieldKind",__constructs__:null
+	,KFunction: ($_=function(f) { return {_hx_index:0,f:f,__enum__:"hscript.FieldKind",toString:$estr}; },$_._hx_name="KFunction",$_.__params__ = ["f"],$_)
+	,KVar: ($_=function(v) { return {_hx_index:1,v:v,__enum__:"hscript.FieldKind",toString:$estr}; },$_._hx_name="KVar",$_.__params__ = ["v"],$_)
+};
+hscript_FieldKind.__constructs__ = [hscript_FieldKind.KFunction,hscript_FieldKind.KVar];
+var hscript__$Interp_Stop = $hxEnums["hscript._Interp.Stop"] = { __ename__:"hscript._Interp.Stop",__constructs__:null
+	,SBreak: {_hx_name:"SBreak",_hx_index:0,__enum__:"hscript._Interp.Stop",toString:$estr}
+	,SContinue: {_hx_name:"SContinue",_hx_index:1,__enum__:"hscript._Interp.Stop",toString:$estr}
+	,SReturn: {_hx_name:"SReturn",_hx_index:2,__enum__:"hscript._Interp.Stop",toString:$estr}
+};
+hscript__$Interp_Stop.__constructs__ = [hscript__$Interp_Stop.SBreak,hscript__$Interp_Stop.SContinue,hscript__$Interp_Stop.SReturn];
+var hscript_Token = $hxEnums["hscript.Token"] = { __ename__:"hscript.Token",__constructs__:null
+	,TEof: {_hx_name:"TEof",_hx_index:0,__enum__:"hscript.Token",toString:$estr}
+	,TConst: ($_=function(c) { return {_hx_index:1,c:c,__enum__:"hscript.Token",toString:$estr}; },$_._hx_name="TConst",$_.__params__ = ["c"],$_)
+	,TId: ($_=function(s) { return {_hx_index:2,s:s,__enum__:"hscript.Token",toString:$estr}; },$_._hx_name="TId",$_.__params__ = ["s"],$_)
+	,TOp: ($_=function(s) { return {_hx_index:3,s:s,__enum__:"hscript.Token",toString:$estr}; },$_._hx_name="TOp",$_.__params__ = ["s"],$_)
+	,TPOpen: {_hx_name:"TPOpen",_hx_index:4,__enum__:"hscript.Token",toString:$estr}
+	,TPClose: {_hx_name:"TPClose",_hx_index:5,__enum__:"hscript.Token",toString:$estr}
+	,TBrOpen: {_hx_name:"TBrOpen",_hx_index:6,__enum__:"hscript.Token",toString:$estr}
+	,TBrClose: {_hx_name:"TBrClose",_hx_index:7,__enum__:"hscript.Token",toString:$estr}
+	,TDot: {_hx_name:"TDot",_hx_index:8,__enum__:"hscript.Token",toString:$estr}
+	,TQuestionDot: {_hx_name:"TQuestionDot",_hx_index:9,__enum__:"hscript.Token",toString:$estr}
+	,TComma: {_hx_name:"TComma",_hx_index:10,__enum__:"hscript.Token",toString:$estr}
+	,TSemicolon: {_hx_name:"TSemicolon",_hx_index:11,__enum__:"hscript.Token",toString:$estr}
+	,TBkOpen: {_hx_name:"TBkOpen",_hx_index:12,__enum__:"hscript.Token",toString:$estr}
+	,TBkClose: {_hx_name:"TBkClose",_hx_index:13,__enum__:"hscript.Token",toString:$estr}
+	,TQuestion: {_hx_name:"TQuestion",_hx_index:14,__enum__:"hscript.Token",toString:$estr}
+	,TDoubleDot: {_hx_name:"TDoubleDot",_hx_index:15,__enum__:"hscript.Token",toString:$estr}
+	,TMeta: ($_=function(s) { return {_hx_index:16,s:s,__enum__:"hscript.Token",toString:$estr}; },$_._hx_name="TMeta",$_.__params__ = ["s"],$_)
+	,TPrepro: ($_=function(s) { return {_hx_index:17,s:s,__enum__:"hscript.Token",toString:$estr}; },$_._hx_name="TPrepro",$_.__params__ = ["s"],$_)
+};
+hscript_Token.__constructs__ = [hscript_Token.TEof,hscript_Token.TConst,hscript_Token.TId,hscript_Token.TOp,hscript_Token.TPOpen,hscript_Token.TPClose,hscript_Token.TBrOpen,hscript_Token.TBrClose,hscript_Token.TDot,hscript_Token.TQuestionDot,hscript_Token.TComma,hscript_Token.TSemicolon,hscript_Token.TBkOpen,hscript_Token.TBkClose,hscript_Token.TQuestion,hscript_Token.TDoubleDot,hscript_Token.TMeta,hscript_Token.TPrepro];
+var hscript_Parser = function() {
+	this.uid = 0;
+	this.preprocesorValues = new haxe_ds_StringMap();
+	this.line = 1;
+	this.opChars = "+*/-=!><&|^%~";
+	this.identChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_";
+	var priorities = [["%"],["*","/"],["+","-"],["<<",">>",">>>"],["|","&","^"],["==","!=",">","<",">=","<="],["..."],["&&"],["||"],["=","+=","-=","*=","/=","%=","<<=",">>=",">>>=","|=","&=","^=","=>"],["->"],["in","is"]];
+	this.opPriority = new haxe_ds_StringMap();
+	this.opRightAssoc = new haxe_ds_StringMap();
+	var _g = 0;
+	var _g1 = priorities.length;
+	while(_g < _g1) {
+		var i = _g++;
+		var _g2 = 0;
+		var _g3 = priorities[i];
+		while(_g2 < _g3.length) {
+			var x = _g3[_g2];
+			++_g2;
+			this.opPriority.h[x] = i;
+			if(i == 9) {
+				this.opRightAssoc.h[x] = true;
+			}
+		}
+	}
+	var x = "!";
+	this.opPriority.h[x] = x == "++" || x == "--" ? -1 : -2;
+	var x = "++";
+	this.opPriority.h[x] = x == "++" || x == "--" ? -1 : -2;
+	var x = "--";
+	this.opPriority.h[x] = x == "++" || x == "--" ? -1 : -2;
+	var x = "~";
+	this.opPriority.h[x] = x == "++" || x == "--" ? -1 : -2;
+};
+$hxClasses["hscript.Parser"] = hscript_Parser;
+hscript_Parser.__name__ = "hscript.Parser";
+hscript_Parser.prototype = {
+	line: null
+	,opChars: null
+	,identChars: null
+	,opPriority: null
+	,opRightAssoc: null
+	,preprocesorValues: null
+	,allowJSON: null
+	,allowTypes: null
+	,allowMetadata: null
+	,resumeErrors: null
+	,input: null
+	,readPos: null
+	,offset: null
+	,char: null
+	,ops: null
+	,idents: null
+	,uid: null
+	,tokens: null
+	,get_currentPos: function() {
+		return this.readPos + this.offset;
+	}
+	,error: function(err,pmin,pmax) {
+		if(!this.resumeErrors) {
+			throw haxe_Exception.thrown(err);
+		}
+	}
+	,invalidChar: function(c) {
+		if(!this.resumeErrors) {
+			throw haxe_Exception.thrown(hscript_Error.EInvalidChar(c));
+		}
+	}
+	,initParser: function(origin,pos) {
+		this.preprocStack = [];
+		this.tokens = new haxe_ds_GenericStack();
+		this.offset = pos;
+		this.char = -1;
+		this.ops = [];
+		this.idents = [];
+		this.uid = 0;
+		var _g = 0;
+		var _g1 = this.opChars.length;
+		while(_g < _g1) {
+			var i = _g++;
+			this.ops[HxOverrides.cca(this.opChars,i)] = true;
+		}
+		var _g = 0;
+		var _g1 = this.identChars.length;
+		while(_g < _g1) {
+			var i = _g++;
+			this.idents[HxOverrides.cca(this.identChars,i)] = true;
+		}
+	}
+	,parseString: function(s,origin,position) {
+		if(position == null) {
+			position = 0;
+		}
+		if(origin == null) {
+			origin = "hscript";
+		}
+		this.initParser(origin,position);
+		this.input = s;
+		this.readPos = 0;
+		var a = [];
+		while(true) {
+			var tk = this.token();
+			if(tk == hscript_Token.TEof) {
+				break;
+			}
+			var _this = this.tokens;
+			_this.head = new haxe_ds_GenericCell(tk,_this.head);
+			this.parseFullExpr(a);
+		}
+		if(a.length == 1) {
+			return a[0];
+		} else {
+			return hscript_Expr.EBlock(a);
+		}
+	}
+	,unexpected: function(tk) {
+		var err = hscript_Error.EUnexpected(this.tokenString(tk));
+		if(!this.resumeErrors) {
+			throw haxe_Exception.thrown(err);
+		}
+		return null;
+	}
+	,push: function(tk) {
+		var _this = this.tokens;
+		_this.head = new haxe_ds_GenericCell(tk,_this.head);
+	}
+	,ensure: function(tk) {
+		var t = this.token();
+		if(t != tk) {
+			this.unexpected(t);
+		}
+	}
+	,ensureToken: function(tk) {
+		var t = this.token();
+		if(!Type.enumEq(t,tk)) {
+			this.unexpected(t);
+		}
+	}
+	,maybe: function(tk) {
+		var t = this.token();
+		if(Type.enumEq(t,tk)) {
+			return true;
+		}
+		var _this = this.tokens;
+		_this.head = new haxe_ds_GenericCell(t,_this.head);
+		return false;
+	}
+	,getIdent: function() {
+		var tk = this.token();
+		if(tk == null) {
+			this.unexpected(tk);
+			return null;
+		} else if(tk._hx_index == 2) {
+			var id = tk.s;
+			return id;
+		} else {
+			this.unexpected(tk);
+			return null;
+		}
+	}
+	,expr: function(e) {
+		return e;
+	}
+	,pmin: function(e) {
+		return 0;
+	}
+	,pmax: function(e) {
+		return 0;
+	}
+	,mk: function(e,pmin,pmax) {
+		if(pmax == null) {
+			pmax = -1;
+		}
+		if(pmin == null) {
+			pmin = -1;
+		}
+		return e;
+	}
+	,isBlock: function(e) {
+		if(e == null) {
+			return false;
+		}
+		if(e == null) {
+			return false;
+		} else {
+			switch(e._hx_index) {
+			case 2:
+				var _g = e.n;
+				var t = e.t;
+				var e1 = e.e;
+				if(e1 != null) {
+					return this.isBlock(e1);
+				} else if(t != null) {
+					if(t == null) {
+						return false;
+					} else if(t._hx_index == 2) {
+						var _g = t.fields;
+						return true;
+					} else {
+						return false;
+					}
+				} else {
+					return false;
+				}
+				break;
+			case 4:
+				var _g = e.e;
+				return true;
+			case 6:
+				var _g = e.op;
+				var _g = e.e1;
+				var e1 = e.e2;
+				return this.isBlock(e1);
+			case 7:
+				var _g = e.op;
+				var prefix = e.prefix;
+				var e1 = e.e;
+				if(!prefix) {
+					return this.isBlock(e1);
+				} else {
+					return false;
+				}
+				break;
+			case 9:
+				var _g = e.cond;
+				var e1 = e.e1;
+				var e2 = e.e2;
+				if(e2 != null) {
+					return this.isBlock(e2);
+				} else {
+					return this.isBlock(e1);
+				}
+				break;
+			case 10:
+				var _g = e.cond;
+				var e1 = e.e;
+				return this.isBlock(e1);
+			case 11:
+				var _g = e.v;
+				var _g = e.it;
+				var e1 = e.e;
+				return this.isBlock(e1);
+			case 14:
+				var _g = e.args;
+				var _g = e.name;
+				var _g = e.ret;
+				var e1 = e.e;
+				return this.isBlock(e1);
+			case 15:
+				var e1 = e.e;
+				if(e1 != null) {
+					return this.isBlock(e1);
+				} else {
+					return false;
+				}
+				break;
+			case 20:
+				var _g = e.e;
+				var _g = e.v;
+				var _g = e.t;
+				var e1 = e.ecatch;
+				return this.isBlock(e1);
+			case 21:
+				var _g = e.fl;
+				return true;
+			case 23:
+				var _g = e.e;
+				var _g = e.cases;
+				var _g = e.defaultExpr;
+				return true;
+			case 24:
+				var _g = e.cond;
+				var e1 = e.e;
+				return this.isBlock(e1);
+			case 25:
+				var _g = e.args;
+				if(e.name == ":markup") {
+					return true;
+				} else {
+					var e1 = e.e;
+					return this.isBlock(e1);
+				}
+				break;
+			case 27:
+				var _g = e.it;
+				var e1 = e.e;
+				return this.isBlock(e1);
+			default:
+				return false;
+			}
+		}
+	}
+	,parseFullExpr: function(exprs) {
+		var e = this.parseExpr();
+		exprs.push(e);
+		var tk = this.token();
+		while(true) {
+			var tmp;
+			if(tk == hscript_Token.TComma && e != null) {
+				if(e == null) {
+					tmp = false;
+				} else if(e._hx_index == 2) {
+					var _g = e.n;
+					var _g1 = e.t;
+					var _g2 = e.e;
+					tmp = true;
+				} else {
+					tmp = false;
+				}
+			} else {
+				tmp = false;
+			}
+			if(!tmp) {
+				break;
+			}
+			e = this.parseStructure("var");
+			exprs.push(e);
+			tk = this.token();
+		}
+		if(tk != hscript_Token.TSemicolon && tk != hscript_Token.TEof) {
+			if(this.isBlock(e)) {
+				var _this = this.tokens;
+				_this.head = new haxe_ds_GenericCell(tk,_this.head);
+			} else {
+				this.unexpected(tk);
+			}
+		}
+	}
+	,parseObject: function(p1) {
+		var fl = [];
+		_hx_loop1: while(true) {
+			var tk = this.token();
+			var id = null;
+			if(tk == null) {
+				this.unexpected(tk);
+				break;
+			} else {
+				switch(tk._hx_index) {
+				case 1:
+					var c = tk.c;
+					if(!this.allowJSON) {
+						this.unexpected(tk);
+					}
+					if(c._hx_index == 2) {
+						var s = c.s;
+						id = s;
+					} else {
+						this.unexpected(tk);
+					}
+					break;
+				case 2:
+					var i = tk.s;
+					id = i;
+					break;
+				case 7:
+					break _hx_loop1;
+				default:
+					this.unexpected(tk);
+					break _hx_loop1;
+				}
+			}
+			var t = this.token();
+			if(t != hscript_Token.TDoubleDot) {
+				this.unexpected(t);
+			}
+			fl.push({ name : id, e : this.parseExpr()});
+			tk = this.token();
+			if(tk == null) {
+				this.unexpected(tk);
+			} else {
+				switch(tk._hx_index) {
+				case 7:
+					break _hx_loop1;
+				case 10:
+					break;
+				default:
+					this.unexpected(tk);
+				}
+			}
+		}
+		var pmin = p1;
+		return this.parseExprNext(hscript_Expr.EObject(fl));
+	}
+	,parseExpr: function() {
+		var tk = this.token();
+		if(tk == null) {
+			return this.unexpected(tk);
+		} else {
+			switch(tk._hx_index) {
+			case 1:
+				var c = tk.c;
+				return this.parseExprNext(hscript_Expr.EConst(c));
+			case 2:
+				var id = tk.s;
+				var e = this.parseStructure(id);
+				if(e == null) {
+					e = hscript_Expr.EIdent(id);
+				}
+				return this.parseExprNext(e);
+			case 3:
+				var op = tk.s;
+				if(op == "-") {
+					var start = 0;
+					var e = this.parseExpr();
+					if(e == null) {
+						return this.makeUnop(op,e);
+					}
+					if(e == null) {
+						return this.makeUnop(op,e);
+					} else if(e._hx_index == 0) {
+						var _g = e.c;
+						switch(_g._hx_index) {
+						case 0:
+							var i = _g.v;
+							var pmin = start;
+							return hscript_Expr.EConst(hscript_Const.CInt(-i));
+						case 1:
+							var f = _g.f;
+							var pmin = start;
+							return hscript_Expr.EConst(hscript_Const.CFloat(-f));
+						default:
+							return this.makeUnop(op,e);
+						}
+					} else {
+						return this.makeUnop(op,e);
+					}
+				}
+				if(this.opPriority.h[op] < 0) {
+					return this.makeUnop(op,this.parseExpr());
+				}
+				if(op == "<") {
+					var start = this.readPos - 1;
+					var ident = this.getIdent();
+					if(this.tokens.head != null) {
+						throw haxe_Exception.thrown("assert");
+					}
+					if(this.readPos == start + ident.length + 1) {
+						var endTag = "</" + ident + ">";
+						var end = this.input.indexOf(endTag,this.readPos);
+						if(end < 0) {
+							endTag = "/>";
+							end = this.input.indexOf(endTag,this.readPos);
+						}
+						if(end >= 0) {
+							this.readPos = end + endTag.length;
+							this.char = -1;
+							--start;
+							var end = this.readPos - 1;
+							var str = HxOverrides.substr(this.input,start,end - start + 1);
+							return hscript_Expr.EMeta(":markup",[],hscript_Expr.EConst(hscript_Const.CString(str)));
+						}
+					}
+				}
+				return this.unexpected(tk);
+			case 4:
+				tk = this.token();
+				if(tk == hscript_Token.TPClose) {
+					var t = this.token();
+					if(!Type.enumEq(t,hscript_Token.TOp("->"))) {
+						this.unexpected(t);
+					}
+					var eret = this.parseExpr();
+					return this.mkLambda([],eret,0);
+				}
+				var _this = this.tokens;
+				_this.head = new haxe_ds_GenericCell(tk,_this.head);
+				var e = this.parseExpr();
+				tk = this.token();
+				if(tk != null) {
+					switch(tk._hx_index) {
+					case 0:
+						if(this.resumeErrors) {
+							return e;
+						}
+						break;
+					case 5:
+						return this.parseExprNext(hscript_Expr.EParent(e));
+					case 10:
+						if(e != null) {
+							if(e._hx_index == 1) {
+								var v = e.v;
+								return this.parseLambda([{ name : v}],0);
+							}
+						}
+						break;
+					case 15:
+						var t = this.parseType();
+						tk = this.token();
+						if(tk != null) {
+							switch(tk._hx_index) {
+							case 5:
+								return this.parseExprNext(hscript_Expr.ECheckType(e,t));
+							case 10:
+								if(e != null) {
+									if(e._hx_index == 1) {
+										var v = e.v;
+										return this.parseLambda([{ name : v, t : t}],0);
+									}
+								}
+								break;
+							default:
+							}
+						}
+						break;
+					default:
+					}
+				}
+				return this.unexpected(tk);
+			case 6:
+				tk = this.token();
+				if(tk == null) {
+					var _this = this.tokens;
+					_this.head = new haxe_ds_GenericCell(tk,_this.head);
+				} else {
+					switch(tk._hx_index) {
+					case 1:
+						var c = tk.c;
+						if(this.allowJSON) {
+							if(c._hx_index == 2) {
+								var _g = c.s;
+								var tk2 = this.token();
+								var _this = this.tokens;
+								_this.head = new haxe_ds_GenericCell(tk2,_this.head);
+								var _this = this.tokens;
+								_this.head = new haxe_ds_GenericCell(tk,_this.head);
+								if(tk2 != null) {
+									if(tk2._hx_index == 15) {
+										return this.parseExprNext(this.parseObject(0));
+									}
+								}
+							} else {
+								var _this = this.tokens;
+								_this.head = new haxe_ds_GenericCell(tk,_this.head);
+							}
+						} else {
+							var _this = this.tokens;
+							_this.head = new haxe_ds_GenericCell(tk,_this.head);
+						}
+						break;
+					case 2:
+						var _g = tk.s;
+						var tk2 = this.token();
+						var _this = this.tokens;
+						_this.head = new haxe_ds_GenericCell(tk2,_this.head);
+						var _this = this.tokens;
+						_this.head = new haxe_ds_GenericCell(tk,_this.head);
+						if(tk2 != null) {
+							if(tk2._hx_index == 15) {
+								return this.parseExprNext(this.parseObject(0));
+							}
+						}
+						break;
+					case 7:
+						return this.parseExprNext(hscript_Expr.EObject([]));
+					default:
+						var _this = this.tokens;
+						_this.head = new haxe_ds_GenericCell(tk,_this.head);
+					}
+				}
+				var a = [];
+				while(true) {
+					this.parseFullExpr(a);
+					tk = this.token();
+					if(tk == hscript_Token.TBrClose || this.resumeErrors && tk == hscript_Token.TEof) {
+						break;
+					}
+					var _this = this.tokens;
+					_this.head = new haxe_ds_GenericCell(tk,_this.head);
+				}
+				return hscript_Expr.EBlock(a);
+			case 12:
+				var a = [];
+				tk = this.token();
+				var first = true;
+				while(tk != hscript_Token.TBkClose && (!this.resumeErrors || tk != hscript_Token.TEof)) {
+					if(!first) {
+						if(tk != hscript_Token.TComma) {
+							this.unexpected(tk);
+						} else {
+							tk = this.token();
+							if(tk == hscript_Token.TBkClose) {
+								break;
+							}
+						}
+					}
+					first = false;
+					var _this = this.tokens;
+					_this.head = new haxe_ds_GenericCell(tk,_this.head);
+					a.push(this.parseExpr());
+					tk = this.token();
+				}
+				if(a.length == 1 && a[0] != null) {
+					var _g = a[0];
+					if(_g != null) {
+						switch(_g._hx_index) {
+						case 10:
+							var _g1 = _g.cond;
+							var _g1 = _g.e;
+							var tmp = "__a_" + this.uid++;
+							var e = hscript_Expr.EBlock([hscript_Expr.EVar(tmp,null,hscript_Expr.EArrayDecl([])),this.mapCompr(tmp,a[0]),hscript_Expr.EIdent(tmp)]);
+							return this.parseExprNext(e);
+						case 11:
+							var _g1 = _g.v;
+							var _g1 = _g.it;
+							var _g1 = _g.e;
+							var tmp = "__a_" + this.uid++;
+							var e = hscript_Expr.EBlock([hscript_Expr.EVar(tmp,null,hscript_Expr.EArrayDecl([])),this.mapCompr(tmp,a[0]),hscript_Expr.EIdent(tmp)]);
+							return this.parseExprNext(e);
+						case 24:
+							var _g1 = _g.cond;
+							var _g1 = _g.e;
+							var tmp = "__a_" + this.uid++;
+							var e = hscript_Expr.EBlock([hscript_Expr.EVar(tmp,null,hscript_Expr.EArrayDecl([])),this.mapCompr(tmp,a[0]),hscript_Expr.EIdent(tmp)]);
+							return this.parseExprNext(e);
+						default:
+						}
+					}
+				}
+				return this.parseExprNext(hscript_Expr.EArrayDecl(a));
+			case 16:
+				var id = tk.s;
+				if(this.allowMetadata) {
+					var args = this.parseMetaArgs();
+					return hscript_Expr.EMeta(id,args,this.parseExpr());
+				} else {
+					return this.unexpected(tk);
+				}
+				break;
+			default:
+				return this.unexpected(tk);
+			}
+		}
+	}
+	,parseLambda: function(args,pmin) {
+		_hx_loop1: while(true) {
+			var id = this.getIdent();
+			var t = this.maybe(hscript_Token.TDoubleDot) ? this.parseType() : null;
+			args.push({ name : id, t : t});
+			var tk = this.token();
+			if(tk == null) {
+				this.unexpected(tk);
+				break;
+			} else {
+				switch(tk._hx_index) {
+				case 5:
+					break _hx_loop1;
+				case 10:
+					break;
+				default:
+					this.unexpected(tk);
+					break _hx_loop1;
+				}
+			}
+		}
+		var t = this.token();
+		if(!Type.enumEq(t,hscript_Token.TOp("->"))) {
+			this.unexpected(t);
+		}
+		var eret = this.parseExpr();
+		return this.mkLambda(args,eret,pmin);
+	}
+	,mkLambda: function(args,eret,p) {
+		var pmin = p;
+		var pmin = p;
+		return hscript_Expr.EFunction(args,hscript_Expr.EMeta(":lambda",[],hscript_Expr.EReturn(eret)));
+	}
+	,parseMetaArgs: function() {
+		var tk = this.token();
+		if(tk != hscript_Token.TPOpen) {
+			var _this = this.tokens;
+			_this.head = new haxe_ds_GenericCell(tk,_this.head);
+			return null;
+		}
+		var args = [];
+		tk = this.token();
+		if(tk != hscript_Token.TPClose) {
+			var _this = this.tokens;
+			_this.head = new haxe_ds_GenericCell(tk,_this.head);
+			_hx_loop1: while(true) {
+				args.push(this.parseExpr());
+				var _g = this.token();
+				if(_g == null) {
+					var tk = _g;
+					this.unexpected(tk);
+				} else {
+					switch(_g._hx_index) {
+					case 5:
+						break _hx_loop1;
+					case 10:
+						break;
+					default:
+						var tk1 = _g;
+						this.unexpected(tk1);
+					}
+				}
+			}
+		}
+		return args;
+	}
+	,mapCompr: function(tmp,e) {
+		if(e == null) {
+			return null;
+		}
+		var edef;
+		switch(e._hx_index) {
+		case 3:
+			var e2 = e.e;
+			edef = hscript_Expr.EParent(this.mapCompr(tmp,e2));
+			break;
+		case 4:
+			var _g = e.e;
+			if(_g.length == 1) {
+				var e1 = _g[0];
+				edef = hscript_Expr.EBlock([this.mapCompr(tmp,e1)]);
+			} else {
+				edef = hscript_Expr.ECall(hscript_Expr.EField(hscript_Expr.EIdent(tmp),"push"),[e]);
+			}
+			break;
+		case 9:
+			var cond = e.cond;
+			var e1 = e.e1;
+			var e2 = e.e2;
+			edef = e2 == null ? hscript_Expr.EIf(cond,this.mapCompr(tmp,e1),null) : hscript_Expr.ECall(hscript_Expr.EField(hscript_Expr.EIdent(tmp),"push"),[e]);
+			break;
+		case 10:
+			var cond = e.cond;
+			var e2 = e.e;
+			edef = hscript_Expr.EWhile(cond,this.mapCompr(tmp,e2));
+			break;
+		case 11:
+			var v = e.v;
+			var it = e.it;
+			var e2 = e.e;
+			edef = hscript_Expr.EFor(v,it,this.mapCompr(tmp,e2));
+			break;
+		case 24:
+			var cond = e.cond;
+			var e2 = e.e;
+			edef = hscript_Expr.EDoWhile(cond,this.mapCompr(tmp,e2));
+			break;
+		case 27:
+			var it = e.it;
+			var e2 = e.e;
+			edef = hscript_Expr.EForGen(it,this.mapCompr(tmp,e2));
+			break;
+		default:
+			edef = hscript_Expr.ECall(hscript_Expr.EField(hscript_Expr.EIdent(tmp),"push"),[e]);
+		}
+		return edef;
+	}
+	,makeUnop: function(op,e) {
+		if(e == null && this.resumeErrors) {
+			return null;
+		}
+		if(e == null) {
+			return hscript_Expr.EUnop(op,true,e);
+		} else {
+			switch(e._hx_index) {
+			case 6:
+				var bop = e.op;
+				var e1 = e.e1;
+				var e2 = e.e2;
+				return hscript_Expr.EBinop(bop,this.makeUnop(op,e1),e2);
+			case 22:
+				var e1 = e.cond;
+				var e2 = e.e1;
+				var e3 = e.e2;
+				return hscript_Expr.ETernary(this.makeUnop(op,e1),e2,e3);
+			default:
+				return hscript_Expr.EUnop(op,true,e);
+			}
+		}
+	}
+	,makeBinop: function(op,e1,e) {
+		if(e == null && this.resumeErrors) {
+			return hscript_Expr.EBinop(op,e1,e);
+		}
+		if(e == null) {
+			return hscript_Expr.EBinop(op,e1,e);
+		} else {
+			switch(e._hx_index) {
+			case 6:
+				var op2 = e.op;
+				var e2 = e.e1;
+				var e3 = e.e2;
+				var delta = this.opPriority.h[op] - this.opPriority.h[op2];
+				if(delta < 0 || delta == 0 && !Object.prototype.hasOwnProperty.call(this.opRightAssoc.h,op)) {
+					return hscript_Expr.EBinop(op2,this.makeBinop(op,e1,e2),e3);
+				} else {
+					return hscript_Expr.EBinop(op,e1,e);
+				}
+				break;
+			case 22:
+				var e2 = e.cond;
+				var e3 = e.e1;
+				var e4 = e.e2;
+				if(Object.prototype.hasOwnProperty.call(this.opRightAssoc.h,op)) {
+					return hscript_Expr.EBinop(op,e1,e);
+				} else {
+					return hscript_Expr.ETernary(this.makeBinop(op,e1,e2),e3,e4);
+				}
+				break;
+			default:
+				return hscript_Expr.EBinop(op,e1,e);
+			}
+		}
+	}
+	,parseStructure: function(id) {
+		switch(id) {
+		case "break":
+			return hscript_Expr.EBreak;
+		case "cast":
+			var tk = this.token();
+			if(tk == hscript_Token.TPOpen) {
+				var e = this.parseExpr();
+				var t = this.token();
+				if(t != hscript_Token.TComma) {
+					this.unexpected(t);
+				}
+				var t = this.parseType();
+				return hscript_Expr.ECast(e,t);
+			} else {
+				var _this = this.tokens;
+				_this.head = new haxe_ds_GenericCell(tk,_this.head);
+				var e = this.parseExpr();
+				return hscript_Expr.ECast(e,null);
+			}
+			break;
+		case "continue":
+			return hscript_Expr.EContinue;
+		case "do":
+			var e = this.parseExpr();
+			var tk = this.token();
+			if(tk == null) {
+				this.unexpected(tk);
+			} else if(tk._hx_index == 2) {
+				if(tk.s != "while") {
+					this.unexpected(tk);
+				}
+			} else {
+				this.unexpected(tk);
+			}
+			var econd = this.parseExpr();
+			return hscript_Expr.EDoWhile(econd,e);
+		case "else":
+			return this.unexpected(hscript_Token.TId(id));
+		case "final":case "var":
+			var ident = this.getIdent();
+			var tk = this.token();
+			var t = null;
+			if(tk == hscript_Token.TDoubleDot && this.allowTypes) {
+				t = this.parseType();
+				tk = this.token();
+			}
+			var e = null;
+			if(tk == null) {
+				if(t != null) {
+					var _this = this.tokens;
+					_this.head = new haxe_ds_GenericCell(tk,_this.head);
+				} else {
+					this.unexpected(tk);
+				}
+			} else {
+				switch(tk._hx_index) {
+				case 3:
+					if(tk.s == "=") {
+						e = this.parseExpr();
+					} else {
+						this.unexpected(tk);
+					}
+					break;
+				case 10:case 11:
+					var _this = this.tokens;
+					_this.head = new haxe_ds_GenericCell(tk,_this.head);
+					break;
+				default:
+					if(t != null) {
+						var _this = this.tokens;
+						_this.head = new haxe_ds_GenericCell(tk,_this.head);
+					} else {
+						this.unexpected(tk);
+					}
+				}
+			}
+			var pmax = e == null ? 0 : 0;
+			return hscript_Expr.EVar(ident,t,e);
+		case "for":
+			var t = this.token();
+			if(t != hscript_Token.TPOpen) {
+				this.unexpected(t);
+			}
+			var eit = this.parseExpr();
+			var t = this.token();
+			if(t != hscript_Token.TPClose) {
+				this.unexpected(t);
+			}
+			var e = this.parseExpr();
+			if(eit != null) {
+				if(eit._hx_index == 6) {
+					if(eit.op == "in") {
+						var ev = eit.e1;
+						var eit1 = eit.e2;
+						if(ev._hx_index == 1) {
+							var v = ev.v;
+							return hscript_Expr.EFor(v,eit1,e);
+						}
+					}
+				}
+			}
+			return hscript_Expr.EForGen(eit,e);
+		case "function":
+			var tk = this.token();
+			var name = null;
+			if(tk == null) {
+				var _this = this.tokens;
+				_this.head = new haxe_ds_GenericCell(tk,_this.head);
+			} else if(tk._hx_index == 2) {
+				var id = tk.s;
+				name = id;
+			} else {
+				var _this = this.tokens;
+				_this.head = new haxe_ds_GenericCell(tk,_this.head);
+			}
+			var inf = this.parseFunctionDecl();
+			return hscript_Expr.EFunction(inf.args,inf.body,name,inf.ret);
+		case "if":
+			var t = this.token();
+			if(t != hscript_Token.TPOpen) {
+				this.unexpected(t);
+			}
+			var cond = this.parseExpr();
+			var t = this.token();
+			if(t != hscript_Token.TPClose) {
+				this.unexpected(t);
+			}
+			var e1 = this.parseExpr();
+			var e2 = null;
+			var semic = false;
+			var tk = this.token();
+			if(tk == hscript_Token.TSemicolon) {
+				semic = true;
+				tk = this.token();
+			}
+			if(Type.enumEq(tk,hscript_Token.TId("else"))) {
+				e2 = this.parseExpr();
+			} else {
+				var _this = this.tokens;
+				_this.head = new haxe_ds_GenericCell(tk,_this.head);
+				if(semic) {
+					var _this = this.tokens;
+					_this.head = new haxe_ds_GenericCell(hscript_Token.TSemicolon,_this.head);
+				}
+			}
+			var pmax = e2 == null ? 0 : 0;
+			return hscript_Expr.EIf(cond,e1,e2);
+		case "inline":
+			if(!this.maybe(hscript_Token.TId("function"))) {
+				this.unexpected(hscript_Token.TId("inline"));
+			}
+			return this.parseStructure("function");
+		case "new":
+			var a = [];
+			a.push(this.getIdent());
+			_hx_loop1: while(true) {
+				var tk = this.token();
+				if(tk == null) {
+					this.unexpected(tk);
+					break;
+				} else {
+					switch(tk._hx_index) {
+					case 4:
+						break _hx_loop1;
+					case 8:
+						a.push(this.getIdent());
+						break;
+					default:
+						this.unexpected(tk);
+						break _hx_loop1;
+					}
+				}
+			}
+			var args = this.parseExprList(hscript_Token.TPClose);
+			return hscript_Expr.ENew(a.join("."),args);
+		case "return":
+			var tk = this.token();
+			var _this = this.tokens;
+			_this.head = new haxe_ds_GenericCell(tk,_this.head);
+			var e = tk == hscript_Token.TSemicolon ? null : this.parseExpr();
+			var pmax = e == null ? 0 : 0;
+			return hscript_Expr.EReturn(e);
+		case "switch":
+			var e = this.parseExpr();
+			var def = null;
+			var cases = [];
+			var t = this.token();
+			if(t != hscript_Token.TBrOpen) {
+				this.unexpected(t);
+			}
+			_hx_loop2: while(true) {
+				var tk = this.token();
+				if(tk == null) {
+					this.unexpected(tk);
+					break;
+				} else {
+					switch(tk._hx_index) {
+					case 2:
+						switch(tk.s) {
+						case "case":
+							var c = { values : [], expr : null};
+							cases.push(c);
+							_hx_loop3: while(true) {
+								var e1 = this.parseExpr();
+								c.values.push(e1);
+								tk = this.token();
+								if(tk == null) {
+									this.unexpected(tk);
+									break;
+								} else {
+									switch(tk._hx_index) {
+									case 10:
+										break;
+									case 15:
+										break _hx_loop3;
+									default:
+										this.unexpected(tk);
+										break _hx_loop3;
+									}
+								}
+							}
+							var exprs = [];
+							_hx_loop4: while(true) {
+								tk = this.token();
+								var _this = this.tokens;
+								_this.head = new haxe_ds_GenericCell(tk,_this.head);
+								if(tk == null) {
+									this.parseFullExpr(exprs);
+								} else {
+									switch(tk._hx_index) {
+									case 0:
+										if(this.resumeErrors) {
+											break _hx_loop4;
+										} else {
+											this.parseFullExpr(exprs);
+										}
+										break;
+									case 2:
+										switch(tk.s) {
+										case "case":case "default":
+											break _hx_loop4;
+										default:
+											this.parseFullExpr(exprs);
+										}
+										break;
+									case 7:
+										break _hx_loop4;
+									default:
+										this.parseFullExpr(exprs);
+									}
+								}
+							}
+							c.expr = exprs.length == 1 ? exprs[0] : exprs.length == 0 ? hscript_Expr.EBlock([]) : hscript_Expr.EBlock(exprs);
+							break;
+						case "default":
+							if(def != null) {
+								this.unexpected(tk);
+							}
+							var t = this.token();
+							if(t != hscript_Token.TDoubleDot) {
+								this.unexpected(t);
+							}
+							var exprs1 = [];
+							_hx_loop5: while(true) {
+								tk = this.token();
+								var _this1 = this.tokens;
+								_this1.head = new haxe_ds_GenericCell(tk,_this1.head);
+								if(tk == null) {
+									this.parseFullExpr(exprs1);
+								} else {
+									switch(tk._hx_index) {
+									case 0:
+										if(this.resumeErrors) {
+											break _hx_loop5;
+										} else {
+											this.parseFullExpr(exprs1);
+										}
+										break;
+									case 2:
+										switch(tk.s) {
+										case "case":case "default":
+											break _hx_loop5;
+										default:
+											this.parseFullExpr(exprs1);
+										}
+										break;
+									case 7:
+										break _hx_loop5;
+									default:
+										this.parseFullExpr(exprs1);
+									}
+								}
+							}
+							def = exprs1.length == 1 ? exprs1[0] : exprs1.length == 0 ? hscript_Expr.EBlock([]) : hscript_Expr.EBlock(exprs1);
+							break;
+						default:
+							this.unexpected(tk);
+							break _hx_loop2;
+						}
+						break;
+					case 7:
+						break _hx_loop2;
+					default:
+						this.unexpected(tk);
+						break _hx_loop2;
+					}
+				}
+			}
+			return hscript_Expr.ESwitch(e,cases,def);
+		case "throw":
+			var e = this.parseExpr();
+			return hscript_Expr.EThrow(e);
+		case "try":
+			var e = this.parseExpr();
+			var t = this.token();
+			if(!Type.enumEq(t,hscript_Token.TId("catch"))) {
+				this.unexpected(t);
+			}
+			var t = this.token();
+			if(t != hscript_Token.TPOpen) {
+				this.unexpected(t);
+			}
+			var vname = this.getIdent();
+			var t = this.token();
+			if(t != hscript_Token.TDoubleDot) {
+				this.unexpected(t);
+			}
+			var t = null;
+			if(this.allowTypes) {
+				t = this.parseType();
+			} else {
+				var t1 = this.token();
+				if(!Type.enumEq(t1,hscript_Token.TId("Dynamic"))) {
+					this.unexpected(t1);
+				}
+			}
+			var t1 = this.token();
+			if(t1 != hscript_Token.TPClose) {
+				this.unexpected(t1);
+			}
+			var ec = this.parseExpr();
+			return hscript_Expr.ETry(e,vname,t,ec);
+		case "while":
+			var econd = this.parseExpr();
+			var e = this.parseExpr();
+			return hscript_Expr.EWhile(econd,e);
+		default:
+			return null;
+		}
+	}
+	,parseExprNext: function(e1) {
+		var tk = this.token();
+		if(tk == null) {
+			var _this = this.tokens;
+			_this.head = new haxe_ds_GenericCell(tk,_this.head);
+			return e1;
+		} else {
+			switch(tk._hx_index) {
+			case 2:
+				var op = tk.s;
+				if(Object.prototype.hasOwnProperty.call(this.opPriority.h,op)) {
+					return this.parseExprNext(this.makeBinop(op,e1,this.parseExpr()));
+				} else {
+					var _this = this.tokens;
+					_this.head = new haxe_ds_GenericCell(tk,_this.head);
+					return e1;
+				}
+				break;
+			case 3:
+				var op = tk.s;
+				if(op == "->") {
+					switch(e1._hx_index) {
+					case 1:
+						var i = e1.v;
+						var eret = this.parseExpr();
+						return this.mkLambda([{ name : i}],eret,0);
+					case 3:
+						var _hx_tmp = e1.e;
+						if(_hx_tmp._hx_index == 1) {
+							var i = _hx_tmp.v;
+							var eret = this.parseExpr();
+							return this.mkLambda([{ name : i}],eret,0);
+						}
+						break;
+					case 26:
+						var _hx_tmp = e1.e;
+						if(_hx_tmp._hx_index == 1) {
+							var i = _hx_tmp.v;
+							var t = e1.t;
+							var eret = this.parseExpr();
+							return this.mkLambda([{ name : i, t : t}],eret,0);
+						}
+						break;
+					default:
+					}
+					this.unexpected(tk);
+				}
+				if(this.opPriority.h[op] == -1) {
+					var tmp;
+					if(!this.isBlock(e1)) {
+						if(e1._hx_index == 3) {
+							var _g = e1.e;
+							tmp = true;
+						} else {
+							tmp = false;
+						}
+					} else {
+						tmp = true;
+					}
+					if(tmp) {
+						var _this = this.tokens;
+						_this.head = new haxe_ds_GenericCell(tk,_this.head);
+						return e1;
+					}
+					return this.parseExprNext(hscript_Expr.EUnop(op,false,e1));
+				}
+				return this.makeBinop(op,e1,this.parseExpr());
+			case 4:
+				return this.parseExprNext(hscript_Expr.ECall(e1,this.parseExprList(hscript_Token.TPClose)));
+			case 8:
+				var field = this.getIdent();
+				return this.parseExprNext(hscript_Expr.EField(e1,field));
+			case 9:
+				var field = this.getIdent();
+				var tmp = "__a_" + this.uid++;
+				var e = hscript_Expr.EBlock([hscript_Expr.EVar(tmp,null,e1),hscript_Expr.ETernary(hscript_Expr.EBinop("==",hscript_Expr.EIdent(tmp),hscript_Expr.EIdent("null")),hscript_Expr.EIdent("null"),hscript_Expr.EField(hscript_Expr.EIdent(tmp),field))]);
+				return this.parseExprNext(e);
+			case 12:
+				var e2 = this.parseExpr();
+				var t = this.token();
+				if(t != hscript_Token.TBkClose) {
+					this.unexpected(t);
+				}
+				return this.parseExprNext(hscript_Expr.EArray(e1,e2));
+			case 14:
+				var e2 = this.parseExpr();
+				var t = this.token();
+				if(t != hscript_Token.TDoubleDot) {
+					this.unexpected(t);
+				}
+				var e3 = this.parseExpr();
+				return hscript_Expr.ETernary(e1,e2,e3);
+			default:
+				var _this = this.tokens;
+				_this.head = new haxe_ds_GenericCell(tk,_this.head);
+				return e1;
+			}
+		}
+	}
+	,parseFunctionArgs: function() {
+		var args = [];
+		var tk = this.token();
+		if(tk != hscript_Token.TPClose) {
+			var done = false;
+			while(!done) {
+				var name = null;
+				var opt = false;
+				if(tk != null) {
+					if(tk._hx_index == 14) {
+						opt = true;
+						tk = this.token();
+					}
+				}
+				if(tk == null) {
+					this.unexpected(tk);
+					break;
+				} else if(tk._hx_index == 2) {
+					var id = tk.s;
+					name = id;
+				} else {
+					this.unexpected(tk);
+					break;
+				}
+				var arg = { name : name};
+				args.push(arg);
+				if(opt) {
+					arg.opt = true;
+				}
+				if(this.allowTypes) {
+					if(this.maybe(hscript_Token.TDoubleDot)) {
+						arg.t = this.parseType();
+					}
+					if(this.maybe(hscript_Token.TOp("="))) {
+						arg.value = this.parseExpr();
+					}
+				}
+				tk = this.token();
+				if(tk == null) {
+					this.unexpected(tk);
+				} else {
+					switch(tk._hx_index) {
+					case 5:
+						done = true;
+						break;
+					case 10:
+						tk = this.token();
+						break;
+					default:
+						this.unexpected(tk);
+					}
+				}
+			}
+		}
+		return args;
+	}
+	,parseFunctionDecl: function() {
+		var t = this.token();
+		if(t != hscript_Token.TPOpen) {
+			this.unexpected(t);
+		}
+		var args = this.parseFunctionArgs();
+		var ret = null;
+		if(this.allowTypes) {
+			var tk = this.token();
+			if(tk != hscript_Token.TDoubleDot) {
+				var _this = this.tokens;
+				_this.head = new haxe_ds_GenericCell(tk,_this.head);
+			} else {
+				ret = this.parseType();
+			}
+		}
+		return { args : args, ret : ret, body : this.parseExpr()};
+	}
+	,parsePath: function() {
+		var path = [this.getIdent()];
+		while(true) {
+			var t = this.token();
+			if(t != hscript_Token.TDot) {
+				var _this = this.tokens;
+				_this.head = new haxe_ds_GenericCell(t,_this.head);
+				break;
+			}
+			path.push(this.getIdent());
+		}
+		return path;
+	}
+	,parseType: function() {
+		var _gthis = this;
+		var t = this.token();
+		if(t == null) {
+			return this.unexpected(t);
+		} else {
+			switch(t._hx_index) {
+			case 2:
+				var v = t.s;
+				var _this = this.tokens;
+				_this.head = new haxe_ds_GenericCell(t,_this.head);
+				var path = this.parsePath();
+				var params = null;
+				t = this.token();
+				if(t == null) {
+					var _this = this.tokens;
+					_this.head = new haxe_ds_GenericCell(t,_this.head);
+				} else if(t._hx_index == 3) {
+					var op = t.s;
+					if(op == "<") {
+						params = [];
+						_hx_loop1: while(true) {
+							var _g = this.token();
+							if(_g == null) {
+								var tk = _g;
+								var _this = this.tokens;
+								_this.head = new haxe_ds_GenericCell(tk,_this.head);
+								params.push(this.parseType());
+							} else if(_g._hx_index == 1) {
+								var c = _g.c;
+								params.push(hscript_CType.CTExpr(hscript_Expr.EConst(c)));
+							} else {
+								var tk1 = _g;
+								var _this1 = this.tokens;
+								_this1.head = new haxe_ds_GenericCell(tk1,_this1.head);
+								params.push(this.parseType());
+							}
+							t = this.token();
+							if(t != null) {
+								switch(t._hx_index) {
+								case 3:
+									var op = t.s;
+									if(op == ">") {
+										break _hx_loop1;
+									}
+									if(HxOverrides.cca(op,0) == 62) {
+										var _this2 = this.tokens;
+										_this2.head = new haxe_ds_GenericCell(hscript_Token.TOp(HxOverrides.substr(op,1,null)),_this2.head);
+										break _hx_loop1;
+									}
+									break;
+								case 10:
+									continue;
+								default:
+								}
+							}
+							this.unexpected(t);
+							break;
+						}
+					} else {
+						var _this = this.tokens;
+						_this.head = new haxe_ds_GenericCell(t,_this.head);
+					}
+				} else {
+					var _this = this.tokens;
+					_this.head = new haxe_ds_GenericCell(t,_this.head);
+				}
+				return this.parseTypeNext(hscript_CType.CTPath(path,params));
+			case 4:
+				var a = this.token();
+				var b = this.token();
+				var _this = this.tokens;
+				_this.head = new haxe_ds_GenericCell(b,_this.head);
+				var _this = this.tokens;
+				_this.head = new haxe_ds_GenericCell(a,_this.head);
+				var withReturn = function(args) {
+					var _g = _gthis.token();
+					if(_g == null) {
+						var t = _g;
+						_gthis.unexpected(t);
+					} else if(_g._hx_index == 3) {
+						if(_g.s != "->") {
+							var t = _g;
+							_gthis.unexpected(t);
+						}
+					} else {
+						var t = _g;
+						_gthis.unexpected(t);
+					}
+					return hscript_CType.CTFun(args,_gthis.parseType());
+				};
+				if(a == null) {
+					var t1 = this.parseType();
+					var _g = this.token();
+					if(_g == null) {
+						var t2 = _g;
+						return this.unexpected(t2);
+					} else {
+						switch(_g._hx_index) {
+						case 5:
+							return this.parseTypeNext(hscript_CType.CTParent(t1));
+						case 10:
+							var args = [t1];
+							do args.push(this.parseType()); while(this.maybe(hscript_Token.TComma));
+							var t1 = this.token();
+							if(t1 != hscript_Token.TPClose) {
+								this.unexpected(t1);
+							}
+							return withReturn(args);
+						default:
+							var t1 = _g;
+							return this.unexpected(t1);
+						}
+					}
+				} else {
+					switch(a._hx_index) {
+					case 2:
+						var _g = a.s;
+						if(b == null) {
+							var t1 = this.parseType();
+							var _g = this.token();
+							if(_g == null) {
+								var t2 = _g;
+								return this.unexpected(t2);
+							} else {
+								switch(_g._hx_index) {
+								case 5:
+									return this.parseTypeNext(hscript_CType.CTParent(t1));
+								case 10:
+									var args = [t1];
+									do args.push(this.parseType()); while(this.maybe(hscript_Token.TComma));
+									var t1 = this.token();
+									if(t1 != hscript_Token.TPClose) {
+										this.unexpected(t1);
+									}
+									return withReturn(args);
+								default:
+									var t1 = _g;
+									return this.unexpected(t1);
+								}
+							}
+						} else if(b._hx_index == 15) {
+							var _g = [];
+							var _g1 = 0;
+							var _g2 = this.parseFunctionArgs();
+							while(_g1 < _g2.length) {
+								var arg = _g2[_g1];
+								++_g1;
+								var _g3 = arg.value;
+								if(_g3 != null) {
+									var v = _g3;
+									if(!this.resumeErrors) {
+										throw haxe_Exception.thrown(hscript_Error.ECustom("Default values not allowed in function types"));
+									}
+								}
+								_g.push(hscript_CType.CTNamed(arg.name,arg.opt ? hscript_CType.CTOpt(arg.t) : arg.t));
+							}
+							var args = _g;
+							return withReturn(args);
+						} else {
+							var t1 = this.parseType();
+							var _g = this.token();
+							if(_g == null) {
+								var t2 = _g;
+								return this.unexpected(t2);
+							} else {
+								switch(_g._hx_index) {
+								case 5:
+									return this.parseTypeNext(hscript_CType.CTParent(t1));
+								case 10:
+									var args = [t1];
+									do args.push(this.parseType()); while(this.maybe(hscript_Token.TComma));
+									var t1 = this.token();
+									if(t1 != hscript_Token.TPClose) {
+										this.unexpected(t1);
+									}
+									return withReturn(args);
+								default:
+									var t1 = _g;
+									return this.unexpected(t1);
+								}
+							}
+						}
+						break;
+					case 5:
+						var _g = [];
+						var _g1 = 0;
+						var _g2 = this.parseFunctionArgs();
+						while(_g1 < _g2.length) {
+							var arg = _g2[_g1];
+							++_g1;
+							var _g3 = arg.value;
+							if(_g3 != null) {
+								var v = _g3;
+								if(!this.resumeErrors) {
+									throw haxe_Exception.thrown(hscript_Error.ECustom("Default values not allowed in function types"));
+								}
+							}
+							_g.push(hscript_CType.CTNamed(arg.name,arg.opt ? hscript_CType.CTOpt(arg.t) : arg.t));
+						}
+						var args = _g;
+						return withReturn(args);
+					default:
+						var t1 = this.parseType();
+						var _g = this.token();
+						if(_g == null) {
+							var t2 = _g;
+							return this.unexpected(t2);
+						} else {
+							switch(_g._hx_index) {
+							case 5:
+								return this.parseTypeNext(hscript_CType.CTParent(t1));
+							case 10:
+								var args = [t1];
+								do args.push(this.parseType()); while(this.maybe(hscript_Token.TComma));
+								var t1 = this.token();
+								if(t1 != hscript_Token.TPClose) {
+									this.unexpected(t1);
+								}
+								return withReturn(args);
+							default:
+								var t1 = _g;
+								return this.unexpected(t1);
+							}
+						}
+					}
+				}
+				break;
+			case 6:
+				var fields = [];
+				var meta = null;
+				_hx_loop8: while(true) {
+					t = this.token();
+					if(t == null) {
+						this.unexpected(t);
+						break;
+					} else {
+						switch(t._hx_index) {
+						case 2:
+							var _g = t.s;
+							switch(_g) {
+							case "final":case "var":
+								var name = this.getIdent();
+								var t1 = this.token();
+								if(t1 != hscript_Token.TDoubleDot) {
+									this.unexpected(t1);
+								}
+								if(t == null ? false : t._hx_index == 2 && t.s == "final") {
+									if(meta == null) {
+										meta = [];
+									}
+									meta.push({ name : ":final", params : []});
+								}
+								fields.push({ name : name, t : this.parseType(), meta : meta});
+								meta = null;
+								var t2 = this.token();
+								if(t2 != hscript_Token.TSemicolon) {
+									this.unexpected(t2);
+								}
+								break;
+							default:
+								var name1 = _g;
+								var t3 = this.token();
+								if(t3 != hscript_Token.TDoubleDot) {
+									this.unexpected(t3);
+								}
+								fields.push({ name : name1, t : this.parseType(), meta : meta});
+								t = this.token();
+								if(t == null) {
+									this.unexpected(t);
+								} else {
+									switch(t._hx_index) {
+									case 7:
+										break _hx_loop8;
+									case 10:
+										break;
+									default:
+										this.unexpected(t);
+									}
+								}
+							}
+							break;
+						case 7:
+							break _hx_loop8;
+						case 16:
+							var name2 = t.s;
+							if(meta == null) {
+								meta = [];
+							}
+							meta.push({ name : name2, params : this.parseMetaArgs()});
+							break;
+						default:
+							this.unexpected(t);
+							break _hx_loop8;
+						}
+					}
+				}
+				return this.parseTypeNext(hscript_CType.CTAnon(fields));
+			default:
+				return this.unexpected(t);
+			}
+		}
+	}
+	,parseTypeNext: function(t) {
+		var tk = this.token();
+		if(tk == null) {
+			var _this = this.tokens;
+			_this.head = new haxe_ds_GenericCell(tk,_this.head);
+			return t;
+		} else if(tk._hx_index == 3) {
+			var op = tk.s;
+			if(op != "->") {
+				var _this = this.tokens;
+				_this.head = new haxe_ds_GenericCell(tk,_this.head);
+				return t;
+			}
+		} else {
+			var _this = this.tokens;
+			_this.head = new haxe_ds_GenericCell(tk,_this.head);
+			return t;
+		}
+		var t2 = this.parseType();
+		if(t2._hx_index == 1) {
+			var _g = t2.ret;
+			var args = t2.args;
+			args.unshift(t);
+			return t2;
+		} else {
+			return hscript_CType.CTFun([t],t2);
+		}
+	}
+	,parseExprList: function(etk) {
+		var args = [];
+		var tk = this.token();
+		if(tk == etk) {
+			return args;
+		}
+		var _this = this.tokens;
+		_this.head = new haxe_ds_GenericCell(tk,_this.head);
+		while(true) {
+			args.push(this.parseExpr());
+			tk = this.token();
+			if(tk == null) {
+				if(tk == etk) {
+					break;
+				}
+				this.unexpected(tk);
+				break;
+			} else if(tk._hx_index != 10) {
+				if(tk == etk) {
+					break;
+				}
+				this.unexpected(tk);
+				break;
+			}
+		}
+		return args;
+	}
+	,parseModule: function(content,origin,position) {
+		if(position == null) {
+			position = 0;
+		}
+		if(origin == null) {
+			origin = "hscript";
+		}
+		this.initParser(origin,position);
+		this.input = content;
+		this.readPos = 0;
+		this.allowTypes = true;
+		this.allowMetadata = true;
+		var decls = [];
+		while(true) {
+			var tk = this.token();
+			if(tk == hscript_Token.TEof) {
+				break;
+			}
+			var _this = this.tokens;
+			_this.head = new haxe_ds_GenericCell(tk,_this.head);
+			decls.push(this.parseModuleDecl());
+		}
+		return decls;
+	}
+	,parseMetadata: function() {
+		var meta = [];
+		while(true) {
+			var tk = this.token();
+			if(tk == null) {
+				var _this = this.tokens;
+				_this.head = new haxe_ds_GenericCell(tk,_this.head);
+				break;
+			} else if(tk._hx_index == 16) {
+				var name = tk.s;
+				meta.push({ name : name, params : this.parseMetaArgs()});
+			} else {
+				var _this1 = this.tokens;
+				_this1.head = new haxe_ds_GenericCell(tk,_this1.head);
+				break;
+			}
+		}
+		return meta;
+	}
+	,parseParams: function() {
+		if(this.maybe(hscript_Token.TOp("<"))) {
+			if(!this.resumeErrors) {
+				throw haxe_Exception.thrown(hscript_Error.EInvalidOp("Unsupported class type parameters"));
+			}
+		}
+		return { };
+	}
+	,parseModuleDecl: function() {
+		var meta = this.parseMetadata();
+		var ident = this.getIdent();
+		var isPrivate = false;
+		var isExtern = false;
+		_hx_loop1: while(true) {
+			switch(ident) {
+			case "extern":
+				isExtern = true;
+				break;
+			case "private":
+				isPrivate = true;
+				break;
+			default:
+				break _hx_loop1;
+			}
+			ident = this.getIdent();
+		}
+		switch(ident) {
+		case "class":
+			var name = this.getIdent();
+			var params = this.parseParams();
+			var extend = null;
+			var implement = [];
+			_hx_loop2: while(true) {
+				var t = this.token();
+				if(t == null) {
+					var _this = this.tokens;
+					_this.head = new haxe_ds_GenericCell(t,_this.head);
+					break;
+				} else if(t._hx_index == 2) {
+					switch(t.s) {
+					case "extends":
+						extend = this.parseType();
+						break;
+					case "implements":
+						implement.push(this.parseType());
+						break;
+					default:
+						var _this1 = this.tokens;
+						_this1.head = new haxe_ds_GenericCell(t,_this1.head);
+						break _hx_loop2;
+					}
+				} else {
+					var _this2 = this.tokens;
+					_this2.head = new haxe_ds_GenericCell(t,_this2.head);
+					break;
+				}
+			}
+			var fields = [];
+			var t = this.token();
+			if(t != hscript_Token.TBrOpen) {
+				this.unexpected(t);
+			}
+			while(!this.maybe(hscript_Token.TBrClose)) fields.push(this.parseField());
+			return hscript_ModuleDecl.DClass({ name : name, meta : meta, params : params, extend : extend, implement : implement, fields : fields, isPrivate : isPrivate, isExtern : isExtern});
+		case "import":
+			var path = [this.getIdent()];
+			var star = false;
+			while(true) {
+				var t = this.token();
+				if(t != hscript_Token.TDot) {
+					var _this = this.tokens;
+					_this.head = new haxe_ds_GenericCell(t,_this.head);
+					break;
+				}
+				t = this.token();
+				if(t == null) {
+					this.unexpected(t);
+				} else {
+					switch(t._hx_index) {
+					case 2:
+						var id = t.s;
+						path.push(id);
+						break;
+					case 3:
+						if(t.s == "*") {
+							star = true;
+						} else {
+							this.unexpected(t);
+						}
+						break;
+					default:
+						this.unexpected(t);
+					}
+				}
+			}
+			var name = null;
+			if(this.maybe(hscript_Token.TId("as")) && !star) {
+				var t = this.token();
+				if(t == null) {
+					this.unexpected(t);
+				} else if(t._hx_index == 2) {
+					var id = t.s;
+					name = id;
+				} else {
+					this.unexpected(t);
+				}
+			}
+			var t = this.token();
+			if(t != hscript_Token.TSemicolon) {
+				this.unexpected(t);
+			}
+			return hscript_ModuleDecl.DImport(path,star,name);
+		case "package":
+			var path = this.parsePath();
+			var t = this.token();
+			if(t != hscript_Token.TSemicolon) {
+				this.unexpected(t);
+			}
+			return hscript_ModuleDecl.DPackage(path);
+		case "typedef":
+			var name = this.getIdent();
+			var params = this.parseParams();
+			var t = this.token();
+			if(!Type.enumEq(t,hscript_Token.TOp("="))) {
+				this.unexpected(t);
+			}
+			var t = this.parseType();
+			return hscript_ModuleDecl.DTypedef({ name : name, meta : meta, params : params, isPrivate : isPrivate, t : t});
+		default:
+			this.unexpected(hscript_Token.TId(ident));
+		}
+		return null;
+	}
+	,parseField: function() {
+		var meta = this.parseMetadata();
+		var access = [];
+		_hx_loop1: while(true) {
+			var id = this.getIdent();
+			switch(id) {
+			case "final":case "var":
+				var name = this.getIdent();
+				var get = null;
+				var set = null;
+				if(this.maybe(hscript_Token.TPOpen)) {
+					get = this.getIdent();
+					var t = this.token();
+					if(t != hscript_Token.TComma) {
+						this.unexpected(t);
+					}
+					set = this.getIdent();
+					var t1 = this.token();
+					if(t1 != hscript_Token.TPClose) {
+						this.unexpected(t1);
+					}
+				}
+				var type = this.maybe(hscript_Token.TDoubleDot) ? this.parseType() : null;
+				var expr = this.maybe(hscript_Token.TOp("=")) ? this.parseExpr() : null;
+				if(expr != null) {
+					if(this.isBlock(expr)) {
+						this.maybe(hscript_Token.TSemicolon);
+					} else {
+						var t2 = this.token();
+						if(t2 != hscript_Token.TSemicolon) {
+							this.unexpected(t2);
+						}
+					}
+				} else {
+					var tmp;
+					if(type != null) {
+						if(type == null) {
+							tmp = false;
+						} else if(type._hx_index == 2) {
+							var _g = type.fields;
+							tmp = true;
+						} else {
+							tmp = false;
+						}
+					} else {
+						tmp = false;
+					}
+					if(tmp) {
+						this.maybe(hscript_Token.TSemicolon);
+					} else {
+						var t3 = this.token();
+						if(t3 != hscript_Token.TSemicolon) {
+							this.unexpected(t3);
+						}
+					}
+				}
+				return { name : name, meta : meta, access : access, kind : hscript_FieldKind.KVar({ get : get, set : set, type : type, expr : expr})};
+			case "function":
+				var name1 = this.getIdent();
+				var inf = this.parseFunctionDecl();
+				return { name : name1, meta : meta, access : access, kind : hscript_FieldKind.KFunction({ args : inf.args, expr : inf.body, ret : inf.ret})};
+			case "inline":
+				access.push(hscript_FieldAccess.AInline);
+				break;
+			case "macro":
+				access.push(hscript_FieldAccess.AMacro);
+				break;
+			case "override":
+				access.push(hscript_FieldAccess.AOverride);
+				break;
+			case "private":
+				access.push(hscript_FieldAccess.APrivate);
+				break;
+			case "public":
+				access.push(hscript_FieldAccess.APublic);
+				break;
+			case "static":
+				access.push(hscript_FieldAccess.AStatic);
+				break;
+			default:
+				this.unexpected(hscript_Token.TId(id));
+				break _hx_loop1;
+			}
+		}
+		return null;
+	}
+	,readChar: function() {
+		return this.input.charCodeAt(this.readPos++);
+	}
+	,readString: function(until) {
+		var c = 0;
+		var b_b = "";
+		var esc = false;
+		var old = this.line;
+		var s = this.input;
+		while(true) {
+			var c = this.input.charCodeAt(this.readPos++);
+			if(c != c) {
+				this.line = old;
+				if(!this.resumeErrors) {
+					throw haxe_Exception.thrown(hscript_Error.EUnterminatedString);
+				}
+				break;
+			}
+			if(esc) {
+				esc = false;
+				switch(c) {
+				case 47:
+					if(this.allowJSON) {
+						b_b += String.fromCodePoint(c);
+					} else {
+						this.invalidChar(c);
+					}
+					break;
+				case 34:case 39:case 92:
+					b_b += String.fromCodePoint(c);
+					break;
+				case 110:
+					b_b += String.fromCodePoint(10);
+					break;
+				case 114:
+					b_b += String.fromCodePoint(13);
+					break;
+				case 116:
+					b_b += String.fromCodePoint(9);
+					break;
+				case 117:
+					if(!this.allowJSON) {
+						this.invalidChar(c);
+					}
+					var k = 0;
+					var _g = 0;
+					while(_g < 4) {
+						var i = _g++;
+						k <<= 4;
+						var char = this.input.charCodeAt(this.readPos++);
+						switch(char) {
+						case 48:case 49:case 50:case 51:case 52:case 53:case 54:case 55:case 56:case 57:
+							k += char - 48;
+							break;
+						case 65:case 66:case 67:case 68:case 69:case 70:
+							k += char - 55;
+							break;
+						case 97:case 98:case 99:case 100:case 101:case 102:
+							k += char - 87;
+							break;
+						default:
+							if(char != char) {
+								this.line = old;
+								if(!this.resumeErrors) {
+									throw haxe_Exception.thrown(hscript_Error.EUnterminatedString);
+								}
+							}
+							this.invalidChar(char);
+						}
+					}
+					b_b += String.fromCodePoint(k);
+					break;
+				default:
+					this.invalidChar(c);
+				}
+			} else if(c == 92) {
+				esc = true;
+			} else if(c == until) {
+				break;
+			} else {
+				if(c == 10) {
+					this.line++;
+				}
+				b_b += String.fromCodePoint(c);
+			}
+		}
+		return b_b;
+	}
+	,token: function() {
+		if(this.tokens.head != null) {
+			var _this = this.tokens;
+			var k = _this.head;
+			if(k == null) {
+				return null;
+			} else {
+				_this.head = k.next;
+				return k.elt;
+			}
+		}
+		var char;
+		if(this.char < 0) {
+			char = this.input.charCodeAt(this.readPos++);
+		} else {
+			char = this.char;
+			this.char = -1;
+		}
+		while(true) {
+			if(char != char) {
+				this.char = char;
+				return hscript_Token.TEof;
+			}
+			switch(char) {
+			case 0:
+				return hscript_Token.TEof;
+			case 10:
+				this.line++;
+				break;
+			case 9:case 13:case 32:
+				break;
+			case 34:case 39:
+				return hscript_Token.TConst(hscript_Const.CString(this.readString(char)));
+			case 35:
+				char = this.input.charCodeAt(this.readPos++);
+				if(this.idents[char]) {
+					var id = String.fromCodePoint(char);
+					while(true) {
+						char = this.input.charCodeAt(this.readPos++);
+						if(!this.idents[char]) {
+							this.char = char;
+							return this.preprocess(id);
+						}
+						id += String.fromCodePoint(char);
+					}
+				}
+				this.invalidChar(char);
+				break;
+			case 40:
+				return hscript_Token.TPOpen;
+			case 41:
+				return hscript_Token.TPClose;
+			case 44:
+				return hscript_Token.TComma;
+			case 46:
+				char = this.input.charCodeAt(this.readPos++);
+				switch(char) {
+				case 46:
+					char = this.input.charCodeAt(this.readPos++);
+					if(char != 46) {
+						this.invalidChar(char);
+					}
+					return hscript_Token.TOp("...");
+				case 48:case 49:case 50:case 51:case 52:case 53:case 54:case 55:case 56:case 57:
+					var n = char - 48;
+					var exp = 1;
+					while(true) {
+						char = this.input.charCodeAt(this.readPos++);
+						exp *= 10;
+						switch(char) {
+						case 48:case 49:case 50:case 51:case 52:case 53:case 54:case 55:case 56:case 57:
+							n = n * 10 + (char - 48);
+							break;
+						default:
+							this.char = char;
+							return hscript_Token.TConst(hscript_Const.CFloat(n / exp));
+						}
+					}
+					break;
+				default:
+					this.char = char;
+					return hscript_Token.TDot;
+				}
+				break;
+			case 48:case 49:case 50:case 51:case 52:case 53:case 54:case 55:case 56:case 57:
+				var n1 = (char - 48) * 1.0;
+				var exp1 = 0.;
+				while(true) {
+					char = this.input.charCodeAt(this.readPos++);
+					exp1 *= 10;
+					switch(char) {
+					case 46:
+						if(exp1 > 0) {
+							if(exp1 == 10 && this.input.charCodeAt(this.readPos++) == 46) {
+								var _this = this.tokens;
+								_this.head = new haxe_ds_GenericCell(hscript_Token.TOp("..."),_this.head);
+								var i = n1 | 0;
+								return hscript_Token.TConst(i == n1 ? hscript_Const.CInt(i) : hscript_Const.CFloat(n1));
+							}
+							this.invalidChar(char);
+						}
+						exp1 = 1.;
+						break;
+					case 48:case 49:case 50:case 51:case 52:case 53:case 54:case 55:case 56:case 57:
+						n1 = n1 * 10 + (char - 48);
+						break;
+					case 69:case 101:
+						var tk = this.token();
+						var pow = null;
+						if(tk == null) {
+							var _this1 = this.tokens;
+							_this1.head = new haxe_ds_GenericCell(tk,_this1.head);
+						} else {
+							switch(tk._hx_index) {
+							case 1:
+								var _g = tk.c;
+								if(_g._hx_index == 0) {
+									var e = _g.v;
+									pow = e;
+								} else {
+									var _this2 = this.tokens;
+									_this2.head = new haxe_ds_GenericCell(tk,_this2.head);
+								}
+								break;
+							case 3:
+								if(tk.s == "-") {
+									tk = this.token();
+									if(tk == null) {
+										var _this3 = this.tokens;
+										_this3.head = new haxe_ds_GenericCell(tk,_this3.head);
+									} else if(tk._hx_index == 1) {
+										var _g1 = tk.c;
+										if(_g1._hx_index == 0) {
+											var e1 = _g1.v;
+											pow = -e1;
+										} else {
+											var _this4 = this.tokens;
+											_this4.head = new haxe_ds_GenericCell(tk,_this4.head);
+										}
+									} else {
+										var _this5 = this.tokens;
+										_this5.head = new haxe_ds_GenericCell(tk,_this5.head);
+									}
+								} else {
+									var _this6 = this.tokens;
+									_this6.head = new haxe_ds_GenericCell(tk,_this6.head);
+								}
+								break;
+							default:
+								var _this7 = this.tokens;
+								_this7.head = new haxe_ds_GenericCell(tk,_this7.head);
+							}
+						}
+						if(pow == null) {
+							this.invalidChar(char);
+						}
+						if(exp1 == 0) {
+							exp1 = 10;
+						}
+						return hscript_Token.TConst(hscript_Const.CFloat(Math.pow(10,pow) / exp1 * n1 * 10));
+					case 120:
+						if(n1 > 0 || exp1 > 0) {
+							this.invalidChar(char);
+						}
+						var n2 = 0;
+						while(true) {
+							char = this.input.charCodeAt(this.readPos++);
+							switch(char) {
+							case 48:case 49:case 50:case 51:case 52:case 53:case 54:case 55:case 56:case 57:
+								n2 = (n2 << 4) + char - 48;
+								break;
+							case 65:case 66:case 67:case 68:case 69:case 70:
+								n2 = (n2 << 4) + (char - 55);
+								break;
+							case 97:case 98:case 99:case 100:case 101:case 102:
+								n2 = (n2 << 4) + (char - 87);
+								break;
+							default:
+								this.char = char;
+								return hscript_Token.TConst(hscript_Const.CInt(n2));
+							}
+						}
+						break;
+					default:
+						this.char = char;
+						var i1 = n1 | 0;
+						return hscript_Token.TConst(exp1 > 0 ? hscript_Const.CFloat(n1 * 10 / exp1) : i1 == n1 ? hscript_Const.CInt(i1) : hscript_Const.CFloat(n1));
+					}
+				}
+				break;
+			case 58:
+				return hscript_Token.TDoubleDot;
+			case 59:
+				return hscript_Token.TSemicolon;
+			case 61:
+				char = this.input.charCodeAt(this.readPos++);
+				if(char == 61) {
+					return hscript_Token.TOp("==");
+				} else if(char == 62) {
+					return hscript_Token.TOp("=>");
+				}
+				this.char = char;
+				return hscript_Token.TOp("=");
+			case 63:
+				char = this.input.charCodeAt(this.readPos++);
+				if(char == 46) {
+					return hscript_Token.TQuestionDot;
+				}
+				this.char = char;
+				return hscript_Token.TQuestion;
+			case 64:
+				char = this.input.charCodeAt(this.readPos++);
+				if(this.idents[char] || char == 58) {
+					var id1 = String.fromCodePoint(char);
+					while(true) {
+						char = this.input.charCodeAt(this.readPos++);
+						if(!this.idents[char]) {
+							this.char = char;
+							return hscript_Token.TMeta(id1);
+						}
+						id1 += String.fromCodePoint(char);
+					}
+				}
+				this.invalidChar(char);
+				break;
+			case 91:
+				return hscript_Token.TBkOpen;
+			case 93:
+				return hscript_Token.TBkClose;
+			case 123:
+				return hscript_Token.TBrOpen;
+			case 125:
+				return hscript_Token.TBrClose;
+			default:
+				if(this.ops[char]) {
+					var op = String.fromCodePoint(char);
+					while(true) {
+						char = this.input.charCodeAt(this.readPos++);
+						if(char != char) {
+							char = 0;
+						}
+						if(!this.ops[char]) {
+							this.char = char;
+							return hscript_Token.TOp(op);
+						}
+						var pop = op;
+						op += String.fromCodePoint(char);
+						if(!Object.prototype.hasOwnProperty.call(this.opPriority.h,op) && Object.prototype.hasOwnProperty.call(this.opPriority.h,pop)) {
+							if(op == "//" || op == "/*") {
+								return this.tokenComment(op,char);
+							}
+							this.char = char;
+							return hscript_Token.TOp(pop);
+						}
+					}
+				}
+				if(this.idents[char]) {
+					var id2 = String.fromCodePoint(char);
+					while(true) {
+						char = this.input.charCodeAt(this.readPos++);
+						if(char != char) {
+							char = 0;
+						}
+						if(!this.idents[char]) {
+							this.char = char;
+							return hscript_Token.TId(id2);
+						}
+						id2 += String.fromCodePoint(char);
+					}
+				}
+				this.invalidChar(char);
+			}
+			char = this.input.charCodeAt(this.readPos++);
+		}
+	}
+	,preprocValue: function(id) {
+		return this.preprocesorValues.h[id];
+	}
+	,preprocStack: null
+	,parsePreproCond: function() {
+		var tk = this.token();
+		if(tk == null) {
+			return this.unexpected(tk);
+		} else {
+			switch(tk._hx_index) {
+			case 2:
+				var id = tk.s;
+				return hscript_Expr.EIdent(id);
+			case 3:
+				if(tk.s == "!") {
+					return hscript_Expr.EUnop("!",true,this.parsePreproCond());
+				} else {
+					return this.unexpected(tk);
+				}
+				break;
+			case 4:
+				var _this = this.tokens;
+				_this.head = new haxe_ds_GenericCell(hscript_Token.TPOpen,_this.head);
+				return this.parseExpr();
+			default:
+				return this.unexpected(tk);
+			}
+		}
+	}
+	,evalPreproCond: function(e) {
+		switch(e._hx_index) {
+		case 1:
+			var id = e.v;
+			return this.preprocValue(id) != null;
+		case 3:
+			var e1 = e.e;
+			return this.evalPreproCond(e1);
+		case 6:
+			var _g = e.e1;
+			var _g1 = e.e2;
+			switch(e.op) {
+			case "&&":
+				var e1 = _g;
+				var e2 = _g1;
+				if(this.evalPreproCond(e1)) {
+					return this.evalPreproCond(e2);
+				} else {
+					return false;
+				}
+				break;
+			case "||":
+				var e1 = _g;
+				var e2 = _g1;
+				if(!this.evalPreproCond(e1)) {
+					return this.evalPreproCond(e2);
+				} else {
+					return true;
+				}
+				break;
+			default:
+				if(!this.resumeErrors) {
+					throw haxe_Exception.thrown(hscript_Error.EInvalidPreprocessor("Can't eval " + $hxEnums[e.__enum__].__constructs__[e._hx_index]._hx_name));
+				}
+				return false;
+			}
+			break;
+		case 7:
+			var _g = e.prefix;
+			if(e.op == "!") {
+				var e1 = e.e;
+				return !this.evalPreproCond(e1);
+			} else {
+				if(!this.resumeErrors) {
+					throw haxe_Exception.thrown(hscript_Error.EInvalidPreprocessor("Can't eval " + $hxEnums[e.__enum__].__constructs__[e._hx_index]._hx_name));
+				}
+				return false;
+			}
+			break;
+		default:
+			if(!this.resumeErrors) {
+				throw haxe_Exception.thrown(hscript_Error.EInvalidPreprocessor("Can't eval " + $hxEnums[e.__enum__].__constructs__[e._hx_index]._hx_name));
+			}
+			return false;
+		}
+	}
+	,preprocess: function(id) {
+		switch(id) {
+		case "else":case "elseif":
+			if(this.preprocStack.length > 0) {
+				if(this.preprocStack[this.preprocStack.length - 1].r) {
+					this.preprocStack[this.preprocStack.length - 1].r = false;
+					this.skipTokens();
+					return this.token();
+				} else if(id == "else") {
+					this.preprocStack.pop();
+					this.preprocStack.push({ r : true});
+					return this.token();
+				} else {
+					this.preprocStack.pop();
+					return this.preprocess("if");
+				}
+			} else {
+				return hscript_Token.TPrepro(id);
+			}
+			break;
+		case "end":
+			if(this.preprocStack.length > 0) {
+				this.preprocStack.pop();
+				return this.token();
+			} else {
+				return hscript_Token.TPrepro(id);
+			}
+			break;
+		case "if":
+			var e = this.parsePreproCond();
+			if(this.evalPreproCond(e)) {
+				this.preprocStack.push({ r : true});
+				return this.token();
+			}
+			this.preprocStack.push({ r : false});
+			this.skipTokens();
+			return this.token();
+		default:
+			return hscript_Token.TPrepro(id);
+		}
+	}
+	,skipTokens: function() {
+		var spos = this.preprocStack.length - 1;
+		var obj = this.preprocStack[spos];
+		var pos = this.readPos + this.offset;
+		while(true) {
+			var tk = this.token();
+			if(tk == hscript_Token.TEof) {
+				if(!this.resumeErrors) {
+					throw haxe_Exception.thrown(hscript_Error.EInvalidPreprocessor("Unclosed"));
+				}
+			}
+			if(this.preprocStack[spos] != obj) {
+				var _this = this.tokens;
+				_this.head = new haxe_ds_GenericCell(tk,_this.head);
+				break;
+			}
+		}
+	}
+	,tokenComment: function(op,char) {
+		var c = HxOverrides.cca(op,1);
+		var s = this.input;
+		if(c == 47) {
+			while(char != 13 && char != 10) {
+				char = this.input.charCodeAt(this.readPos++);
+				if(char != char) {
+					break;
+				}
+			}
+			this.char = char;
+			return this.token();
+		}
+		if(c == 42) {
+			var old = this.line;
+			if(op == "/**/") {
+				this.char = char;
+				return this.token();
+			}
+			do {
+				while(char != 42) {
+					if(char == 10) {
+						this.line++;
+					}
+					char = this.input.charCodeAt(this.readPos++);
+					if(char != char) {
+						this.line = old;
+						if(!this.resumeErrors) {
+							throw haxe_Exception.thrown(hscript_Error.EUnterminatedComment);
+						}
+						break;
+					}
+				}
+				char = this.input.charCodeAt(this.readPos++);
+				if(char != char) {
+					this.line = old;
+					if(!this.resumeErrors) {
+						throw haxe_Exception.thrown(hscript_Error.EUnterminatedComment);
+					}
+					break;
+				}
+			} while(char != 47);
+			return this.token();
+		}
+		this.char = char;
+		return hscript_Token.TOp(op);
+	}
+	,constString: function(c) {
+		switch(c._hx_index) {
+		case 0:
+			var v = c.v;
+			if(v == null) {
+				return "null";
+			} else {
+				return "" + v;
+			}
+			break;
+		case 1:
+			var f = c.f;
+			if(f == null) {
+				return "null";
+			} else {
+				return "" + f;
+			}
+			break;
+		case 2:
+			var s = c.s;
+			return s;
+		}
+	}
+	,tokenString: function(t) {
+		switch(t._hx_index) {
+		case 0:
+			return "<eof>";
+		case 1:
+			var c = t.c;
+			return this.constString(c);
+		case 2:
+			var s = t.s;
+			return s;
+		case 3:
+			var s = t.s;
+			return s;
+		case 4:
+			return "(";
+		case 5:
+			return ")";
+		case 6:
+			return "{";
+		case 7:
+			return "}";
+		case 8:
+			return ".";
+		case 9:
+			return "?.";
+		case 10:
+			return ",";
+		case 11:
+			return ";";
+		case 12:
+			return "[";
+		case 13:
+			return "]";
+		case 14:
+			return "?";
+		case 15:
+			return ":";
+		case 16:
+			var id = t.s;
+			return "@" + id;
+		case 17:
+			var id = t.s;
+			return "#" + id;
+		}
+	}
+	,__class__: hscript_Parser
+	,__properties__: {get_currentPos:"get_currentPos"}
+};
+var hscript_Tools = function() { };
+$hxClasses["hscript.Tools"] = hscript_Tools;
+hscript_Tools.__name__ = "hscript.Tools";
+hscript_Tools.iter = function(e,f) {
+	switch(e._hx_index) {
+	case 0:
+		var _g = e.c;
+		break;
+	case 1:
+		var _g = e.v;
+		break;
+	case 2:
+		var _g = e.n;
+		var _g = e.t;
+		var e1 = e.e;
+		if(e1 != null) {
+			f(e1);
+		}
+		break;
+	case 3:
+		var e1 = e.e;
+		f(e1);
+		break;
+	case 4:
+		var el = e.e;
+		var _g = 0;
+		while(_g < el.length) {
+			var e1 = el[_g];
+			++_g;
+			f(e1);
+		}
+		break;
+	case 5:
+		var _g = e.f;
+		var e1 = e.e;
+		f(e1);
+		break;
+	case 6:
+		var _g = e.op;
+		var e1 = e.e1;
+		var e2 = e.e2;
+		f(e1);
+		f(e2);
+		break;
+	case 7:
+		var _g = e.op;
+		var _g = e.prefix;
+		var e1 = e.e;
+		f(e1);
+		break;
+	case 8:
+		var e1 = e.e;
+		var args = e.params;
+		f(e1);
+		var _g = 0;
+		while(_g < args.length) {
+			var a = args[_g];
+			++_g;
+			f(a);
+		}
+		break;
+	case 9:
+		var c = e.cond;
+		var e1 = e.e1;
+		var e2 = e.e2;
+		f(c);
+		f(e1);
+		if(e2 != null) {
+			f(e2);
+		}
+		break;
+	case 10:
+		var c = e.cond;
+		var e1 = e.e;
+		f(c);
+		f(e1);
+		break;
+	case 11:
+		var _g = e.v;
+		var it = e.it;
+		var e1 = e.e;
+		f(it);
+		f(e1);
+		break;
+	case 12:case 13:
+		break;
+	case 14:
+		var _g = e.args;
+		var _g = e.name;
+		var _g = e.ret;
+		var e1 = e.e;
+		f(e1);
+		break;
+	case 15:
+		var e1 = e.e;
+		if(e1 != null) {
+			f(e1);
+		}
+		break;
+	case 16:
+		var e1 = e.e;
+		var i = e.index;
+		f(e1);
+		f(i);
+		break;
+	case 17:
+		var el = e.e;
+		var _g = 0;
+		while(_g < el.length) {
+			var e1 = el[_g];
+			++_g;
+			f(e1);
+		}
+		break;
+	case 18:
+		var _g = e.cl;
+		var el = e.params;
+		var _g = 0;
+		while(_g < el.length) {
+			var e1 = el[_g];
+			++_g;
+			f(e1);
+		}
+		break;
+	case 19:
+		var e1 = e.e;
+		f(e1);
+		break;
+	case 20:
+		var _g = e.v;
+		var _g = e.t;
+		var e1 = e.e;
+		var c = e.ecatch;
+		f(e1);
+		f(c);
+		break;
+	case 21:
+		var fl = e.fl;
+		var _g = 0;
+		while(_g < fl.length) {
+			var fi = fl[_g];
+			++_g;
+			f(fi.e);
+		}
+		break;
+	case 22:
+		var c = e.cond;
+		var e1 = e.e1;
+		var e2 = e.e2;
+		f(c);
+		f(e1);
+		f(e2);
+		break;
+	case 23:
+		var e1 = e.e;
+		var cases = e.cases;
+		var def = e.defaultExpr;
+		f(e1);
+		var _g = 0;
+		while(_g < cases.length) {
+			var c = cases[_g];
+			++_g;
+			var _g1 = 0;
+			var _g2 = c.values;
+			while(_g1 < _g2.length) {
+				var v = _g2[_g1];
+				++_g1;
+				f(v);
+			}
+			f(c.expr);
+		}
+		if(def != null) {
+			f(def);
+		}
+		break;
+	case 24:
+		var c = e.cond;
+		var e1 = e.e;
+		f(c);
+		f(e1);
+		break;
+	case 25:
+		var name = e.name;
+		var args = e.args;
+		var e1 = e.e;
+		if(args != null) {
+			var _g = 0;
+			while(_g < args.length) {
+				var a = args[_g];
+				++_g;
+				f(a);
+			}
+		}
+		f(e1);
+		break;
+	case 26:
+		var _g = e.t;
+		var e1 = e.e;
+		f(e1);
+		break;
+	case 27:
+		var it = e.it;
+		var e1 = e.e;
+		f(it);
+		f(e1);
+		break;
+	case 28:
+		var _g = e.t;
+		var e1 = e.e;
+		f(e1);
+		break;
+	}
+};
+hscript_Tools.map = function(e,f) {
+	var edef;
+	switch(e._hx_index) {
+	case 0:
+		var _g = e.c;
+		edef = e;
+		break;
+	case 1:
+		var _g = e.v;
+		edef = e;
+		break;
+	case 2:
+		var n = e.n;
+		var t = e.t;
+		var e1 = e.e;
+		edef = hscript_Expr.EVar(n,t,e1 != null ? f(e1) : null);
+		break;
+	case 3:
+		var e1 = e.e;
+		edef = hscript_Expr.EParent(f(e1));
+		break;
+	case 4:
+		var el = e.e;
+		var _g = [];
+		var _g1 = 0;
+		while(_g1 < el.length) {
+			var e1 = el[_g1];
+			++_g1;
+			_g.push(f(e1));
+		}
+		edef = hscript_Expr.EBlock(_g);
+		break;
+	case 5:
+		var e1 = e.e;
+		var fi = e.f;
+		edef = hscript_Expr.EField(f(e1),fi);
+		break;
+	case 6:
+		var op = e.op;
+		var e1 = e.e1;
+		var e2 = e.e2;
+		edef = hscript_Expr.EBinop(op,f(e1),f(e2));
+		break;
+	case 7:
+		var op = e.op;
+		var pre = e.prefix;
+		var e1 = e.e;
+		edef = hscript_Expr.EUnop(op,pre,f(e1));
+		break;
+	case 8:
+		var e1 = e.e;
+		var args = e.params;
+		var edef1 = f(e1);
+		var _g = [];
+		var _g1 = 0;
+		while(_g1 < args.length) {
+			var a = args[_g1];
+			++_g1;
+			_g.push(f(a));
+		}
+		edef = hscript_Expr.ECall(edef1,_g);
+		break;
+	case 9:
+		var c = e.cond;
+		var e1 = e.e1;
+		var e2 = e.e2;
+		edef = hscript_Expr.EIf(f(c),f(e1),e2 != null ? f(e2) : null);
+		break;
+	case 10:
+		var c = e.cond;
+		var e1 = e.e;
+		edef = hscript_Expr.EWhile(f(c),f(e1));
+		break;
+	case 11:
+		var v = e.v;
+		var it = e.it;
+		var e1 = e.e;
+		edef = hscript_Expr.EFor(v,f(it),f(e1));
+		break;
+	case 12:case 13:
+		edef = e;
+		break;
+	case 14:
+		var args = e.args;
+		var e1 = e.e;
+		var name = e.name;
+		var t = e.ret;
+		edef = hscript_Expr.EFunction(args,f(e1),name,t);
+		break;
+	case 15:
+		var e1 = e.e;
+		edef = hscript_Expr.EReturn(e1 != null ? f(e1) : null);
+		break;
+	case 16:
+		var e1 = e.e;
+		var i = e.index;
+		edef = hscript_Expr.EArray(f(e1),f(i));
+		break;
+	case 17:
+		var el = e.e;
+		var _g = [];
+		var _g1 = 0;
+		while(_g1 < el.length) {
+			var e1 = el[_g1];
+			++_g1;
+			_g.push(f(e1));
+		}
+		edef = hscript_Expr.EArrayDecl(_g);
+		break;
+	case 18:
+		var cl = e.cl;
+		var el = e.params;
+		var _g = [];
+		var _g1 = 0;
+		while(_g1 < el.length) {
+			var e1 = el[_g1];
+			++_g1;
+			_g.push(f(e1));
+		}
+		edef = hscript_Expr.ENew(cl,_g);
+		break;
+	case 19:
+		var e1 = e.e;
+		edef = hscript_Expr.EThrow(f(e1));
+		break;
+	case 20:
+		var e1 = e.e;
+		var v = e.v;
+		var t = e.t;
+		var c = e.ecatch;
+		edef = hscript_Expr.ETry(f(e1),v,t,f(c));
+		break;
+	case 21:
+		var fl = e.fl;
+		var _g = [];
+		var _g1 = 0;
+		while(_g1 < fl.length) {
+			var fi = fl[_g1];
+			++_g1;
+			_g.push({ name : fi.name, e : f(fi.e)});
+		}
+		edef = hscript_Expr.EObject(_g);
+		break;
+	case 22:
+		var c = e.cond;
+		var e1 = e.e1;
+		var e2 = e.e2;
+		edef = hscript_Expr.ETernary(f(c),f(e1),f(e2));
+		break;
+	case 23:
+		var e1 = e.e;
+		var cases = e.cases;
+		var def = e.defaultExpr;
+		var edef1 = f(e1);
+		var _g = [];
+		var _g1 = 0;
+		while(_g1 < cases.length) {
+			var c = cases[_g1];
+			++_g1;
+			var _g2 = [];
+			var _g3 = 0;
+			var _g4 = c.values;
+			while(_g3 < _g4.length) {
+				var v = _g4[_g3];
+				++_g3;
+				_g2.push(f(v));
+			}
+			_g.push({ values : _g2, expr : f(c.expr)});
+		}
+		edef = hscript_Expr.ESwitch(edef1,_g,def == null ? null : f(def));
+		break;
+	case 24:
+		var c = e.cond;
+		var e1 = e.e;
+		edef = hscript_Expr.EDoWhile(f(c),f(e1));
+		break;
+	case 25:
+		var name = e.name;
+		var args = e.args;
+		var e1 = e.e;
+		var edef1;
+		if(args == null) {
+			edef1 = null;
+		} else {
+			var _g = [];
+			var _g1 = 0;
+			while(_g1 < args.length) {
+				var a = args[_g1];
+				++_g1;
+				_g.push(f(a));
+			}
+			edef1 = _g;
+		}
+		edef = hscript_Expr.EMeta(name,edef1,f(e1));
+		break;
+	case 26:
+		var e1 = e.e;
+		var t = e.t;
+		edef = hscript_Expr.ECheckType(f(e1),t);
+		break;
+	case 27:
+		var it = e.it;
+		var e1 = e.e;
+		edef = hscript_Expr.EForGen(f(it),f(e1));
+		break;
+	case 28:
+		var e1 = e.e;
+		var t = e.t;
+		edef = hscript_Expr.ECast(f(e1),t);
+		break;
+	}
+	return edef;
+};
+hscript_Tools.expr = function(e) {
+	return e;
+};
+hscript_Tools.mk = function(e,p) {
+	return e;
+};
+hscript_Tools.getKeyIterator = function(e,callb) {
+	var key = null;
+	var value = null;
+	var it = e;
+	if(it._hx_index == 6) {
+		if(it.op == "in") {
+			var ekv = it.e1;
+			var eiter = it.e2;
+			if(ekv._hx_index == 6) {
+				if(ekv.op == "=>") {
+					var v1 = ekv.e1;
+					var v2 = ekv.e2;
+					if(v1._hx_index == 1) {
+						if(v2._hx_index == 1) {
+							var v21 = v2.v;
+							var v11 = v1.v;
+							key = v11;
+							value = v21;
+							it = eiter;
+						}
+					}
+				}
+			}
+		}
+	}
+	return callb(key,value,it);
+};
 var js_Browser = function() { };
 $hxClasses["js.Browser"] = js_Browser;
 js_Browser.__name__ = "js.Browser";
@@ -83320,6 +87884,11 @@ var lime__$internal_backend_html5_HTML5HTTPRequest = function() {
 };
 $hxClasses["lime._internal.backend.html5.HTML5HTTPRequest"] = lime__$internal_backend_html5_HTML5HTTPRequest;
 lime__$internal_backend_html5_HTML5HTTPRequest.__name__ = "lime._internal.backend.html5.HTML5HTTPRequest";
+lime__$internal_backend_html5_HTML5HTTPRequest.originElement = null;
+lime__$internal_backend_html5_HTML5HTTPRequest.originHostname = null;
+lime__$internal_backend_html5_HTML5HTTPRequest.originPort = null;
+lime__$internal_backend_html5_HTML5HTTPRequest.originProtocol = null;
+lime__$internal_backend_html5_HTML5HTTPRequest.supportsImageProgress = null;
 lime__$internal_backend_html5_HTML5HTTPRequest.loadImage = function(uri) {
 	var promise = new lime_app_Promise();
 	if(lime__$internal_backend_html5_HTML5HTTPRequest.activeRequests < lime__$internal_backend_html5_HTML5HTTPRequest.requestLimit) {
@@ -83796,6 +88365,8 @@ var lime__$internal_backend_html5_HTML5Window = function(parent) {
 };
 $hxClasses["lime._internal.backend.html5.HTML5Window"] = lime__$internal_backend_html5_HTML5Window;
 lime__$internal_backend_html5_HTML5Window.__name__ = "lime._internal.backend.html5.HTML5Window";
+lime__$internal_backend_html5_HTML5Window.textArea = null;
+lime__$internal_backend_html5_HTML5Window.textInput = null;
 lime__$internal_backend_html5_HTML5Window.prototype = {
 	canvas: null
 	,div: null
@@ -88677,6 +93248,7 @@ lime_app_Future.prototype = {
 var lime_app__$Future_FutureWork = function() { };
 $hxClasses["lime.app._Future.FutureWork"] = lime_app__$Future_FutureWork;
 lime_app__$Future_FutureWork.__name__ = "lime.app._Future.FutureWork";
+lime_app__$Future_FutureWork.threadPool = null;
 lime_app__$Future_FutureWork.queue = function(state) {
 	if(lime_app__$Future_FutureWork.threadPool == null) {
 		lime_app__$Future_FutureWork.threadPool = new lime_system_ThreadPool();
@@ -91181,6 +95753,8 @@ var lime_graphics_cairo_Cairo = function(surface) {
 $hxClasses["lime.graphics.cairo.Cairo"] = lime_graphics_cairo_Cairo;
 lime_graphics_cairo_Cairo.__name__ = "lime.graphics.cairo.Cairo";
 lime_graphics_cairo_Cairo.__properties__ = {get_versionString:"get_versionString",get_version:"get_version"};
+lime_graphics_cairo_Cairo.version = null;
+lime_graphics_cairo_Cairo.versionString = null;
 lime_graphics_cairo_Cairo.get_version = function() {
 	return 0;
 };
@@ -91531,6 +96105,9 @@ lime_graphics_cairo_CairoSurface.flush = function(this1) {
 var lime_graphics_opengl_GL = function() { };
 $hxClasses["lime.graphics.opengl.GL"] = lime_graphics_opengl_GL;
 lime_graphics_opengl_GL.__name__ = "lime.graphics.opengl.GL";
+lime_graphics_opengl_GL.context = null;
+lime_graphics_opengl_GL.type = null;
+lime_graphics_opengl_GL.version = null;
 lime_graphics_opengl_GL.activeTexture = function(texture) {
 	lime_graphics_opengl_GL.context.activeTexture(texture);
 };
@@ -92449,6 +97026,8 @@ lime_graphics_opengl_ext_KHR_$debug.prototype = {
 };
 var lime_math_ARGB = {};
 lime_math_ARGB.__properties__ = {set_r:"set_r",get_r:"get_r",set_g:"set_g",get_g:"get_g",set_b:"set_b",get_b:"get_b",set_a:"set_a",get_a:"get_a"};
+lime_math_ARGB.a16 = null;
+lime_math_ARGB.unmult = null;
 lime_math_ARGB._new = function(argb) {
 	if(argb == null) {
 		argb = 0;
@@ -92578,6 +97157,8 @@ lime_math_ARGB.set_r = function(this1,value) {
 };
 var lime_math_BGRA = {};
 lime_math_BGRA.__properties__ = {set_r:"set_r",get_r:"get_r",set_g:"set_g",get_g:"get_g",set_b:"set_b",get_b:"get_b",set_a:"set_a",get_a:"get_a"};
+lime_math_BGRA.a16 = null;
+lime_math_BGRA.unmult = null;
 lime_math_BGRA._new = function(bgra) {
 	if(bgra == null) {
 		bgra = 0;
@@ -92707,6 +97288,10 @@ lime_math_BGRA.set_r = function(this1,value) {
 };
 var lime_math_ColorMatrix = {};
 lime_math_ColorMatrix.__properties__ = {set_redOffset:"set_redOffset",get_redOffset:"get_redOffset",set_redMultiplier:"set_redMultiplier",get_redMultiplier:"get_redMultiplier",set_greenOffset:"set_greenOffset",get_greenOffset:"get_greenOffset",set_greenMultiplier:"set_greenMultiplier",get_greenMultiplier:"get_greenMultiplier",set_color:"set_color",get_color:"get_color",set_blueOffset:"set_blueOffset",get_blueOffset:"get_blueOffset",set_blueMultiplier:"set_blueMultiplier",get_blueMultiplier:"get_blueMultiplier",set_alphaOffset:"set_alphaOffset",get_alphaOffset:"get_alphaOffset",set_alphaMultiplier:"set_alphaMultiplier",get_alphaMultiplier:"get_alphaMultiplier"};
+lime_math_ColorMatrix.__alphaTable = null;
+lime_math_ColorMatrix.__blueTable = null;
+lime_math_ColorMatrix.__greenTable = null;
+lime_math_ColorMatrix.__redTable = null;
 lime_math_ColorMatrix._new = function(data) {
 	var this1;
 	if(data != null && data.length == 20) {
@@ -93652,6 +98237,10 @@ lime_math_Matrix4.set = function(this1,index,value) {
 };
 var lime_math_RGBA = {};
 lime_math_RGBA.__properties__ = {set_r:"set_r",get_r:"get_r",set_g:"set_g",get_g:"get_g",set_b:"set_b",get_b:"get_b",set_a:"set_a",get_a:"get_a"};
+lime_math_RGBA.__alpha16 = null;
+lime_math_RGBA.__clamp = null;
+lime_math_RGBA.a16 = null;
+lime_math_RGBA.unmult = null;
 lime_math_RGBA._new = function(rgba) {
 	if(rgba == null) {
 		rgba = 0;
@@ -94152,6 +98741,7 @@ lime_media_AudioContext.prototype = {
 var lime_media_AudioManager = function() { };
 $hxClasses["lime.media.AudioManager"] = lime_media_AudioManager;
 lime_media_AudioManager.__name__ = "lime.media.AudioManager";
+lime_media_AudioManager.context = null;
 lime_media_AudioManager.init = function(context) {
 	if(lime_media_AudioManager.context == null) {
 		if(context == null) {
@@ -95838,6 +100428,8 @@ lime_system_BackgroundWorker.prototype = {
 var lime_system_CFFI = function() { };
 $hxClasses["lime.system.CFFI"] = lime_system_CFFI;
 lime_system_CFFI.__name__ = "lime.system.CFFI";
+lime_system_CFFI.available = null;
+lime_system_CFFI.enabled = null;
 lime_system_CFFI.load = function(library,method,args,lazy) {
 	if(lazy == null) {
 		lazy = false;
@@ -95912,6 +100504,7 @@ var lime_system_Clipboard = function() { };
 $hxClasses["lime.system.Clipboard"] = lime_system_Clipboard;
 lime_system_Clipboard.__name__ = "lime.system.Clipboard";
 lime_system_Clipboard.__properties__ = {set_text:"set_text",get_text:"get_text"};
+lime_system_Clipboard._text = null;
 lime_system_Clipboard.__update = function() {
 	var cacheText = lime_system_Clipboard._text;
 	lime_system_Clipboard._text = null;
@@ -96013,6 +100606,20 @@ var lime_system_System = function() { };
 $hxClasses["lime.system.System"] = lime_system_System;
 lime_system_System.__name__ = "lime.system.System";
 lime_system_System.__properties__ = {get_userDirectory:"get_userDirectory",get_platformVersion:"get_platformVersion",get_platformName:"get_platformName",get_platformLabel:"get_platformLabel",get_numDisplays:"get_numDisplays",get_fontsDirectory:"get_fontsDirectory",get_endianness:"get_endianness",get_documentsDirectory:"get_documentsDirectory",get_deviceVendor:"get_deviceVendor",get_deviceModel:"get_deviceModel",get_desktopDirectory:"get_desktopDirectory",get_applicationStorageDirectory:"get_applicationStorageDirectory",get_applicationDirectory:"get_applicationDirectory",set_allowScreenTimeout:"set_allowScreenTimeout",get_allowScreenTimeout:"get_allowScreenTimeout"};
+lime_system_System.disableCFFI = null;
+lime_system_System.__applicationDirectory = null;
+lime_system_System.__applicationEntryPoint = null;
+lime_system_System.__applicationStorageDirectory = null;
+lime_system_System.__desktopDirectory = null;
+lime_system_System.__deviceModel = null;
+lime_system_System.__deviceVendor = null;
+lime_system_System.__documentsDirectory = null;
+lime_system_System.__endianness = null;
+lime_system_System.__fontsDirectory = null;
+lime_system_System.__platformLabel = null;
+lime_system_System.__platformName = null;
+lime_system_System.__platformVersion = null;
+lime_system_System.__userDirectory = null;
 lime_system_System.embed = $hx_exports["lime"]["embed"] = function(projectName,element,width,height,config) {
 	if(lime_system_System.__applicationEntryPoint == null) {
 		return;
@@ -97474,7 +102081,7 @@ var lime_utils_AssetCache = function() {
 	this.audio = new haxe_ds_StringMap();
 	this.font = new haxe_ds_StringMap();
 	this.image = new haxe_ds_StringMap();
-	this.version = 514705;
+	this.version = 367108;
 };
 $hxClasses["lime.utils.AssetCache"] = lime_utils_AssetCache;
 lime_utils_AssetCache.__name__ = "lime.utils.AssetCache";
@@ -99439,6 +104046,7 @@ lime_utils_Int8Array.toString = function(this1) {
 var lime_utils_Log = function() { };
 $hxClasses["lime.utils.Log"] = lime_utils_Log;
 lime_utils_Log.__name__ = "lime.utils.Log";
+lime_utils_Log.level = null;
 lime_utils_Log.debug = function(message,info) {
 	if(lime_utils_Log.level >= 4) {
 		console.debug("[" + info.className + "] " + Std.string(message));
@@ -100272,6 +104880,7 @@ var objects_AlphaCharacter = function() {
 };
 $hxClasses["objects.AlphaCharacter"] = objects_AlphaCharacter;
 objects_AlphaCharacter.__name__ = "objects.AlphaCharacter";
+objects_AlphaCharacter.allLetters = null;
 objects_AlphaCharacter.loadAlphabetData = function(request) {
 	if(request == null) {
 		request = "alphabet";
@@ -102430,6 +107039,7 @@ objects_Note.initializeGlobalRGBShader = function(noteData) {
 	}
 	return objects_Note.globalRgbShaders[noteData];
 };
+objects_Note._lastValidChecked = null;
 objects_Note.getNoteSkinPostfix = function() {
 	var skin = "";
 	if(backend_ClientPrefs.data.noteSkin != backend_ClientPrefs.defaultData.noteSkin) {
@@ -111415,6 +116025,7 @@ var openfl_display_SimpleButton = function(upState,overState,downState,hitTestSt
 };
 $hxClasses["openfl.display.SimpleButton"] = openfl_display_SimpleButton;
 openfl_display_SimpleButton.__name__ = "openfl.display.SimpleButton";
+openfl_display_SimpleButton.__constructor = null;
 openfl_display_SimpleButton.__super__ = openfl_display_InteractiveObject;
 openfl_display_SimpleButton.prototype = $extend(openfl_display_InteractiveObject.prototype,{
 	enabled: null
@@ -113925,6 +118536,7 @@ var openfl_display_Stage3D = function(stage) {
 };
 $hxClasses["openfl.display.Stage3D"] = openfl_display_Stage3D;
 openfl_display_Stage3D.__name__ = "openfl.display.Stage3D";
+openfl_display_Stage3D.__active = null;
 openfl_display_Stage3D.__super__ = openfl_events_EventDispatcher;
 openfl_display_Stage3D.prototype = $extend(openfl_events_EventDispatcher.prototype,{
 	context3D: null
@@ -118286,6 +122898,22 @@ openfl_display__$internal_DrawCommandBuffer.prototype = {
 var openfl_display__$internal_CanvasGraphics = function() { };
 $hxClasses["openfl.display._internal.CanvasGraphics"] = openfl_display__$internal_CanvasGraphics;
 openfl_display__$internal_CanvasGraphics.__name__ = "openfl.display._internal.CanvasGraphics";
+openfl_display__$internal_CanvasGraphics.allowSmoothing = null;
+openfl_display__$internal_CanvasGraphics.bitmapFill = null;
+openfl_display__$internal_CanvasGraphics.bitmapStroke = null;
+openfl_display__$internal_CanvasGraphics.bitmapRepeat = null;
+openfl_display__$internal_CanvasGraphics.bounds = null;
+openfl_display__$internal_CanvasGraphics.graphics = null;
+openfl_display__$internal_CanvasGraphics.hasFill = null;
+openfl_display__$internal_CanvasGraphics.hasStroke = null;
+openfl_display__$internal_CanvasGraphics.hitTesting = null;
+openfl_display__$internal_CanvasGraphics.inversePendingMatrix = null;
+openfl_display__$internal_CanvasGraphics.pendingMatrix = null;
+openfl_display__$internal_CanvasGraphics.windingRule = null;
+openfl_display__$internal_CanvasGraphics.worldAlpha = null;
+openfl_display__$internal_CanvasGraphics.context = null;
+openfl_display__$internal_CanvasGraphics.hitTestCanvas = null;
+openfl_display__$internal_CanvasGraphics.hitTestContext = null;
 openfl_display__$internal_CanvasGraphics.closePath = function(strokeBefore) {
 	if(strokeBefore == null) {
 		strokeBefore = false;
@@ -124731,6 +129359,8 @@ openfl_display__$internal_CanvasSimpleButton.renderDrawableMask = function(simpl
 var openfl_display__$internal_CanvasTextField = function() { };
 $hxClasses["openfl.display._internal.CanvasTextField"] = openfl_display__$internal_CanvasTextField;
 openfl_display__$internal_CanvasTextField.__name__ = "openfl.display._internal.CanvasTextField";
+openfl_display__$internal_CanvasTextField.context = null;
+openfl_display__$internal_CanvasTextField.clearRect = null;
 openfl_display__$internal_CanvasTextField.render = function(textField,renderer,transform) {
 	var textEngine = textField.__textEngine;
 	var useTextBounds = !(textEngine.background || textEngine.border);
@@ -126073,6 +130703,7 @@ openfl_display__$internal_Context3DDisplayObjectContainer.renderDrawableMask = f
 var openfl_display__$internal_Context3DGraphics = function() { };
 $hxClasses["openfl.display._internal.Context3DGraphics"] = openfl_display__$internal_Context3DGraphics;
 openfl_display__$internal_Context3DGraphics.__name__ = "openfl.display._internal.Context3DGraphics";
+openfl_display__$internal_Context3DGraphics.maskRender = null;
 openfl_display__$internal_Context3DGraphics.buildBuffer = function(graphics,renderer) {
 	var quadBufferPosition = 0;
 	var triangleIndexBufferPosition = 0;
@@ -129352,6 +133983,19 @@ openfl_display__$internal_Context3DTextField.renderMask = function(textField,ren
 var openfl_display__$internal_Context3DTilemap = function() { };
 $hxClasses["openfl.display._internal.Context3DTilemap"] = openfl_display__$internal_Context3DTilemap;
 openfl_display__$internal_Context3DTilemap.__name__ = "openfl.display._internal.Context3DTilemap";
+openfl_display__$internal_Context3DTilemap.cacheColorTransform = null;
+openfl_display__$internal_Context3DTilemap.context = null;
+openfl_display__$internal_Context3DTilemap.dataPerVertex = null;
+openfl_display__$internal_Context3DTilemap.currentBitmapData = null;
+openfl_display__$internal_Context3DTilemap.currentBlendMode = null;
+openfl_display__$internal_Context3DTilemap.currentShader = null;
+openfl_display__$internal_Context3DTilemap.bufferPosition = null;
+openfl_display__$internal_Context3DTilemap.lastFlushedPosition = null;
+openfl_display__$internal_Context3DTilemap.lastUsedBitmapData = null;
+openfl_display__$internal_Context3DTilemap.lastUsedShader = null;
+openfl_display__$internal_Context3DTilemap.numTiles = null;
+openfl_display__$internal_Context3DTilemap.vertexBufferData = null;
+openfl_display__$internal_Context3DTilemap.vertexDataPosition = null;
 openfl_display__$internal_Context3DTilemap.buildBuffer = function(tilemap,renderer) {
 	if(!tilemap.__renderable || tilemap.__group.__tiles.length == 0 || tilemap.__worldAlpha <= 0) {
 		tilemap.__group.__dirty = false;
@@ -133322,6 +137966,7 @@ openfl_display__$internal_DrawCommandType.__constructs__ = [openfl_display__$int
 var openfl_display__$internal_FlashRenderer = function() { };
 $hxClasses["openfl.display._internal.FlashRenderer"] = openfl_display__$internal_FlashRenderer;
 openfl_display__$internal_FlashRenderer.__name__ = "openfl.display._internal.FlashRenderer";
+openfl_display__$internal_FlashRenderer.instances = null;
 openfl_display__$internal_FlashRenderer.register = function(renderObject) {
 	if(openfl_display__$internal_FlashRenderer.instances == null) {
 		openfl_display__$internal_FlashRenderer.instances = openfl_utils_Dictionary.toObjectMap(null,true);
@@ -133979,6 +138624,7 @@ var openfl_display3D_Context3D = function(stage,contextState,stage3D) {
 };
 $hxClasses["openfl.display3D.Context3D"] = openfl_display3D_Context3D;
 openfl_display3D_Context3D.__name__ = "openfl.display3D.Context3D";
+openfl_display3D_Context3D.__driverInfo = null;
 openfl_display3D_Context3D.__super__ = openfl_events_EventDispatcher;
 openfl_display3D_Context3D.prototype = $extend(openfl_events_EventDispatcher.prototype,{
 	backBufferHeight: null
@@ -137565,6 +142211,10 @@ var openfl_display3D_textures_TextureBase = function(context) {
 };
 $hxClasses["openfl.display3D.textures.TextureBase"] = openfl_display3D_textures_TextureBase;
 openfl_display3D_textures_TextureBase.__name__ = "openfl.display3D.textures.TextureBase";
+openfl_display3D_textures_TextureBase.__compressedFormats = null;
+openfl_display3D_textures_TextureBase.__compressedFormatsAlpha = null;
+openfl_display3D_textures_TextureBase.__textureFormat = null;
+openfl_display3D_textures_TextureBase.__textureInternalFormat = null;
 openfl_display3D_textures_TextureBase.__super__ = openfl_events_EventDispatcher;
 openfl_display3D_textures_TextureBase.prototype = $extend(openfl_events_EventDispatcher.prototype,{
 	__alphaTexture: null
@@ -139539,6 +144189,12 @@ var openfl_events_MouseEvent = function(type,bubbles,cancelable,localX,localY,re
 };
 $hxClasses["openfl.events.MouseEvent"] = openfl_events_MouseEvent;
 openfl_events_MouseEvent.__name__ = "openfl.events.MouseEvent";
+openfl_events_MouseEvent.__altKey = null;
+openfl_events_MouseEvent.__buttonDown = null;
+openfl_events_MouseEvent.__commandKey = null;
+openfl_events_MouseEvent.__controlKey = null;
+openfl_events_MouseEvent.__ctrlKey = null;
+openfl_events_MouseEvent.__shiftKey = null;
 openfl_events_MouseEvent.__create = function(type,button,stageX,stageY,local,target,delta) {
 	if(delta == null) {
 		delta = 0;
@@ -141508,6 +146164,7 @@ var openfl_media_SoundMixer = function() { };
 $hxClasses["openfl.media.SoundMixer"] = openfl_media_SoundMixer;
 openfl_media_SoundMixer.__name__ = "openfl.media.SoundMixer";
 openfl_media_SoundMixer.__properties__ = {set_soundTransform:"set_soundTransform",get_soundTransform:"get_soundTransform"};
+openfl_media_SoundMixer.bufferTime = null;
 openfl_media_SoundMixer.areSoundsInaccessible = function() {
 	return false;
 };
@@ -142196,6 +146853,7 @@ openfl_net_NetStream.prototype = $extend(openfl_events_EventDispatcher.prototype
 	,__properties__: {set_speed:"set_speed",get_speed:"get_speed",set_soundTransform:"set_soundTransform",get_soundTransform:"get_soundTransform"}
 });
 var openfl_net_ObjectEncoding = {};
+openfl_net_ObjectEncoding.dynamicPropertyWriter = null;
 var openfl_net_SharedObjectFlushStatus = {};
 openfl_net_SharedObjectFlushStatus.fromString = function(value) {
 	switch(value) {
@@ -142411,6 +147069,7 @@ openfl_net_URLRequest.prototype = {
 var openfl_net_URLRequestDefaults = function() { };
 $hxClasses["openfl.net.URLRequestDefaults"] = openfl_net_URLRequestDefaults;
 openfl_net_URLRequestDefaults.__name__ = "openfl.net.URLRequestDefaults";
+openfl_net_URLRequestDefaults.userAgent = null;
 var openfl_net_URLRequestHeader = function(name,value) {
 	if(value == null) {
 		value = "";
@@ -144026,6 +148685,9 @@ var openfl_text__$internal_TextEngine = function(textField) {
 };
 $hxClasses["openfl.text._internal.TextEngine"] = openfl_text__$internal_TextEngine;
 openfl_text__$internal_TextEngine.__name__ = "openfl.text._internal.TextEngine";
+openfl_text__$internal_TextEngine.__defaultFonts = null;
+openfl_text__$internal_TextEngine.__context = null;
+openfl_text__$internal_TextEngine.__div = null;
 openfl_text__$internal_TextEngine.findFont = function(name) {
 	return openfl_text_Font.__fontByName.h[name];
 };
@@ -145450,6 +150112,8 @@ openfl_ui_GameInputDevice.prototype = {
 var openfl_ui_Keyboard = function() { };
 $hxClasses["openfl.ui.Keyboard"] = openfl_ui_Keyboard;
 openfl_ui_Keyboard.__name__ = "openfl.ui.Keyboard";
+openfl_ui_Keyboard.capsLock = null;
+openfl_ui_Keyboard.numLock = null;
 openfl_ui_Keyboard.isAccessible = function() {
 	return false;
 };
@@ -145842,6 +150506,7 @@ var openfl_ui_Mouse = function() { };
 $hxClasses["openfl.ui.Mouse"] = openfl_ui_Mouse;
 openfl_ui_Mouse.__name__ = "openfl.ui.Mouse";
 openfl_ui_Mouse.__properties__ = {set_cursor:"set_cursor",get_cursor:"get_cursor"};
+openfl_ui_Mouse.__hidden = null;
 openfl_ui_Mouse.hide = function() {
 	openfl_ui_Mouse.__hidden = true;
 	var _g = 0;
@@ -145983,6 +150648,10 @@ var openfl_ui_Multitouch = function() { };
 $hxClasses["openfl.ui.Multitouch"] = openfl_ui_Multitouch;
 openfl_ui_Multitouch.__name__ = "openfl.ui.Multitouch";
 openfl_ui_Multitouch.__properties__ = {get_supportsTouchEvents:"get_supportsTouchEvents"};
+openfl_ui_Multitouch.inputMode = null;
+openfl_ui_Multitouch.maxTouchPoints = null;
+openfl_ui_Multitouch.supportedGestures = null;
+openfl_ui_Multitouch.supportsGestureEvents = null;
 openfl_ui_Multitouch.get_supportsTouchEvents = function() {
 	if(('ontouchstart' in document.documentElement) || (window.DocumentTouch && document instanceof DocumentTouch)) {
 		return true;
@@ -148458,6 +153127,8 @@ haxe_lang_Iterable.prototype = {
 var openfl_utils__$internal_Lib = function() { };
 $hxClasses["openfl.utils._internal.Lib"] = openfl_utils__$internal_Lib;
 openfl_utils__$internal_Lib.__name__ = "openfl.utils._internal.Lib";
+openfl_utils__$internal_Lib.application = null;
+openfl_utils__$internal_Lib.current = null;
 openfl_utils__$internal_Lib.notImplemented = function(posInfo) {
 	var api = posInfo.className + "." + posInfo.methodName;
 	if(!Object.prototype.hasOwnProperty.call(openfl_utils__$internal_Lib.__sentWarnings.h,api)) {
@@ -152714,6 +157385,7 @@ var options_OptionsState = function() {
 };
 $hxClasses["options.OptionsState"] = options_OptionsState;
 options_OptionsState.__name__ = "options.OptionsState";
+options_OptionsState.menuBG = null;
 options_OptionsState.__super__ = backend_MusicBeatState;
 options_OptionsState.prototype = $extend(backend_MusicBeatState.prototype,{
 	options: null
@@ -153329,6 +158001,7 @@ var psychlua_CustomSubstate = function(name) {
 };
 $hxClasses["psychlua.CustomSubstate"] = psychlua_CustomSubstate;
 psychlua_CustomSubstate.__name__ = "psychlua.CustomSubstate";
+psychlua_CustomSubstate.instance = null;
 psychlua_CustomSubstate.openCustomSubstate = function(name,pauseGame) {
 	if(pauseGame == null) {
 		pauseGame = false;
@@ -156577,6 +161250,7 @@ var states_LoadingState = function(target,stopMusic) {
 };
 $hxClasses["states.LoadingState"] = states_LoadingState;
 states_LoadingState.__name__ = "states.LoadingState";
+states_LoadingState.mutex = null;
 states_LoadingState.loadAndSwitchState = function(target,stopMusic,intrusive) {
 	if(intrusive == null) {
 		intrusive = true;
@@ -159474,6 +164148,8 @@ states_PlayState.get_isPixelStage = function() {
 		return true;
 	}
 };
+states_PlayState.prevCamFollow = null;
+states_PlayState.instance = null;
 states_PlayState.sortByTime = function(Obj1,Obj2) {
 	var Value1 = Obj1.strumTime;
 	var Value2 = Obj2.strumTime;
@@ -178019,6 +182695,7 @@ var states_editors_WeekEditorState = function(weekFile) {
 $hxClasses["states.editors.WeekEditorState"] = states_editors_WeekEditorState;
 states_editors_WeekEditorState.__name__ = "states.editors.WeekEditorState";
 states_editors_WeekEditorState.__interfaces__ = [backend_ui_PsychUIEvent];
+states_editors_WeekEditorState._file = null;
 states_editors_WeekEditorState.loadWeek = function() {
 	var jsonFilter = new openfl_net_FileFilter("JSON","json");
 	states_editors_WeekEditorState._file = new openfl_net_FileReference();
@@ -186600,6 +191277,7 @@ var substates_GameOverSubstate = function(playStateBoyfriend) {
 };
 $hxClasses["substates.GameOverSubstate"] = substates_GameOverSubstate;
 substates_GameOverSubstate.__name__ = "substates.GameOverSubstate";
+substates_GameOverSubstate.instance = null;
 substates_GameOverSubstate.resetVariables = function() {
 	substates_GameOverSubstate.characterName = "bf-dead";
 	substates_GameOverSubstate.deathSoundName = "fnf_loss_sfx";
@@ -188446,6 +193124,7 @@ web_FileSystem.createDirectory = function(path) {
 web_FileSystem.deleteFile = function(path) {
 };
 function $getIterator(o) { if( o instanceof Array ) return new haxe_iterators_ArrayIterator(o); else return o.iterator(); }
+function $getKeyValueIterator(o) { if( o instanceof Array ) return HxOverrides.keyValueIter(o); else return o.keyValueIterator(); }
 function $bind(o,m) { if( m == null ) return null; if( m.__id__ == null ) m.__id__ = $global.$haxeUID++; var f; if( o.hx__closures__ == null ) o.hx__closures__ = {}; else f = o.hx__closures__[m.__id__]; if( f == null ) { f = m.bind(o); o.hx__closures__[m.__id__] = f; } return f; }
 $global.$haxeUID |= 0;
 var _init = lime__$internal_backend_html5_HTML5Application;
@@ -188598,6 +193277,8 @@ backend_ClientPrefs.gamepadBinds = (function($this) {
 	$r = _g;
 	return $r;
 }(this));
+backend_ClientPrefs.defaultKeys = null;
+backend_ClientPrefs.defaultButtons = null;
 backend_Conductor.bpm = 100;
 backend_Conductor.crochet = 60 / backend_Conductor.bpm * 1000;
 backend_Conductor.stepCrochet = backend_Conductor.crochet / 4;
@@ -188705,6 +193386,7 @@ flixel_FlxCamera.renderRect = (function($this) {
 	$r = rect;
 	return $r;
 }(this));
+backend_StageData.forceNextDirectory = null;
 backend_StageData.reservedNames = ["gf","gfGroup","dad","dadGroup","boyfriend","boyfriendGroup"];
 backend_WeekData.weeksLoaded = new haxe_ds_StringMap();
 backend_WeekData.weeksList = [];
@@ -188787,6 +193469,7 @@ backend_ui_PsychUIInputText.onKeyDown_ignored = [16,17,27];
 backend_ui_PsychUIInputText.CHANGE_EVENT = "inputtext_change";
 backend_ui_PsychUIInputText.KEY_TILDE = 126;
 backend_ui_PsychUIInputText.KEY_ACUTE = 180;
+backend_ui_PsychUIInputText.focusOn = null;
 backend_ui_PsychUIDropDownMenu.CLICK_EVENT = "dropdown_click";
 backend_ui_PsychUINumericStepper.CHANGE_EVENT = "numericstepper_change";
 backend_ui_PsychUIRadioGroup.CLICK_EVENT = "radiogroup_click";
@@ -188801,7 +193484,8 @@ cutscenes_DialogueCharacter.IDLE_POSTFIX = "-IDLE";
 cutscenes_DialogueCharacter.DEFAULT_CHARACTER = "bf";
 cutscenes_DialogueCharacter.DEFAULT_SCALE = 0.7;
 openfl_text_TextField.__missingFontWarning = new haxe_ds_StringMap();
-flixel_system_FlxVersion.sha = "b07c67a79e07bf5c54b42623e3ee74e6bd380e07\n";
+flixel_system_FlxVersion.sha = "";
+flixel_math_FlxRandom._arrayFloatHelper = null;
 flixel_math_FlxRandom.MULTIPLIER = 48271.0;
 flixel_math_FlxRandom.MODULUS = 2147483647;
 flixel_util_FlxSave.invalidChars = new EReg("[ ~%&\\\\;:\"',<>?#]+","g");
@@ -188870,6 +193554,7 @@ flixel_text_FlxText.VERTICAL_GUTTER = 4;
 flixel_addons_text_FlxTypeText.helperString = "";
 openfl_display_BitmapData.__meta__ = { fields : { image : { SuppressWarnings : ["checkstyle:Dynamic"]}, __framebufferContext : { SuppressWarnings : ["checkstyle:Dynamic"]}, __indexBufferContext : { SuppressWarnings : ["checkstyle:Dynamic"]}, __surface : { SuppressWarnings : ["checkstyle:Dynamic"]}, __textureContext : { SuppressWarnings : ["checkstyle:Dynamic"]}, __vertexBufferContext : { SuppressWarnings : ["checkstyle:Dynamic"]}, compare : { SuppressWarnings : ["checkstyle:Dynamic"]}, getSurface : { SuppressWarnings : ["checkstyle:Dynamic"]}, __fromImage : { SuppressWarnings : ["checkstyle:Dynamic"]}}};
 openfl_display_BitmapData.VERTEX_BUFFER_STRIDE = 14;
+openfl_display_BitmapData.__supportsBGRA = null;
 openfl_display_BitmapData.__tempVector = new lime_math_Vector2();
 flixel_addons_transition__$FlxTransitionSprite_RawGraphicTransTileCircle.resourceType = "image/png";
 flixel_addons_transition__$FlxTransitionSprite_RawGraphicTransTileCircle.resourceName = "__ASSET__:bitmap_flixel_addons_transition__FlxTransitionSprite_RawGraphicTransTileCircle";
@@ -188883,6 +193568,8 @@ flixel_addons_transition_RawGraphicTransTileSquare.resourceType = "image/png";
 flixel_addons_transition_RawGraphicTransTileSquare.resourceName = "__ASSET__:bitmap_flixel_addons_transition_RawGraphicTransTileSquare";
 flixel_addons_transition_GraphicTransTileSquare.WIDTH = 544;
 flixel_addons_transition_GraphicTransTileSquare.HEIGHT = 32;
+flixel_addons_transition_FlxTransitionableState.defaultTransIn = null;
+flixel_addons_transition_FlxTransitionableState.defaultTransOut = null;
 flixel_addons_transition_FlxTransitionableState.skipNextTransIn = false;
 flixel_addons_transition_FlxTransitionableState.skipNextTransOut = false;
 flixel_addons_transition__$TransitionFade_RawGraphicDiagonalGradient.resourceType = "image/png";
@@ -189732,6 +194419,7 @@ flixel_system_GraphicVirtualInput.resourceType = "image/png";
 flixel_system_GraphicVirtualInput.resourceName = "__ASSET__:bitmap_flixel_system_GraphicVirtualInput";
 openfl_utils_ByteArrayData.__meta__ = { obj : { SuppressWarnings : ["checkstyle:FieldDocComment"]}};
 openfl_utils_ByteArrayData.defaultObjectEncoding = 10;
+openfl_utils_ByteArrayData.__defaultEndian = null;
 flixel_system_VirtualInputData.resourceName = "__ASSET__:file_flixel_system_VirtualInputData";
 flixel_system_FlxAssets.defaultSoundExtension = "ogg";
 flixel_system_FlxAssets.FONT_DEFAULT = "Nokia Cellphone FC Small";
@@ -189855,6 +194543,8 @@ flixel_util_FlxAxes.XY = 17;
 flixel_util_FlxAxes.NONE = 0;
 flixel_util_FlxBitmapDataPool.maxLength = 8;
 flixel_util_FlxBitmapDataPool.$length = 0;
+flixel_util_FlxBitmapDataPool._head = null;
+flixel_util_FlxBitmapDataPool._tail = null;
 flixel_util_FlxBitmapDataPool._rect = new openfl_geom_Rectangle();
 flixel_util_FlxBitmapDataUtil.matrix = new flixel_math_FlxMatrix();
 flixel_util_FlxCollision.pointA = new flixel_math_FlxBasePoint(0,0);
@@ -189935,6 +194625,7 @@ flxanimate_filters_GradientGlowFilter.__colorRatioShader = new flxanimate_filter
 flxanimate_filters_GradientGlowFilter.__fullCombineShader = new flxanimate_filters__$GradientGlowFilter_FullCombineShader();
 flxanimate_filters_GradientGlowFilter.__colorFadeBmp = new openfl_display_BitmapData(255,1,null,0);
 flxanimate_format_PropertyList._dateRegex = new EReg("(\\d{4}-\\d{2}-\\d{2})(?:T(\\d{2}:\\d{2}:\\d{2})Z)?","");
+flxanimate_frames_FlxAnimateFrames.data = null;
 openfl_geom_Matrix3D.__meta__ = { statics : { create2D : { SuppressWarnings : ["checkstyle:FieldDocComment"]}, createABCD : { SuppressWarnings : ["checkstyle:FieldDocComment"]}, createOrtho : { SuppressWarnings : ["checkstyle:FieldDocComment"]}}};
 flxanimate_motion_AdjustColor.s_arrayOfDeltaIndex = [0,0.01,0.02,0.04,0.05,0.06,0.07,0.08,0.1,0.11,0.12,0.14,0.15,0.16,0.17,0.18,0.20,0.21,0.22,0.24,0.25,0.27,0.28,0.30,0.32,0.34,0.36,0.38,0.40,0.42,0.44,0.46,0.48,0.5,0.53,0.56,0.59,0.62,0.65,0.68,0.71,0.74,0.77,0.80,0.83,0.86,0.89,0.92,0.95,0.98,1.0,1.06,1.12,1.18,1.24,1.30,1.36,1.42,1.48,1.54,1.60,1.66,1.72,1.78,1.84,1.90,1.96,2.0,2.12,2.25,2.37,2.50,2.62,2.75,2.87,3.0,3.2,3.4,3.6,3.8,4.0,4.3,4.7,4.9,5.0,5.5,6.0,6.5,6.8,7.0,7.3,7.5,7.8,8.0,8.4,8.7,9.0,9.4,9.6,9.8,10.0];
 flxanimate_motion_DynamicMatrix.MATRIX_ORDER_PREPEND = 0;
@@ -189942,8 +194633,10 @@ flxanimate_motion_DynamicMatrix.MATRIX_ORDER_APPEND = 1;
 haxe_Serializer.USE_CACHE = false;
 haxe_Serializer.USE_ENUM_INDEX = false;
 haxe_Serializer.BASE64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789%:";
+haxe_Serializer.BASE64_CODES = null;
 haxe_Unserializer.DEFAULT_RESOLVER = new haxe__$Unserializer_DefaultResolver();
 haxe_Unserializer.BASE64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789%:";
+haxe_Unserializer.CODES = null;
 haxe_crypto_Base64.CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 haxe_crypto_Base64.BYTES = haxe_io_Bytes.ofString(haxe_crypto_Base64.CHARS);
 haxe_io_FPHelper.i64tmp = new haxe__$Int64__$_$_$Int64(0,0);
@@ -189964,6 +194657,10 @@ haxe_zip_InflateImpl.LEN_BASE_VAL_TBL = [3,4,5,6,7,8,9,10,11,13,15,17,19,23,27,3
 haxe_zip_InflateImpl.DIST_EXTRA_BITS_TBL = [0,0,0,0,1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10,11,11,12,12,13,13,-1,-1];
 haxe_zip_InflateImpl.DIST_BASE_VAL_TBL = [1,2,3,4,5,7,9,13,17,25,33,49,65,97,129,193,257,385,513,769,1025,1537,2049,3073,4097,6145,8193,12289,16385,24577];
 haxe_zip_InflateImpl.CODE_LENGTHS_POS = [16,17,18,0,8,7,9,6,10,5,11,4,12,3,13,2,14,1,15];
+haxe_zip_InflateImpl.FIXED_HUFFMAN = null;
+hscript_Parser.p1 = 0;
+hscript_Parser.tokenMin = 0;
+hscript_Parser.tokenMax = 0;
 lime__$internal_backend_html5_HTML5HTTPRequest.OPTION_REVOKE_URL = 1;
 lime__$internal_backend_html5_HTML5HTTPRequest.activeRequests = 0;
 lime__$internal_backend_html5_HTML5HTTPRequest.requestLimit = 17;
@@ -190776,6 +195473,7 @@ lime_media_openal_ALC.DEFAULT_ALL_DEVICES_SPECIFIER = 4114;
 lime_media_openal_ALC.ALL_DEVICES_SPECIFIER = 4115;
 lime_system_BackgroundWorker.MESSAGE_COMPLETE = "__COMPLETE__";
 lime_system_BackgroundWorker.MESSAGE_ERROR = "__ERROR__";
+lime_system_CFFI.__moduleNames = null;
 lime_system_Clipboard.onUpdate = new lime_app__$Event_$Void_$Void();
 lime_system_Clipboard.__updated = false;
 lime_system_Sensor.sensorByID = new haxe_ds_IntMap();
@@ -191358,6 +196056,8 @@ openfl_display_DOMRenderer.__meta__ = { fields : { element : { SuppressWarnings 
 openfl_display_GradientType.LINEAR = 0;
 openfl_display_GradientType.RADIAL = 1;
 openfl_display_Graphics.__meta__ = { fields : { overrideBlendMode : { SuppressWarnings : ["checkstyle:FieldDocComment"]}}};
+openfl_display_Graphics.maxTextureHeight = null;
+openfl_display_Graphics.maxTextureWidth = null;
 openfl_display_GraphicsPath.SIN45 = 0.70710678118654752440084436210485;
 openfl_display_GraphicsPath.TAN22 = 0.4142135623730950488016887242097;
 openfl_display_GraphicsPathWinding.EVEN_ODD = 0;
@@ -191586,6 +196286,7 @@ openfl_display3D__$internal__$AGALConverter_SourceRegister.__meta__ = { obj : { 
 openfl_display3D__$internal_ATFReader.__meta__ = { obj : { SuppressWarnings : ["checkstyle:FieldDocComment"]}};
 openfl_display3D__$internal_Context3DState.__meta__ = { obj : { SuppressWarnings : ["checkstyle:FieldDocComment"]}};
 openfl_display3D_textures_TextureBase.__meta__ = { fields : { __textureContext : { SuppressWarnings : ["checkstyle:Dynamic"]}, __getGLFramebuffer : { SuppressWarnings : ["checkstyle:Dynamic"]}}};
+openfl_display3D_textures_TextureBase.__supportsBGRA = null;
 openfl_display3D_textures_Texture.__lowMemoryMode = false;
 openfl_errors_Error.DEFAULT_TO_STRING = "Error";
 openfl_events_Event.ACTIVATE = "activate";
@@ -192217,10 +196918,13 @@ shaders_RainShader.MAX_LIGHTS = 8;
 states_FlashingState.leftState = false;
 states_FreeplayState.curSelected = 0;
 states_FreeplayState.lastDifficultyName = backend_Difficulty.defaultDifficulty;
+states_FreeplayState.vocals = null;
+states_FreeplayState.opponentVocals = null;
 states_LoadingState.loaded = 0;
 states_LoadingState.loadMax = 0;
 states_LoadingState.originalBitmapKeys = new haxe_ds_StringMap();
 states_LoadingState.requestedBitmaps = new haxe_ds_StringMap();
+states_LoadingState.threadPool = null;
 states_LoadingState.isIntrusive = false;
 states_LoadingState.imagesToPrepare = [];
 states_LoadingState.soundsToPrepare = [];
@@ -192239,6 +196943,7 @@ states_PlayState.curStage = "";
 states_PlayState.stageUI = "normal";
 states_PlayState.uiPrefix = "";
 states_PlayState.uiPostfix = "";
+states_PlayState.SONG = null;
 states_PlayState.isStoryMode = false;
 states_PlayState.storyWeek = 0;
 states_PlayState.storyPlaylist = [];
@@ -192268,8 +196973,10 @@ states_editors_DialogueCharacterEditorState.DEFAULT_TEXT = "Lorem ipsum dolor si
 states_editors_DialogueEditorState.DEFAULT_TEXT = "coolswag";
 states_editors_DialogueEditorState.DEFAULT_SPEED = 0.05;
 states_editors_DialogueEditorState.DEFAULT_BUBBLETYPE = "normal";
+states_editors_NoteSplashEditorState.imageSkin = null;
 states_editors_WeekEditorState.unsavedProgress = false;
 states_editors_WeekEditorState.weekFileName = "week1";
+states_editors_WeekEditorState.loadedWeek = null;
 states_editors_WeekEditorState.loadError = false;
 states_editors_content_MetaNote.noteTypeTexts = new haxe_ds_IntMap();
 states_editors_content_VSlice.metadataVersion = "2.2.3";
@@ -192280,6 +196987,7 @@ substates_GameOverSubstate.deathSoundName = "fnf_loss_sfx";
 substates_GameOverSubstate.loopSoundName = "gameOver";
 substates_GameOverSubstate.endSoundName = "gameOverEnd";
 substates_GameOverSubstate.deathDelay = 0;
+substates_PauseSubState.songName = null;
 tjson_TJSON.OBJECT_REFERENCE_PREFIX = "@~obRef#";
 ApplicationMain.main();
 })(typeof exports != "undefined" ? exports : typeof window != "undefined" ? window : typeof self != "undefined" ? self : this, typeof window != "undefined" ? window : typeof global != "undefined" ? global : typeof self != "undefined" ? self : this);
